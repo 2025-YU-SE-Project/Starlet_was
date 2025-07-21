@@ -3,11 +3,18 @@ package com.example.se_be.entity;
 import com.example.se_be.entity.enums.Emotion;
 import com.example.se_be.entity.enums.Factor;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +30,7 @@ public class Diary {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<Factor> factors;
+    private List<Factor> factors = new ArrayList<>();
     // 필드에서 바로 리스트 할 필요 있을지도
 
     @Column
@@ -31,4 +38,12 @@ public class Diary {
 
     @Column(nullable = false)
     private LocalDate createAt;
+
+    @Builder public Diary(User user, Emotion emotion, List<Factor> factors, String content, LocalDate createAt) {
+        this.user = user;
+        this.emotion = emotion;
+        this.factors = factors;
+        this.content = content;
+        this.createAt = createAt;
+    }
 }
