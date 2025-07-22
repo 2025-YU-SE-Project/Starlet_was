@@ -19,8 +19,7 @@ public class UserService {
 //            return false;
 
         // 2. 닉네임 및 이메일 중복 확인
-        if(userRepository.existsByEmail(dto.getEmail())
-                || userRepository.existsByNickname(dto.getNickname()))
+        if(existEmail(dto.getEmail()) || existNickname(dto.getNickname()))
             return null;
 
         // 3. 비밀번호 형식 확인, 일단은 제한하지 않음.
