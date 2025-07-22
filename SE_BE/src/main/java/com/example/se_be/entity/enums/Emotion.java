@@ -2,21 +2,21 @@ package com.example.se_be.entity.enums;
 
 public enum Emotion {
     HAPPINESS,
-    ANXIETY,
+    FUNNY,
     NEUTRAL,
-    CALM,
+    SURPRISING,
     ANGER,
-    DEPRESSION;
+    SADNESS;
 
     // 색상을 바로 가져올 수 있게
     public Color getColor() {
         return switch (this) {
             case HAPPINESS -> Color.YELLOW;
-            case ANXIETY -> Color.ORANGE;
+            case FUNNY -> Color.ORANGE;
             case NEUTRAL -> Color.WHITE;
-            case CALM -> Color.SKYBLUE;
+            case SURPRISING -> Color.SKYBLUE;
             case ANGER -> Color.RED;
-            case DEPRESSION -> Color.BLUE;
+            case SADNESS -> Color.BLUE;
         };
     }
 }
