@@ -30,4 +30,12 @@ public class UserService {
 
         return user.getId();
     }
+
+    public boolean existEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean existNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
 }

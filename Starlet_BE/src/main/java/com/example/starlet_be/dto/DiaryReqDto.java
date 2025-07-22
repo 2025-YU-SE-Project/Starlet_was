@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class DiaryReqDto {
-    private Long id;
     private String username;
     private String emotion;
     private List<String> factors;
