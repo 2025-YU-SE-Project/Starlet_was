@@ -5,6 +5,7 @@ import com.example.starlet_be.dto.UserResDto;
 import com.example.starlet_be.entity.User;
 import com.example.starlet_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 단일 조회
     public UserResDto getUser(Long id) {
@@ -46,8 +48,8 @@ public class UserService {
 
         // 3. 비밀번호 형식 확인, 일단은 제한하지 않음.
 
-        // 4. 엔티티로 변환 후 저장
-        User user = userRepository.save(dto.toEntity());
+        // 4. 엔티티로 변환 후 저장, 암호화작업
+        User user = userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
 
         return user.getId();
     }
