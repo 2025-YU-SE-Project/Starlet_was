@@ -53,7 +53,7 @@ public class UserController {
     }
 
     // 3-1. 이메일 중복 확인만(Restful한지는 모름)
-    @PostMapping("/signup/{email}")
+    @GetMapping("/signup/email/{email}")
     public ResponseEntity<?> existEmail(@PathVariable String email){
         // 존재하면 true, 존재하지 않으면 false.
         return (userService.existEmail(email)) ?
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     // 3-2. 닉네임 중복 확인만(Restful한지는 모름)
-    @PostMapping("/signup/{nickname}")
+    @GetMapping("/signup/nickname/{nickname}")
     public ResponseEntity<?> existNickname(@PathVariable String nickname){
         // 존재하면 true, 존재하지 않으면 false.
         return (userService.existNickname(nickname)) ?
@@ -77,6 +77,7 @@ public class UserController {
 
 
     // 5. 사용자 삭제
+
 
     // 정도면 충분할 것 같습니다..!
 }
