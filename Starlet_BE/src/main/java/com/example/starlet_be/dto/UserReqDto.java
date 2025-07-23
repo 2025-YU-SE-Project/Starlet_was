@@ -20,7 +20,7 @@ public class UserReqDto {
     public User toEntity(String encodedPassword) {
         return User.builder()
                 .nickname(nickname)
-                .nickname(encodedPassword)
+                .password(encodedPassword)
                 .email(email)
                 .build();
         // 위에 인텔리제이 자동완성인데 저건 뭔지 봐야할 듯 : 빌더의 의도에 맞게 된 문법이라 저렇게 쓰는게 맞음
