@@ -1,5 +1,6 @@
 package com.example.starlet_be.entity;
 
+import com.example.starlet_be.dto.UserResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +27,9 @@ public class User{
         this.nickname = nickname;
         this.password = password;
         this.email = email;
+    }
+
+    public UserResDto toResDto() {
+        return UserResDto.builder().id(id).nickname(nickname).email(email).build();
     }
 }

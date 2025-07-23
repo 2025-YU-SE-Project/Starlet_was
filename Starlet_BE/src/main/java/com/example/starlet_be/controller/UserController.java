@@ -1,6 +1,7 @@
 package com.example.starlet_be.controller;
 
 import com.example.starlet_be.dto.UserReqDto;
+import com.example.starlet_be.dto.UserResDto;
 import com.example.starlet_be.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -17,10 +20,23 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
 
-    // 1. 사용자 조회
+    // 1-A. 사용자 조회(관리자 전용)
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id){
+        UserResDto info = userService.getUser(id);
+
+        return (info != null) ?
+                ResponseEntity.ok().body(info) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 유저가 존재하지 않습니다.");
+    }
 
 
-    // 2. 사용자들 조회
+    // 2-A. 사용자들 조회(관리자 전용)
+    @GetMapping
+    public ResponseEntity<?> getUserList(){
+        List<UserResDto> infos = userService.getUserList();
+        return ResponseEntity.ok().body(infos);
+    }
 
 
     // 3. 회원가입
