@@ -5,6 +5,7 @@ import com.example.starlet_be.dto.UserResDto;
 import com.example.starlet_be.entity.User;
 import com.example.starlet_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,4 +65,9 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
+    public void deleteCurrentUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("해당하는 이메일을 가진 유저를 발견할 수 없음"));
+        userRepository.delete(user);
+    }
 }

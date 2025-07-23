@@ -13,6 +13,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,7 +109,12 @@ public class UserController {
     }
 
 
-    // 5. 사용자 삭제
+    // 5. 사용자 삭제, URI는 임시
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteCurrentUser(Authentication authentication){
+        userService.deleteCurrentUser(authentication.getName());
+        return ResponseEntity.ok().build();
+    }
 
 
     // 정도면 충분할 것 같습니다..!
