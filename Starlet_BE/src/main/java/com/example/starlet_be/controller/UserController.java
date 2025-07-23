@@ -30,7 +30,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     // 1-A. 사용자 조회(관리자 전용)
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id){
         UserResDto info = userService.getUser(id);
 
@@ -41,7 +41,7 @@ public class UserController {
 
 
     // 2-A. 사용자들 조회(관리자 전용)
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<?> getUserList(){
         List<UserResDto> infos = userService.getUserList();
         return ResponseEntity.ok().body(infos);
