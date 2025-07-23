@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final StarUserDetailService starUserDetailService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,11 +43,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, starUserDetailService);
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -59,8 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/signup/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
