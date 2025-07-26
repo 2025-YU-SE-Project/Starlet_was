@@ -72,4 +72,8 @@ public class UserService {
                 () -> new UsernameNotFoundException("해당하는 이메일을 가진 유저를 발견할 수 없음"));
         userRepository.delete(user);
     }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow( () -> new IllegalArgumentException("이메일을 가진 유저가 존재하지 않음"));
+    }
 }

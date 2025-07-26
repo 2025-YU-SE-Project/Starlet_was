@@ -61,9 +61,9 @@ public class AuthService {
         }
     }
 
-//    public void sendPasswordResetEmail(User user, String token){
-//        String link = baseUrl + "/api/v1/auth/pw-reset/confirm?token=" + token;
-//    }
+    public void sendPasswordResetEmail(User user, String token){
+        String link = baseUrl + "/api/v1/auth/pw-reset/confirm?token=" + token;
+    }
 
     public boolean emailVerification(String token){
         try{
