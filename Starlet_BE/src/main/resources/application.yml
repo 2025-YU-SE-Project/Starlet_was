@@ -28,3 +28,7 @@ spring:
 
 jwt:
   secret-key: ${SECRET_KEY}
+
+app:
+  frontend:
+    base-url: ${APP_FRONTEND_BASE_URL}

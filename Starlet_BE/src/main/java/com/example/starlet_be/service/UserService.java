@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class UserService {
     }
 
     // 회원가입
-    public Long signUp(UserReqDto dto) {
+    public User signUp(UserReqDto dto) {
         // 1. 입력정보 유효성 확인, dto와 컨트롤러 계층에서 처리 가능
 //        if(dto.getNickname().isBlank()
 //                || !dto.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
@@ -50,9 +51,8 @@ public class UserService {
         // 3. 비밀번호 형식 확인, 일단은 제한하지 않음.
 
         // 4. 엔티티로 변환 후 저장, 암호화작업
-        User user = userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
 
-        return user.getId();
+        return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
     }
 
     // 이메일 존재(중복) 확인
@@ -65,6 +65,8 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
+
+    @Transactional
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("해당하는 이메일을 가진 유저를 발견할 수 없음"));
