@@ -6,6 +6,17 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.gmail.com      # 메일 서버 호스트 (예: smtp.gmail.com)
+    port: 587                   # 메일 서버 포트 (TLS: 587, SSL: 465)
+    username: ${VERIFY_EMAIL}   # 보낼 메일 계정
+    password: ${VERIFY_PASSWORD}     # 메일 계정 비밀번호
+    properties:
+      mail:
+        smtp:
+          auth: true            # SMTP 인증 사용 여부
+          starttls:
+            enable: true        # TLS 암호화 사용 여부
 
   jpa:
     hibernate:
