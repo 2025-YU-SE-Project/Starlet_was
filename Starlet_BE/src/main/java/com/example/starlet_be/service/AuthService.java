@@ -108,6 +108,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public boolean emailVerification(String token){
         try{
             User user = tokenService.validateToken(token, TokenType.VERIFY);
@@ -120,6 +121,7 @@ public class AuthService {
         return true;
     }
 
+    @Transactional
     public boolean passwordResetVerification(String token){
         try{
             User user = tokenService.validateToken(token, TokenType.PASSWORD_RESET);
