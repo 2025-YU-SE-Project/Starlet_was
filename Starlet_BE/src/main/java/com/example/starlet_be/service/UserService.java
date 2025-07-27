@@ -1,8 +1,12 @@
 package com.example.starlet_be.service;
 
+import com.example.starlet_be.dto.PasswordResetConfirmDto;
+import com.example.starlet_be.dto.PasswordResetReqDto;
 import com.example.starlet_be.dto.UserReqDto;
 import com.example.starlet_be.dto.UserResDto;
+import com.example.starlet_be.entity.Token;
 import com.example.starlet_be.entity.User;
+import com.example.starlet_be.entity.enums.TokenType;
 import com.example.starlet_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +22,8 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
+    private final AuthService authService;
 
     // 유저 단일 조회
     public UserResDto getUser(Long id) {
@@ -65,7 +71,7 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-
+    // 로그인 되어있는 유저가 계정 삭제
     @Transactional
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -73,7 +79,26 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    // 이메일 기반 찾기
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow( () -> new IllegalArgumentException("이메일을 가진 유저가 존재하지 않음"));
     }
+
+    // 아래 로직들은 authService 클래스로 이동
+
+//    // 비밀번호 변경 승인 요청
+//    public void requestNewPassword(PasswordResetReqDto dto){
+//        User user = findByEmail(dto.getEmail());
+//        Token token = tokenService.createToken(user, TokenType.PASSWORD_RESET);
+//        authService.sendPasswordResetEmail(user, token.getToken());
+//    }
+
+//    // 새로운 비밀번호 반영
+//    @Transactional
+//    public void updatePassword(PasswordResetConfirmDto dto){
+//        User user = tokenService.validateToken(dto.getToken(), TokenType.PASSWORD_RESET);
+//        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+//        userRepository.save(user);
+//        tokenService.deleteTokenByUser(user);
+//    }
 }
