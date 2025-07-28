@@ -54,11 +54,16 @@ public class TokenService {
         return verificationToken.getUser();
     }
 
-    public void existTokenByUser(User user, TokenType type){
-        Token token = tokenRepository.findByUserIdAndType(user.getId(), type).orElseThrow(
-                () -> new IllegalArgumentException("타입에 맞는 유저의 토큰이 존재하지 않음"));
-        if(token.getExpireTime().isBefore(LocalDateTime.now()))
-            throw new IllegalArgumentException("이미 만료된 토큰입니다.");
+    public boolean existTokenByUser(User user, TokenType type){
+        try{
+            Token token = tokenRepository.findByUserIdAndType(user.getId(), type).orElseThrow(
+                    () -> new IllegalArgumentException("타입에 맞는 유저의 토큰이 존재하지 않음"));
+            if(token.getExpireTime().isBefore(LocalDateTime.now()))
+                throw new IllegalArgumentException("이미 만료된 토큰입니다.");
+        } catch(IllegalArgumentException e){
+            return false;
+        }
+        return true;
     }
 
 

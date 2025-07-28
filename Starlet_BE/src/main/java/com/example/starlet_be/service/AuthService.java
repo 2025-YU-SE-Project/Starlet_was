@@ -156,4 +156,10 @@ public class AuthService {
         userRepository.save(user); // 반영
         tokenService.deleteTokenByUser(user); // 비밀번호가 변경 되면 토큰을 그냥 제거
     }
+
+    public boolean existTokenByUser(String email){
+        User user = userService.findByEmail(email);
+        return (tokenService.existTokenByUser(user, TokenType.VERIFY)) |
+                (tokenService.existTokenByUser(user, TokenType.PASSWORD_RESET));
+    }
 }
