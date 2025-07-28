@@ -27,13 +27,13 @@ public class AuthController {
                 ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/password-reset")
+    @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody PasswordResetReqDto dto){
         authService.requestNewPassword(dto);
         return ResponseEntity.ok("비밀번호 재설정 링크가 전송되었습니다.");
     }
 
-    @PostMapping("/password-reset/confirm")
+    @PostMapping("/password-reset/new-password")
     public ResponseEntity<?> confirmPasswordReset(@RequestBody PasswordResetConfirmDto dto){
         authService.updatePassword(dto);
         return ResponseEntity.ok("비밀번호가 재설정 되었습니다.");

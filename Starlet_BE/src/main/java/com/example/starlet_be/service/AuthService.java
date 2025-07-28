@@ -69,7 +69,7 @@ public class AuthService {
     }
 
     public void sendPasswordResetEmail(User user, String token){
-        String link = baseUrl + "/api/v1/auth/pw-reset/confirm?token=" + token;
+        String link = baseUrl + "/api/v1/auth/verify/password?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -121,11 +121,12 @@ public class AuthService {
         return true;
     }
 
+    // 이메일 인증 후 다시 사용가능계정 변경
     @Transactional
     public boolean passwordResetVerification(String token){
         try{
             User user = tokenService.validateToken(token, TokenType.PASSWORD_RESET);
-            user.setVerified(true);
+            user.setVerified(true); // 여기선 이러지말고 바로 페이지 넘어가게 해볼까
             userRepository.save(user);
             tokenService.deleteTokenByUser(user);
         } catch(IllegalArgumentException e){
@@ -136,8 +137,10 @@ public class AuthService {
 
     // 비밀번호 변경 승인 요청
     public void requestNewPassword(PasswordResetReqDto dto){
-        User user = userService.findByEmail(dto.getEmail());
+        User user = userService.findByEmail(dto.getEmail()); // 유저 서비스에 예외처리 구현
         Token token = tokenService.createToken(user, TokenType.PASSWORD_RESET);
+        user.setVerified(false); // 비밀번호를 모르므로 다시 사용불가 계정 처리해도 무관
+        userRepository.save(user); // 반영
         sendPasswordResetEmail(user, token.getToken());
     }
 
@@ -145,8 +148,10 @@ public class AuthService {
     @Transactional
     public void updatePassword(PasswordResetConfirmDto dto){
         User user = tokenService.validateToken(dto.getToken(), TokenType.PASSWORD_RESET);
+        if(user.getVerified() == false) throw new IllegalArgumentException("이메일 인증이 되지 않아서 변경 불가");
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        userRepository.save(user);
-        tokenService.deleteTokenByUser(user);
+        user.setVerified(true); // 다시 사용가능 계정으로 변환
+        userRepository.save(user); // 반영
+        tokenService.deleteTokenByUser(user); // 비밀번호가 변경 되면 토큰을 그냥 제거
     }
 }

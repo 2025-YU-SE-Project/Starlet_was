@@ -22,8 +22,6 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
-    private final AuthService authService;
 
     // 유저 단일 조회
     public UserResDto getUser(Long id) {
