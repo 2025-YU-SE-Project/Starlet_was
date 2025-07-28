@@ -2,16 +2,37 @@ package com.example.starlet_be.controller;
 
 import com.example.starlet_be.dto.PasswordResetConfirmDto;
 import com.example.starlet_be.dto.PasswordResetReqDto;
+import com.example.starlet_be.security.JwtTokenProvider;
 import com.example.starlet_be.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(HttpServletRequest request) {
+        String refreshToken = jwtTokenProvider.extractRefreshTokenFromCookie(request);
+
+        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 리프레시 토큰입니다.");
+        }
+
+        String email = jwtTokenProvider.getEmailFromToken(refreshToken);
+        String newAccessToken = jwtTokenProvider.createAccessToken(email);
+
+        return ResponseEntity.ok().body(Map.of("accessToken", newAccessToken));
+    }
+
 
     @GetMapping("/verify/email")
     public ResponseEntity<?> verifyEmail(@RequestParam String token){

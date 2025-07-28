@@ -133,6 +133,21 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // 6. 로그아웃 : 제대로 작동되는지 테스트 필요
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+                .path("/")              // 로그인과 동일하게
+                .httpOnly(true)        // 동일하게
+                .maxAge(0)             // 즉시 만료
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+
+        return ResponseEntity.ok().build();
+    }
+
+
 
     // 정도면 충분할 것 같습니다..!
 }
