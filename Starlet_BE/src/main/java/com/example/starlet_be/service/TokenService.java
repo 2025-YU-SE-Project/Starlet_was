@@ -4,6 +4,7 @@ import com.example.starlet_be.entity.User;
 import com.example.starlet_be.entity.Token;
 import com.example.starlet_be.entity.enums.TokenType;
 import com.example.starlet_be.repository.TokenRepository;
+import com.example.starlet_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class TokenService {
 
     private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     // 이메일 인증 토큰 생성
     public Token createToken(User user, TokenType type){
@@ -30,6 +32,17 @@ public class TokenService {
         return tokenRepository.save(verificationToken);
     }
 
+//    // 토큰 검증
+//    public User validateToken(String token, TokenType type){
+//        Token verificationToken = tokenRepository.findByToken(token)
+//                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰"));
+//        if(verificationToken.getExpireTime().isBefore(LocalDateTime.now()))
+//            throw new IllegalArgumentException("이미 만료된 토큰입니다.");
+//        if(verificationToken.getType() != type)
+//            throw new IllegalArgumentException("토큰 타입이 올바르지 않습니다.");
+//        return verificationToken.getUser();
+//    }
+
     // 토큰 검증
     public User validateToken(String token, TokenType type){
         Token verificationToken = tokenRepository.findByToken(token)
@@ -39,6 +52,13 @@ public class TokenService {
         if(verificationToken.getType() != type)
             throw new IllegalArgumentException("토큰 타입이 올바르지 않습니다.");
         return verificationToken.getUser();
+    }
+
+    public void existTokenByUser(User user, TokenType type){
+        Token token = tokenRepository.findByUserIdAndType(user.getId(), type).orElseThrow(
+                () -> new IllegalArgumentException("타입에 맞는 유저의 토큰이 존재하지 않음"));
+        if(token.getExpireTime().isBefore(LocalDateTime.now()))
+            throw new IllegalArgumentException("이미 만료된 토큰입니다.");
     }
 
 

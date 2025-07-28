@@ -128,7 +128,6 @@ public class AuthService {
             User user = tokenService.validateToken(token, TokenType.PASSWORD_RESET);
             user.setVerified(true); // 여기선 이러지말고 바로 페이지 넘어가게 해볼까
             userRepository.save(user);
-            tokenService.deleteTokenByUser(user);
         } catch(IllegalArgumentException e){
             return false;
         }
@@ -147,7 +146,10 @@ public class AuthService {
     // 새로운 비밀번호 반영
     @Transactional
     public void updatePassword(PasswordResetConfirmDto dto){
-        User user = tokenService.validateToken(dto.getToken(), TokenType.PASSWORD_RESET);
+        User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("해당 이메일이 존재하지 않음"));
+        tokenService.existTokenByUser(user, TokenType.PASSWORD_RESET); // 예외처리가 포함됨
+
         if(user.getVerified() == false) throw new IllegalArgumentException("이메일 인증이 되지 않아서 변경 불가");
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         user.setVerified(true); // 다시 사용가능 계정으로 변환

@@ -2,6 +2,7 @@ package com.example.starlet_be.repository;
 
 import com.example.starlet_be.entity.Token;
 import com.example.starlet_be.entity.User;
+import com.example.starlet_be.entity.enums.TokenType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     void deleteByExpireTimeBefore(LocalDateTime now);
 
     void deleteByUserId(Long userId);
+
+
+    Optional<Token> findByUserIdAndType(Long id, TokenType type);
 }
