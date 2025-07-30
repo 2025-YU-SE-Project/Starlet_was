@@ -12,7 +12,6 @@ import com.example.starlet_be.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.angus.mail.imap.protocol.UIDSet;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,18 +73,18 @@ public class UserController {
 
     }
 
-    // 3-1. 이메일 중복 확인만(Restful한지는 모름)
-    @GetMapping("/signup/email/{email}")
-    public ResponseEntity<?> existEmail(@PathVariable String email){
+    // 3-1. 이메일 중복 확인만
+    @GetMapping("/signup/email_available")
+    public ResponseEntity<?> existEmail(@RequestParam String email){
         // 존재하면 true, 존재하지 않으면 false.
         return (userService.existEmail(email)) ?
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일입니다.") :
                 ResponseEntity.ok().build();
     }
 
-    // 3-2. 닉네임 중복 확인만(Restful한지는 모름)
-    @GetMapping("/signup/nickname/{nickname}")
-    public ResponseEntity<?> existNickname(@PathVariable String nickname){
+    // 3-2. 닉네임 중복 확인만
+    @GetMapping("/signup/nickname_available")
+    public ResponseEntity<?> existNickname(@RequestParam String nickname){
         // 존재하면 true, 존재하지 않으면 false.
         return (userService.existNickname(nickname)) ?
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임입니다.") :
