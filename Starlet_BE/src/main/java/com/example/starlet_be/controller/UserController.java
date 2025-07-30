@@ -5,7 +5,7 @@ import com.example.starlet_be.dto.UserResDto;
 import com.example.starlet_be.entity.Token;
 import com.example.starlet_be.entity.User;
 import com.example.starlet_be.entity.enums.TokenType;
-import com.example.starlet_be.security.JwtTokenProvider;
+import com.example.starlet_be.security.JwtUtil;
 import com.example.starlet_be.service.AuthService;
 import com.example.starlet_be.service.TokenService;
 import com.example.starlet_be.service.UserService;
@@ -31,7 +31,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final AuthService authService;
@@ -108,8 +108,8 @@ public class UserController {
             throw new IllegalArgumentException("로그인 할 수 없는 상태의 유저.(이메일 미인증, 비밀번호 변경중)");
 
         // 2. 토큰 발급
-        String accessToken = jwtTokenProvider.createAccessToken(dto.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(dto.getEmail());
+        String accessToken = jwtUtil.createAccessToken(dto.getEmail());
+        String refreshToken = jwtUtil.createRefreshToken(dto.getEmail());
 
         // 3. Refresh 토큰 보호
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
