@@ -17,6 +17,7 @@ public class StarUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("이메일로 사용자를 찾을 수 없음"));
+        if(user.getVerified() == false) throw new IllegalArgumentException("이메일 인증이 필요합니다!");
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())

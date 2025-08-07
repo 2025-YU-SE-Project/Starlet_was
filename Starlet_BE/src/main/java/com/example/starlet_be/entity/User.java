@@ -3,12 +3,13 @@ package com.example.starlet_be.entity;
 import com.example.starlet_be.dto.UserResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Getter
+@Data
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +24,14 @@ public class User{
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private Boolean verified;
+
     @Builder public User(String nickname, String password, String email) {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
+        this.verified = false;
     }
 
     public UserResDto toResDto() {
