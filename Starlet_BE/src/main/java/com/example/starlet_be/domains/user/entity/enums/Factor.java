@@ -1,4 +1,4 @@
-package com.example.starlet_be.entity.enums;
+package com.example.starlet_be.domains.user.entity.enums;
 
 public enum Factor {
     WORK,

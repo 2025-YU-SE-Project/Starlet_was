@@ -1,9 +1,9 @@
-package com.example.starlet_be.controller;
+package com.example.starlet_be.domains.user.controller;
 
-import com.example.starlet_be.dto.PasswordResetConfirmDto;
-import com.example.starlet_be.dto.PasswordResetReqDto;
+import com.example.starlet_be.domains.user.reqdto.PasswordResetConfirmDto;
+import com.example.starlet_be.domains.user.reqdto.PasswordResetReqDto;
 import com.example.starlet_be.security.JwtUtil;
-import com.example.starlet_be.service.AuthService;
+import com.example.starlet_be.domains.user.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

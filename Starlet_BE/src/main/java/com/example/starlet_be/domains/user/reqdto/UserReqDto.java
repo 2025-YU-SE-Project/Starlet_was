@@ -1,6 +1,6 @@
-package com.example.starlet_be.dto;
+package com.example.starlet_be.domains.user.reqdto;
 
-import com.example.starlet_be.entity.User;
+import com.example.starlet_be.domains.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

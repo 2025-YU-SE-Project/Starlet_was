@@ -1,6 +1,9 @@
-package com.example.starlet_be.entity;
+package com.example.starlet_be.domains.star.entity;
 
-import com.example.starlet_be.entity.enums.Color;
+import com.example.starlet_be.domains.constellation.entity.Constellation;
+import com.example.starlet_be.domains.diary.entity.Diary;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.entity.enums.Color;
 import jakarta.persistence.*;
 
 @Entity

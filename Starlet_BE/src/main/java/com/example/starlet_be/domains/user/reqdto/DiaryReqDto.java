@@ -1,6 +1,5 @@
-package com.example.starlet_be.dto;
+package com.example.starlet_be.domains.user.reqdto;
 
-import com.example.starlet_be.entity.Diary;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

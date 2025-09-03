@@ -1,10 +1,9 @@
-package com.example.starlet_be.entity;
+package com.example.starlet_be.domains.user.entity;
 
-import com.example.starlet_be.dto.UserResDto;
+import com.example.starlet_be.domains.user.resdto.UserResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity

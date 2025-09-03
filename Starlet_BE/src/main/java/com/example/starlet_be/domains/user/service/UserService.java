@@ -1,13 +1,9 @@
-package com.example.starlet_be.service;
+package com.example.starlet_be.domains.user.service;
 
-import com.example.starlet_be.dto.PasswordResetConfirmDto;
-import com.example.starlet_be.dto.PasswordResetReqDto;
-import com.example.starlet_be.dto.UserReqDto;
-import com.example.starlet_be.dto.UserResDto;
-import com.example.starlet_be.entity.Token;
-import com.example.starlet_be.entity.User;
-import com.example.starlet_be.entity.enums.TokenType;
-import com.example.starlet_be.repository.UserRepository;
+import com.example.starlet_be.domains.user.reqdto.UserReqDto;
+import com.example.starlet_be.domains.user.resdto.UserResDto;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

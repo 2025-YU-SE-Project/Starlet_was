@@ -1,10 +1,10 @@
-package com.example.starlet_be.service;
+package com.example.starlet_be.domains.user.service;
 
-import com.example.starlet_be.entity.User;
-import com.example.starlet_be.entity.Token;
-import com.example.starlet_be.entity.enums.TokenType;
-import com.example.starlet_be.repository.TokenRepository;
-import com.example.starlet_be.repository.UserRepository;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.entity.Token;
+import com.example.starlet_be.domains.user.entity.enums.TokenType;
+import com.example.starlet_be.domains.user.repository.TokenRepository;
+import com.example.starlet_be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

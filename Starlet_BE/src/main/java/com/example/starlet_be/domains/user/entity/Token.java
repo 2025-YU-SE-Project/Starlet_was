@@ -1,7 +1,7 @@
-package com.example.starlet_be.entity;
+package com.example.starlet_be.domains.user.entity;
 
 
-import com.example.starlet_be.entity.enums.TokenType;
+import com.example.starlet_be.domains.user.entity.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.*;
 

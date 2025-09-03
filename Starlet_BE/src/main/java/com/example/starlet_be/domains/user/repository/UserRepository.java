@@ -1,6 +1,6 @@
-package com.example.starlet_be.repository;
+package com.example.starlet_be.domains.user.repository;
 
-import com.example.starlet_be.entity.User;
+import com.example.starlet_be.domains.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,11 @@
-package com.example.starlet_be.service;
+package com.example.starlet_be.domains.user.service;
 
-import com.example.starlet_be.dto.PasswordResetConfirmDto;
-import com.example.starlet_be.dto.PasswordResetReqDto;
-import com.example.starlet_be.entity.Token;
-import com.example.starlet_be.entity.User;
-import com.example.starlet_be.entity.enums.TokenType;
-import com.example.starlet_be.repository.UserRepository;
+import com.example.starlet_be.domains.user.reqdto.PasswordResetConfirmDto;
+import com.example.starlet_be.domains.user.reqdto.PasswordResetReqDto;
+import com.example.starlet_be.domains.user.entity.Token;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.entity.enums.TokenType;
+import com.example.starlet_be.domains.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
