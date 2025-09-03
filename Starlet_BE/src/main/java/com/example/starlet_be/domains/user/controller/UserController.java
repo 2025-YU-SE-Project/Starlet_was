@@ -36,8 +36,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final AuthService authService;
 
@@ -48,14 +46,12 @@ public class UserController {
         return ResponseEntity.ok().body(info);
     }
 
-
     // 2-A. 사용자들 조회(관리자 전용)
     @GetMapping("/get")
     public ResponseEntity<?> getUserList(){
         List<UserResDto> infos = userService.getUserList();
         return ResponseEntity.ok().body(infos);
     }
-
 
     // 3. 회원가입
     @PostMapping("/signup")
@@ -97,42 +93,12 @@ public class UserController {
             return ResponseEntity.ok().build();
     }
 
-    // 닉네임 길이 확인이랑 비밀번호 길이는 프론트엔드에서 검사해도 괜찮을 듯 합니다.
-
-
     // JWT 토큰 방식은 인터넷을 참고하여 코딩
     // 4. 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserReqDto dto,  HttpServletResponse res){
-
-        // 0. 유저 찾기
-        User user = userService.findByEmail(dto.getEmail());
-
-        // 1. 인증
-        try{
-            UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
-            authenticationManager.authenticate(token);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.NOT_VERIFY_USER);
-        }
-
-        // 2. 토큰 발급
-        String accessToken = jwtUtil.createAccessToken(dto.getEmail());
-        String refreshToken = jwtUtil.createRefreshToken(dto.getEmail());
-
-        // 3. Refresh 토큰 보호
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .path("/")
-                .maxAge(7 * 24 * 60 * 60) // 하루
-                .build();
-        res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        // 4. Access 토큰은 응답 바디나 헤더에 담기
-        return ResponseEntity.ok().body(Map.of("accessToken", accessToken));
+        return ResponseEntity.ok().body(userService.login(dto, res));
     }
-
 
     // 5. 사용자 삭제, URI는 임시
     @DeleteMapping("/me")
