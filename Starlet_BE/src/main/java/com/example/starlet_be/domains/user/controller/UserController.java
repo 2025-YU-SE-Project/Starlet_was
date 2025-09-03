@@ -92,9 +92,10 @@ public class UserController {
     @GetMapping("/signup/nickname_available")
     public ResponseEntity<?> existNickname(@RequestParam String nickname){
         // 존재하면 true, 존재하지 않으면 false.
-        return (userService.existNickname(nickname)) ?
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임입니다.") :
-                ResponseEntity.ok().build();
+        if(userService.existNickname(nickname))
+            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
+        else
+            return ResponseEntity.ok().build();
     }
 
     // 닉네임 길이 확인이랑 비밀번호 길이는 프론트엔드에서 검사해도 괜찮을 듯 합니다.
