@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -134,12 +136,12 @@ public class UserController {
 
     // 5. 사용자 삭제, URI는 임시
     @DeleteMapping("/me")
-    public ResponseEntity<?> deleteCurrentUser(Authentication authentication){
-        userService.deleteCurrentUser(authentication.getName());
+    public ResponseEntity<?> deleteCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+        userService.deleteCurrentUser(userDetails.getUsername());
         return ResponseEntity.ok().build();
     }
 
-    // 6. 로그아웃 : 제대로 작동되는지 테스트 필요
+    // 6. 로그아웃 : 프론트엔드에서 그냥 토큰 삭제하기
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")

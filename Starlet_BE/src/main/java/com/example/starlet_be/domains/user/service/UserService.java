@@ -73,7 +73,7 @@ public class UserService {
     @Transactional
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("해당하는 이메일을 가진 유저를 발견할 수 없음"));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
     }
 
