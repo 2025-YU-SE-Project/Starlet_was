@@ -82,9 +82,10 @@ public class UserController {
     @GetMapping("/signup/email_available")
     public ResponseEntity<?> existEmail(@RequestParam String email){
         // 존재하면 true, 존재하지 않으면 false.
-        return (userService.existEmail(email)) ?
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일입니다.") :
-                ResponseEntity.ok().build();
+        if(userService.existEmail(email))
+            throw new CustomException(ErrorCode.EMAIL_CONFLICT);
+        else
+            return ResponseEntity.ok().build();
     }
 
     // 3-2. 닉네임 중복 확인만
