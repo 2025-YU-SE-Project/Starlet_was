@@ -22,6 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // 유저 단일 조회
+    @Transactional(readOnly = true)
     public UserResDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
@@ -30,6 +31,7 @@ public class UserService {
     }
 
     // 유저 전체 조회
+    @Transactional(readOnly = true)
     public List<UserResDto> getUserList() {
         List<User> users = userRepository.findAll();
         List<UserResDto> dtos = new ArrayList<>();
@@ -41,6 +43,7 @@ public class UserService {
     }
 
     // 회원가입
+    @Transactional
     public User signUp(UserReqDto dto) {
         // 1. 입력정보 유효성 확인, dto와 컨트롤러 계층에서 처리 가능
 //        if(dto.getNickname().isBlank()
@@ -60,11 +63,13 @@ public class UserService {
     }
 
     // 이메일 존재(중복) 확인
+    @Transactional(readOnly = true)
     public boolean existEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     // 닉네임 존재(중복) 확인
+    @Transactional(readOnly = true)
     public boolean existNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
@@ -78,6 +83,7 @@ public class UserService {
     }
 
     // 이메일 기반 찾기
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow( () -> new CustomException(ErrorCode.USER_NOT_FOUND) );
     }
