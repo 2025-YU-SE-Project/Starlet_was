@@ -1,6 +1,5 @@
 package com.example.starlet_be.security;
 
-import com.example.starlet_be.service.StarUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final StarUserDetailService starUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
 
 
     @Override
@@ -29,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(token != null && jwtUtil.validateToken(token)) {
             String email = jwtUtil.getEmailFromToken(token);
-            UserDetails userDetails = starUserDetailService.loadUserByUsername(email);
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
