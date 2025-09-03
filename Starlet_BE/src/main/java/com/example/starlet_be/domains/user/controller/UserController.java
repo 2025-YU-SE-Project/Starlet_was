@@ -43,10 +43,7 @@ public class UserController {
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id){
         UserResDto info = userService.getUser(id);
-
-        return (info != null) ?
-                ResponseEntity.ok().body(info) :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 유저가 존재하지 않습니다.");
+        return ResponseEntity.ok().body(info);
     }
 
 

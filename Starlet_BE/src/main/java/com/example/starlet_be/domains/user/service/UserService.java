@@ -23,8 +23,10 @@ public class UserService {
 
     // 유저 단일 조회
     public UserResDto getUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return (user != null) ? user.toResDto() : null;
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+        return user.toResDto();
     }
 
     // 유저 전체 조회
