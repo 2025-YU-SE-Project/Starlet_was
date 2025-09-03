@@ -4,6 +4,8 @@ import com.example.starlet_be.domains.user.reqdto.UserReqDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +48,7 @@ public class UserService {
 
         // 2. 닉네임 및 이메일 중복 확인
         if(existEmail(dto.getEmail()) || existNickname(dto.getNickname()))
-            return null;
+            throw new CustomException(ErrorCode.DUPLICATE_INFO_CONFLICT);
 
         // 3. 비밀번호 형식 확인, 일단은 제한하지 않음.
 

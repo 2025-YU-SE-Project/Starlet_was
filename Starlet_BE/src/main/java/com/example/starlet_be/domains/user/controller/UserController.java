@@ -5,6 +5,8 @@ import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.Token;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.entity.enums.TokenType;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.security.JwtUtil;
 import com.example.starlet_be.domains.user.service.AuthService;
 import com.example.starlet_be.domains.user.service.TokenService;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,9 +66,11 @@ public class UserController {
 
         User user = userService.signUp(dto);
         if(user == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일 또는 닉네임");
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
         Token token = tokenService.createToken(user, TokenType.VERIFY);
+        if(token == null)
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
         authService.sendVerificationEmail(user, token.getToken());
 

@@ -6,6 +6,8 @@ import com.example.starlet_be.domains.user.entity.Token;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.entity.enums.TokenType;
 import com.example.starlet_be.domains.user.repository.UserRepository;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +66,7 @@ public class AuthService {
             mailSender.send(message);
 
         } catch (MessagingException e) {
-            throw new IllegalStateException("인증 메일 전송 실패", e);
+            throw new CustomException(ErrorCode.EMAIL_SEND_FAILED);
         }
     }
 
