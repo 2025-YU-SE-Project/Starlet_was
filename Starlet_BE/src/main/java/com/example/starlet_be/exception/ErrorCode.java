@@ -12,7 +12,11 @@ public enum ErrorCode {
     EMAIL_CONFLICT(409, "이메일이 중복됩니다."),
     NICKNAME_CONFLICT(409, "닉네임이 중복됩니다."),
     DUPLICATE_INFO_CONFLICT(409, "이미 사용중인 정보가 있습니다. 이메일과 닉네임 중복검사를 시행하세요."),
+
+
+    // 인증 관련
     EMAIL_SEND_FAILED(500, "메일 전송을 실패하였습니다."),
+    NOT_VERIFY_USER(400, "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."),
 
 
     // 기타 관련

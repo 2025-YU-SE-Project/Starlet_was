@@ -102,14 +102,18 @@ public class UserController {
     // 4. 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserReqDto dto,  HttpServletResponse res){
-        // 1. 인증
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
-        authenticationManager.authenticate(token);
 
-        // 이메일 인증 토큰이나 비밀번호 변경 중 상태인 계정에 대한 로그인 차단
-        if(authService.existTokenByUser(dto.getEmail()))
-            throw new IllegalArgumentException("로그인 할 수 없는 상태의 유저.(이메일 미인증, 비밀번호 변경중)");
+        // 0. 유저 찾기
+        User user = userService.findByEmail(dto.getEmail());
+
+        // 1. 인증
+        try{
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
+            authenticationManager.authenticate(token);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.NOT_VERIFY_USER);
+        }
 
         // 2. 토큰 발급
         String accessToken = jwtUtil.createAccessToken(dto.getEmail());

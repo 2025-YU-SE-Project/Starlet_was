@@ -79,7 +79,7 @@ public class UserService {
 
     // 이메일 기반 찾기
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow( () -> new IllegalArgumentException("이메일을 가진 유저가 존재하지 않음"));
+        return userRepository.findByEmail(email).orElseThrow( () -> new CustomException(ErrorCode.USER_NOT_FOUND) );
     }
 
     // 아래 로직들은 authService 클래스로 이동
