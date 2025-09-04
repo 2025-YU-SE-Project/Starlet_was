@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.controller;
 
+import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -189,20 +190,20 @@ public interface UserApi {
                                         "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."
                                     }
                                     """),
-//                            @ExampleObject(name = "이메일 형식 비일치", value = """
-//                                    {
-//                                        "email": "이메일 형식을 맞춰주세요."
-//                                    }
-//                                    """),
-//                            @ExampleObject(value = """
-//                                    {
-//                                        "status" : 400,
-//                                        "message" : "비밀번호가 일치하지 않습니다."
-//                                    }
-//                                    """)
+                            @ExampleObject(name = "이메일 형식 비일치", value = """
+                                    {
+                                        "email": "이메일 형식을 맞춰주세요."
+                                    }
+                                    """),
+                            @ExampleObject(value = """
+                                    {
+                                        "status" : 400,
+                                        "message" : "비밀번호가 일치하지 않습니다."
+                                    }
+                                    """)
                     }))
     })
-    ResponseEntity<?> login(@RequestBody SignUpDto dto, HttpServletResponse res);
+    ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse res);
 
 
     ResponseEntity<?> deleteCurrentUser(@AuthenticationPrincipal UserDetails userDetails);
