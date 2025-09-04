@@ -12,6 +12,8 @@ public enum ErrorCode {
     EMAIL_CONFLICT(409, "이메일이 중복됩니다."),
     NICKNAME_CONFLICT(409, "닉네임이 중복됩니다."),
     DUPLICATE_INFO_CONFLICT(409, "이미 사용중인 정보가 있습니다. 이메일과 닉네임 중복검사를 시행하세요."),
+    USER_CREATE_FAILED(500, "유저 생성에 실패하였습니다."),
+    VERIFY_TOKEN_CREATE_FAILD(500, "계정인증 토큰 생성에 실패하였습니다."),
 
 
     // 인증 관련

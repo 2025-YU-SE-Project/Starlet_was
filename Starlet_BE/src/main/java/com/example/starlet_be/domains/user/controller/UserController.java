@@ -49,14 +49,14 @@ public class UserController implements UserApi {
     // 3. 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto){
-        
+
         User user = userService.signUp(dto);
         if(user == null)
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomException(ErrorCode.USER_CREATE_FAILED);
 
         Token token = tokenService.createToken(user, TokenType.VERIFY);
         if(token == null)
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomException(ErrorCode.VERIFY_TOKEN_CREATE_FAILD);
 
         authService.sendVerificationEmail(user, token.getToken());
 

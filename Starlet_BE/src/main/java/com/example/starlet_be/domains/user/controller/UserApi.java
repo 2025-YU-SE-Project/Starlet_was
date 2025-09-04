@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +19,7 @@ public interface UserApi {
 
     ResponseEntity<?> getUserList();
 
-
-    ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto, BindingResult bindingResult);
+    ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto);
 
 
     ResponseEntity<?> existEmail(@RequestParam String email);
