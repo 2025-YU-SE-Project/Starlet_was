@@ -10,10 +10,11 @@ import lombok.Data;
 @Data
 public class SignUpDto {
 
-    @Schema(description = "사용자 닉네임", example = "열정있는 아기사자")
+    @Schema(description = "사용자 닉네임", example = "우리 은하")
     @NotBlank(message = "닉네임은 필수 입력입니다.")
     private String nickname;
 
+    @Schema(description = "비밀번호", example = "sl1234")
     @NotBlank(message = "비밀번호는 필수 입력입니다.")
     private String password;
 
