@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.user.service;
 
-import com.example.starlet_be.domains.user.reqdto.UserReqDto;
+import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +52,7 @@ public class UserService {
 
     // 회원가입
     @Transactional
-    public User signUp(UserReqDto dto) {
+    public User signUp(SignUpDto dto) {
         // 1. 입력정보 유효성 확인, dto와 컨트롤러 계층에서 처리 가능
 //        if(dto.getNickname().isBlank()
 //                || !dto.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
@@ -85,7 +84,7 @@ public class UserService {
 
     // 로그인
     @Transactional
-    public LoginInfoDto login(UserReqDto dto, HttpServletResponse res) {
+    public LoginInfoDto login(SignUpDto dto, HttpServletResponse res) {
         // 1. 유저 찾기
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
