@@ -6,6 +6,8 @@ import com.example.starlet_be.domains.user.entity.Token;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.entity.enums.TokenType;
 import com.example.starlet_be.domains.user.repository.UserRepository;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class AuthService {
     @Value("${app.frontend.base-url}")
     private String baseUrl;
 
+    @Transactional
     public void sendVerificationEmail(User user, String token){
         String link = baseUrl + "/api/v1/auth/verify/email?token=" + token;
         try {
@@ -64,10 +67,11 @@ public class AuthService {
             mailSender.send(message);
 
         } catch (MessagingException e) {
-            throw new IllegalStateException("인증 메일 전송 실패", e);
+            throw new CustomException(ErrorCode.EMAIL_SEND_FAILED);
         }
     }
 
+    @Transactional
     public void sendPasswordResetEmail(User user, String token){
         String link = baseUrl + "/api/v1/auth/verify/password?token=" + token;
         try {
@@ -135,6 +139,7 @@ public class AuthService {
     }
 
     // 비밀번호 변경 승인 요청
+    @Transactional
     public void requestNewPassword(PasswordResetReqDto dto){
         User user = userService.findByEmail(dto.getEmail()); // 유저 서비스에 예외처리 구현
         Token token = tokenService.createToken(user, TokenType.PASSWORD_RESET);
@@ -157,6 +162,7 @@ public class AuthService {
         tokenService.deleteTokenByUser(user); // 비밀번호가 변경 되면 토큰을 그냥 제거
     }
 
+    @Transactional
     public boolean existTokenByUser(String email){
         User user = userService.findByEmail(email);
         return (tokenService.existTokenByUser(user, TokenType.VERIFY)) |

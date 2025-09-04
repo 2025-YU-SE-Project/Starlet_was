@@ -20,6 +20,7 @@ public class TokenService {
     private final UserRepository userRepository;
 
     // 이메일 인증 토큰 생성
+    @Transactional
     public Token createToken(User user, TokenType type){
         String token = UUID.randomUUID().toString();
         LocalDateTime expireTime = LocalDateTime.now().plusHours(24); // 하루 유효시간
@@ -44,6 +45,7 @@ public class TokenService {
 //    }
 
     // 토큰 검증
+    @Transactional(readOnly = true)
     public User validateToken(String token, TokenType type){
         Token verificationToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰"));
@@ -54,6 +56,7 @@ public class TokenService {
         return verificationToken.getUser();
     }
 
+    @Transactional(readOnly = true)
     public boolean existTokenByUser(User user, TokenType type){
         try{
             Token token = tokenRepository.findByUserIdAndType(user.getId(), type).orElseThrow(
@@ -65,7 +68,6 @@ public class TokenService {
         }
         return true;
     }
-
 
     // 만료된 토큰들 삭제
     // 이 부분들은 언제 동작 시켜야할지 고민입니다.
