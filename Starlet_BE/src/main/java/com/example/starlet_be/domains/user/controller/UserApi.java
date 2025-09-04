@@ -1,9 +1,11 @@
 package com.example.starlet_be.domains.user.controller;
 
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
+import com.example.starlet_be.domains.user.resdto.UserResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,8 +24,36 @@ public interface UserApi {
     ResponseEntity<?> getUser(@PathVariable Long id);
 
 
+    @Operation(summary = "회원 목록 조회", description = "프론트엔드 개발용 회원 목록 조회 입니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    [
+                                        {
+                                            "id": 30,
+                                            "nickname": "죽어볼태양",
+                                            "email": "die4sun@naver.com"
+                                        },
+                                        {
+                                            "id": 31,
+                                            "nickname": "달나라 토끼",
+                                            "email": "moonrabit25@naver.com"
+                                        }
+                                    ]
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 401,
+                                        "message": "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    }))
+    })
     ResponseEntity<?> getUserList();
-
 
 
     @Operation(summary = "회원가입", description = "서비스를 이용하기 위한 회원가입 입니다.")
