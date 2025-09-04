@@ -153,6 +153,55 @@ public interface UserApi {
     ResponseEntity<?> existNickname(@RequestParam String nickname);
 
 
+    @Operation(summary = "로그인", description = "로그인을 하는 기능이며, 여기서 나온 토큰으로 서비스에서 유저 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "userId": "<userId>",
+                                        "email": "<email>",
+                                        "nickname": "<nickname>",
+                                        "accessToken": "<accessToken>",
+                                        "refreshToken": "<refreshToken>"
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "이메일이 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 유저를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "400", description = "입력 누락 및 형식 비일치",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(name = "필드 누락", value = """
+                                    {
+                                        "<field>" : "<field>는 필수 입력입니다."
+                                    }
+                                    """),
+                            @ExampleObject(name = "이메일 미인증 / 비밀번호 초기화 중인 계정 차단", value = """
+                                    {
+                                        "status": 400,
+                                        "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."
+                                    }
+                                    """),
+//                            @ExampleObject(name = "이메일 형식 비일치", value = """
+//                                    {
+//                                        "email": "이메일 형식을 맞춰주세요."
+//                                    }
+//                                    """),
+//                            @ExampleObject(value = """
+//                                    {
+//                                        "status" : 400,
+//                                        "message" : "비밀번호가 일치하지 않습니다."
+//                                    }
+//                                    """)
+                    }))
+    })
     ResponseEntity<?> login(@RequestBody SignUpDto dto, HttpServletResponse res);
 
 
