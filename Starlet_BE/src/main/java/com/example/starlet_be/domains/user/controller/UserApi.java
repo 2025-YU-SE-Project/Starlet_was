@@ -206,8 +206,33 @@ public interface UserApi {
     ResponseEntity<?> login(@RequestBody LoginDto dto, HttpServletResponse res);
 
 
+    @Operation(summary = "회원탈퇴(삭제)", description = "회원탈퇴를 하는 기능입니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status" : 401,
+                                        "message" : "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    }))
+    })
     ResponseEntity<?> deleteCurrentUser(@AuthenticationPrincipal UserDetails userDetails);
 
-
+    @Operation(summary = "로그아웃", description = "로그아웃을 하는 기능입니다. 일단 해당 API는 명목상 만들어졌습니다. 로그아웃 한다면 프론트엔드에서 해당 토큰을 지워주세요.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "401", description = "액세스 토큰 미입력/만료",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status" : 401,
+                                        "message" : "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """),
+                    }))
+    })
     ResponseEntity<?> logout(HttpServletResponse response);
 }
