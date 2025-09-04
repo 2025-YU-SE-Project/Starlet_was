@@ -34,7 +34,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserApi {
     private final UserService userService;
     private final TokenService tokenService;
     private final AuthService authService;
@@ -120,8 +120,4 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-
-
-
-    // 정도면 충분할 것 같습니다..!
 }
