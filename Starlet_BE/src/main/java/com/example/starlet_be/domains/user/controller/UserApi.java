@@ -56,7 +56,7 @@ public interface UserApi {
     ResponseEntity<?> getUser(@PathVariable Long id);
 
 
-    @Operation(summary = "회원 목록 조회", description = "프론트엔드 개발용 회원 목록 조회 입니다.")
+    @Operation(summary = "회원 목록 조회", description = "모든 회원들의 정보를 조회하는 API 입니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(mediaType = "application/json", examples = {
