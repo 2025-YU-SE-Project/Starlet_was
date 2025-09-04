@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.controller;
 
+import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.Token;
@@ -87,7 +88,7 @@ public class UserController implements UserApi {
     // JWT 토큰 방식은 인터넷을 참고하여 코딩
     // 4. 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody SignUpDto dto, HttpServletResponse res){
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto dto, HttpServletResponse res){
         return ResponseEntity.ok().body(userService.login(dto, res));
     }
 

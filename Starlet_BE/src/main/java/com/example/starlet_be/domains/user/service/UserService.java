@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.service;
 
+import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
@@ -84,7 +85,7 @@ public class UserService {
 
     // 로그인
     @Transactional
-    public LoginInfoDto login(SignUpDto dto, HttpServletResponse res) {
+    public LoginInfoDto login(LoginDto dto, HttpServletResponse res) {
         // 1. 유저 찾기
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
