@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.user.controller;
 
-import com.example.starlet_be.domains.user.reqdto.UserReqDto;
+import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,13 +21,13 @@ public interface UserApi {
     ResponseEntity<?> getUserList();
 
 
-    ResponseEntity<?> signUp(@Valid @RequestBody UserReqDto dto, BindingResult bindingResult);
+    ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto, BindingResult bindingResult);
 
 
     ResponseEntity<?> existEmail(@RequestParam String email);
 
 
-    ResponseEntity<?> login(@RequestBody UserReqDto dto,  HttpServletResponse res);
+    ResponseEntity<?> login(@RequestBody SignUpDto dto, HttpServletResponse res);
 
 
     ResponseEntity<?> deleteCurrentUser(@AuthenticationPrincipal UserDetails userDetails);

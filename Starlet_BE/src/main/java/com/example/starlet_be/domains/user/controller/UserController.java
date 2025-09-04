@@ -1,13 +1,12 @@
 package com.example.starlet_be.domains.user.controller;
 
-import com.example.starlet_be.domains.user.reqdto.UserReqDto;
+import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.Token;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.entity.enums.TokenType;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
-import com.example.starlet_be.security.JwtUtil;
 import com.example.starlet_be.domains.user.service.AuthService;
 import com.example.starlet_be.domains.user.service.TokenService;
 import com.example.starlet_be.domains.user.service.UserService;
@@ -15,21 +14,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -55,10 +48,8 @@ public class UserController implements UserApi {
 
     // 3. 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody UserReqDto dto, BindingResult bindingResult){
-        // 반환 형태 조금 깔끔하게 할 필요 있을듯
-        if(bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto){
+        
         User user = userService.signUp(dto);
         if(user == null)
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -96,7 +87,7 @@ public class UserController implements UserApi {
     // JWT 토큰 방식은 인터넷을 참고하여 코딩
     // 4. 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserReqDto dto,  HttpServletResponse res){
+    public ResponseEntity<?> login(@RequestBody SignUpDto dto, HttpServletResponse res){
         return ResponseEntity.ok().body(userService.login(dto, res));
     }
 
