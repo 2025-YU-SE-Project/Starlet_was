@@ -2,7 +2,7 @@ name: demo
 
 services:
   app:
-    image: starlet/demo
+    image: chlwjd0803/starlet
     restart: always
     ports:
       - 8080:8080
