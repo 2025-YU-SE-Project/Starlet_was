@@ -57,6 +57,11 @@ dependencies {
 
 }
 
+bootBuildImage{
+    imageName = "starlet/demo"
+    createdDate = "now"
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

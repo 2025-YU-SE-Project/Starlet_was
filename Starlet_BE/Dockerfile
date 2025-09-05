@@ -1,5 +1,5 @@
 # 사용할 기본 이미지 지정 (JDK 17 기본 버전)
-FROM openjdk:17
+FROM eclipse-temurin:17
 
 # 빌드된 JAR 파일 이름을 'app.jar'로 지정
 ARG JAR_FILE=build/libs/*.jar
