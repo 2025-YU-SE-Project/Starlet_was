@@ -4,15 +4,13 @@ import com.example.starlet_be.domains.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-public class SignUpDto {
-
-    @Schema(description = "사용자 닉네임", example = "우리 은하")
-    @NotBlank(message = "닉네임은 필수 입력입니다.")
-    private String nickname;
+@Getter
+@NoArgsConstructor
+public class LoginDto {
 
     @Schema(description = "비밀번호", example = "sl1234")
     @NotBlank(message = "비밀번호는 필수 입력입니다.")
@@ -23,11 +21,10 @@ public class SignUpDto {
     @NotBlank(message = "이메일은 필수 입력입니다.")
     private String email;
 
-    public User toEntity(String encodedPassword) {
+    public User toEntity() {
         return User.builder()
-                .nickname(nickname)
-                .password(encodedPassword)
                 .email(email)
+                .password(password)
                 .build();
     }
 }

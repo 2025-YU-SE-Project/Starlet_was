@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.service;
 
+import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
@@ -84,13 +85,17 @@ public class UserService {
 
     // 로그인
     @Transactional
-    public LoginInfoDto login(SignUpDto dto, HttpServletResponse res) {
+    public LoginInfoDto login(LoginDto dto, HttpServletResponse res) {
         // 1. 유저 찾기
         User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
-        // 2. 이메일인증, 비밀번호 분실 계정이 아닌지 검증
+        // 2. 비밀번호 확인
+        if(!passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+            throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
+
+        // 3. 이메일인증, 비밀번호 분실 계정이 아닌지 검증
         try{
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
@@ -99,11 +104,11 @@ public class UserService {
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
         }
 
-        // 3. JWT 토큰 발급
+        // 4. JWT 토큰 발급
         String accessToken = jwtUtil.createAccessToken(dto.getEmail());
         String refreshToken = jwtUtil.createRefreshToken(dto.getEmail());
 
-        // 4. 리프레쉬 토큰 헤더에 붙이는 작업
+        // 5. 리프레쉬 토큰 헤더에 붙이는 작업
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
@@ -111,7 +116,7 @@ public class UserService {
                 .build();
         res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        // 5. DTO 구성 반환
+        // 6. DTO 구성 반환
         return LoginInfoDto.builder()
                 .userId(user.getId())
                 .email(user.getEmail())
