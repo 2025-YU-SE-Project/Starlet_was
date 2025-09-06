@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.email.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
+import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
@@ -27,8 +28,28 @@ public class EmailService {
     @Value("${app.frontend.base-url}")
     private String baseUrl;
 
+    // 1. 이메일 추가
+    @Transactional
+    public Email createEmail(String address, Verify verify){
+        Email email = Email.builder()
+                .address(address)
+                .verify(verify)
+                .build();
+        return emailRepository.save(email);
+    }
 
-    // 1. 계정 생성 후 첫 인증 메일 전송
+    // 2. 이메일 삭제
+    @Transactional
+    public void deleteEmail(Email email){
+        emailRepository.delete(email);
+    }
+
+
+
+
+
+
+    // 2. 계정 생성 후 첫 인증 메일 전송
     @Transactional
     public void sendVerificationEmail(Email email, String token){
         String link = baseUrl + "/api/v1/auth/verify/email?token=" + token;
@@ -71,7 +92,7 @@ public class EmailService {
     }
 
 
-    // 2. 비밀번호 초기화 인증 메일 전송
+    // 3. 비밀번호 초기화 인증 메일 전송
     public void sendPasswordResetEmail(Email email, String token){
         String link = baseUrl + "/api/v1/auth/verify/password?token=" + token;
         try {
