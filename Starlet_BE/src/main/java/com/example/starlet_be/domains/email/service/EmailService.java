@@ -44,6 +44,14 @@ public class EmailService {
         emailRepository.delete(email);
     }
 
+    // 3. 이메일 조회
+    @Transactional(readOnly = true)
+    public Email findEmailByAddress(String address){
+        return emailRepository.findByAddress(address).orElseThrow(
+                () -> new IllegalArgumentException("이메일 없음")
+        );
+    }
+
 
 
 
