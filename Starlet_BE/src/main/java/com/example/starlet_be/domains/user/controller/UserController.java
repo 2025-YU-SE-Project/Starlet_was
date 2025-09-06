@@ -6,6 +6,7 @@ import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.verify.entity.VerifyType;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
@@ -29,7 +30,6 @@ import java.util.List;
 public class UserController implements UserApi {
     private final UserService userService;
     private final EmailService emailService;
-    private final VerifyService verifyService;
 
     // 1-A. 사용자 조회(관리자 전용)
     @GetMapping("/get/{id}")
@@ -52,6 +52,9 @@ public class UserController implements UserApi {
         // 인증된 이메일 가져오기
         Email email = emailService.findEmailByAddress(dto.getEmail());
 
+        if(email.getVerify().getType() != VerifyType.VERIFY)
+            throw new CustomException(ErrorCode.NOT_VERIFY_USER);
+
         User user = userService.signUp(dto, email);
         if(user == null)
             throw new CustomException(ErrorCode.USER_CREATE_FAILED);
@@ -61,17 +64,8 @@ public class UserController implements UserApi {
 
     }
 
-    // 3-1. 이메일 중복 확인만
-    @GetMapping("/signup/email_available")
-    public ResponseEntity<?> existEmail(@RequestParam String address){
-        // 존재하면 true, 존재하지 않으면 false.
-        if(emailService.existsEmailAddress(address))
-            throw new CustomException(ErrorCode.EMAIL_CONFLICT);
-        else
-            return ResponseEntity.ok().build();
-    }
 
-    // 3-2. 닉네임 중복 확인만
+    // 3. 닉네임 중복 확인
     @GetMapping("/signup/nickname_available")
     public ResponseEntity<?> existNickname(@RequestParam String nickname){
         // 존재하면 true, 존재하지 않으면 false.

@@ -24,7 +24,7 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "email_id", nullable = false)
     private Email email;
 

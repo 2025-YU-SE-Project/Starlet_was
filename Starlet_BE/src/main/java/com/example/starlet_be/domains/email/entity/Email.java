@@ -27,7 +27,7 @@ public class Email {
     @Column
     private String address;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "verify_id", nullable = false)
     private Verify verify;
 

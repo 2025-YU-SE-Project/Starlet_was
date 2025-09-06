@@ -1,6 +1,7 @@
 package com.example.starlet_be.domains.user.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
@@ -8,6 +9,8 @@ import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
+import com.example.starlet_be.domains.verify.entity.Verify;
+import com.example.starlet_be.domains.verify.repository.VerifyRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.security.JwtUtil;
@@ -30,8 +33,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final EmailService emailService;
     private final JwtUtil jwtUtil;
+    private final EmailRepository emailRepository;
+    private final VerifyRepository verifyRepository;
 
     // 유저 단일 조회
     @Transactional(readOnly = true)
@@ -58,8 +62,8 @@ public class UserService {
     @Transactional
     public User signUp(SignUpDto dto, Email email) {
         // 닉네임 및 이메일 중복 확인
-        if(emailService.existsEmailAddress(email.getAddress()) || existNickname(dto.getNickname()))
-            throw new CustomException(ErrorCode.DUPLICATE_INFO_CONFLICT);
+        if(existNickname(dto.getNickname()))
+            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
 
         return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()), email));
     }
@@ -119,7 +123,12 @@ public class UserService {
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmailAddress(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Email userEmail = user.getEmail();
+        Verify userVerify = userEmail.getVerify();
+
         userRepository.delete(user);
+        emailRepository.delete(userEmail);
+        verifyRepository.delete(userVerify);
     }
 
     // 이메일 기반 찾기
