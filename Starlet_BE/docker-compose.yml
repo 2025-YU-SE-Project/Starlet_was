@@ -1,8 +1,12 @@
-name: demo
+version: '3.8'
 
 services:
   app:
-    image: starlet/demo
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platform: linux/amd64
+    image: chlwjd0803/starlet
     restart: always
     ports:
       - 8080:8080

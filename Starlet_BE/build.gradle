@@ -58,7 +58,7 @@ dependencies {
 }
 
 bootBuildImage{
-    imageName = "starlet/demo"
+    imageName = "chlwjd0803/starlet"
     createdDate = "now"
 }
 
