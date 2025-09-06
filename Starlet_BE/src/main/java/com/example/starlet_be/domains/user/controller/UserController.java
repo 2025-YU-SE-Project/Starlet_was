@@ -63,9 +63,9 @@ public class UserController implements UserApi {
 
     // 3-1. 이메일 중복 확인만
     @GetMapping("/signup/email_available")
-    public ResponseEntity<?> existEmail(@RequestParam String email){
+    public ResponseEntity<?> existEmail(@RequestParam String address){
         // 존재하면 true, 존재하지 않으면 false.
-        if(userService.existEmail(email))
+        if(emailService.existsEmailAddress(address))
             throw new CustomException(ErrorCode.EMAIL_CONFLICT);
         else
             return ResponseEntity.ok().build();

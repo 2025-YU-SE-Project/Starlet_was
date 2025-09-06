@@ -47,6 +47,12 @@ public class EmailService {
         );
     }
 
+    // 4. 이메일 중복 확인
+    @Transactional(readOnly = true)
+    public boolean existsEmailAddress(String address){
+        return emailRepository.existsByAddress(address);
+    }
+
 
 
     // 4. 계정 생성 후 첫 인증 메일 전송

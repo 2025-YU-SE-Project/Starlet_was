@@ -2,9 +2,7 @@ package com.example.starlet_be.domains.verify.controller;
 
 import com.example.starlet_be.domains.verify.reqdto.PasswordResetConfirmDto;
 import com.example.starlet_be.domains.verify.service.VerifyService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,17 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v2/verify")
+@RequestMapping("/api/v1/verify")
 @RequiredArgsConstructor
 public class VerifyController {
 
     private final VerifyService verifyService;
 
     // 1. 가입 이메일 인증 받기
-    @GetMapping("/email")
+    @GetMapping("/init")
     public ResponseEntity<?> emailVerification(@RequestParam String token){
         verifyService.emailVerification(token);
         return ResponseEntity.ok().build();

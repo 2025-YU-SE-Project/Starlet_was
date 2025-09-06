@@ -29,7 +29,7 @@ public class EmailController {
     // 1. 이메일 중복 확인
     @GetMapping("/check-duplication")
     public ResponseEntity<?> checkDuplication(@RequestParam String address){
-        if(userService.existEmail(address))
+        if(emailService.existsEmailAddress(address))
             throw new CustomException(ErrorCode.EMAIL_CONFLICT);
         return ResponseEntity.ok().build();
     }

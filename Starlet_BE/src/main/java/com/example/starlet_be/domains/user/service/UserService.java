@@ -1,6 +1,7 @@
 package com.example.starlet_be.domains.user.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
@@ -29,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
     private final JwtUtil jwtUtil;
 
     // 유저 단일 조회
@@ -56,17 +58,12 @@ public class UserService {
     @Transactional
     public User signUp(SignUpDto dto, Email email) {
         // 닉네임 및 이메일 중복 확인
-        if(existEmail(dto.getEmail()) || existNickname(dto.getNickname()))
+        if(emailService.existsEmailAddress(email.getAddress()) || existNickname(dto.getNickname()))
             throw new CustomException(ErrorCode.DUPLICATE_INFO_CONFLICT);
 
         return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()), email));
     }
 
-    // 이메일 존재(중복) 확인
-    @Transactional(readOnly = true)
-    public boolean existEmail(String email) {
-        return userRepository.existsByEmailAddress(email);
-    }
 
     // 닉네임 존재(중복) 확인
     @Transactional(readOnly = true)
