@@ -54,10 +54,7 @@ public class EmailService {
 
 
 
-
-
-
-    // 2. 계정 생성 후 첫 인증 메일 전송
+    // 4. 계정 생성 후 첫 인증 메일 전송
     @Transactional
     public void sendVerificationEmail(Email email, String token){
         String link = baseUrl + "/api/v1/auth/verify/email?token=" + token;
@@ -100,7 +97,7 @@ public class EmailService {
     }
 
 
-    // 3. 비밀번호 초기화 인증 메일 전송
+    // 5. 비밀번호 초기화 인증 메일 전송
     public void sendPasswordResetEmail(Email email, String token){
         String link = baseUrl + "/api/v1/auth/verify/password?token=" + token;
         try {
