@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
-    private final VerifyService verifyService;
     private final EmailRepository emailRepository;
-    private final EmailService emailService;
-    private final PasswordEncoder passwordEncoder;
 
     @Value("${app.frontend.base-url}")
     private String baseUrl;
