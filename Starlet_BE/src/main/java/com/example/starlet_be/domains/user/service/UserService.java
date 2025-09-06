@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.service;
 
+import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
@@ -53,28 +54,18 @@ public class UserService {
 
     // 회원가입
     @Transactional
-    public User signUp(SignUpDto dto) {
-        // 1. 입력정보 유효성 확인, dto와 컨트롤러 계층에서 처리 가능
-//        if(dto.getNickname().isBlank()
-//                || !dto.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
-//                || dto.getPassword().isBlank())
-//            return false;
-
-        // 2. 닉네임 및 이메일 중복 확인
+    public User signUp(SignUpDto dto, Email email) {
+        // 닉네임 및 이메일 중복 확인
         if(existEmail(dto.getEmail()) || existNickname(dto.getNickname()))
             throw new CustomException(ErrorCode.DUPLICATE_INFO_CONFLICT);
 
-        // 3. 비밀번호 형식 확인, 일단은 제한하지 않음.
-
-        // 4. 엔티티로 변환 후 저장, 암호화작업
-
-        return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
+        return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()), email));
     }
 
     // 이메일 존재(중복) 확인
     @Transactional(readOnly = true)
     public boolean existEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmailAddress(email);
     }
 
     // 닉네임 존재(중복) 확인
@@ -87,7 +78,7 @@ public class UserService {
     @Transactional
     public LoginInfoDto login(LoginDto dto, HttpServletResponse res) {
         // 1. 유저 찾기
-        User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
+        User user = userRepository.findByEmailAddress(dto.getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
@@ -119,7 +110,7 @@ public class UserService {
         // 6. DTO 구성 반환
         return LoginInfoDto.builder()
                 .userId(user.getId())
-                .email(user.getEmail())
+                .email(user.getEmail().getAddress())
                 .nickname(user.getNickname())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -129,7 +120,7 @@ public class UserService {
     // 로그인 되어있는 유저가 계정 삭제
     @Transactional
     public void deleteCurrentUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findByEmailAddress(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
     }
@@ -137,6 +128,6 @@ public class UserService {
     // 이메일 기반 찾기
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow( () -> new CustomException(ErrorCode.USER_NOT_FOUND) );
+        return userRepository.findByEmailAddress(email).orElseThrow( () -> new CustomException(ErrorCode.USER_NOT_FOUND) );
     }
 }

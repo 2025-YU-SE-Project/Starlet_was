@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -110,7 +109,7 @@ public class VerifyService {
         if(email.getVerify().getType() != VerifyType.CHANGING_PASSWORD)
             throw new IllegalArgumentException("비밀번호 초기화중인 계정이 아닙니다.");
 
-        User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
+        User user = userRepository.findByEmailAddress(dto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("이메일을 가진 유저가 없음")
         );
 
