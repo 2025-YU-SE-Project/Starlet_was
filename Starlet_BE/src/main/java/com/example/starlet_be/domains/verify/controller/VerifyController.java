@@ -28,7 +28,7 @@ public class VerifyController {
 
 
     // 2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
-    @GetMapping("/password")
+    @GetMapping("/password-reset/confirm")
     public ResponseEntity<?> passwordResetVerification(@RequestParam String token){
         verifyService.passwordResetVerification(token);
         return ResponseEntity.ok().build();
