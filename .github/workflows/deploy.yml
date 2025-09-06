@@ -8,6 +8,7 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     permissions:
       packages: write # Docker Hub에 이미지 푸시를 위한 권한 추가
     steps:
@@ -50,7 +51,6 @@ jobs:
           script: |
             cd /home/ubuntu/starlet
             docker-compose down
-            docker-compose pull app
-            # --no-deps 플래그를 제거하여 의존성(db)도 함께 시작
-            docker-compose up -d app
+            docker-compose pull
+            docker-compose up -d
             docker image prune -f
