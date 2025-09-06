@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       platform: linux/amd64
-    image: chlwjd0803/starlet
+    image: chlwjd0803/starlet:amd64
     restart: always
     ports:
       - 8080:8080
