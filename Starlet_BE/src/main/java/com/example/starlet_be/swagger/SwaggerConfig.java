@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "Starlet API", description = "Starlet API 명세서 입니다.", version = "v1"),
+        info = @Info(title = "Starlet API", description = "Starlet API 명세서", version = "v1"),
         security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
