@@ -10,7 +10,6 @@ import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,21 +38,29 @@ public class EmailController {
     // 2. 초기 이메일 인증 전송
     @PostMapping("/init")
     public ResponseEntity<?> initEmail(@RequestBody EmailAddressDto dto){
-        Verify verify = verifyService.createVerify(VerifyType.EMAIL_VERIFICATION);
+        // 인증 객체 최초 생성
+        Verify verify = verifyService.createVerify();
+
+        // 이메일 생성 후 인증객체 붙이기
         Email email = emailService.createEmail(dto.getEmail(), verify);
+
+        // 인증 이메일 전송
         emailService.sendVerificationEmail(email, verify.getToken());
         return ResponseEntity.ok().build();
     }
 
 
     // 3. 비밀번호 재설정 이메일 전송
+    public ResponseEntity<?> requestPasswordReset(@RequestBody EmailAddressDto dto){
+        Email email = emailService.findEmailByAddress(dto.getEmail());
 
+        // 1. 해당 계정의 이메일의 인증상태를 바꿀 것
+        verifyService.passwordResetRequestStatus(email);
 
+        // 2. 재설정 이메일을 보낼 것
+        emailService.sendPasswordResetEmail(email, email.getVerify().getToken());
 
-
-    // 5. 비밀번호 재설정
-
-
-
+        return ResponseEntity.ok().build();
+    }
 
 }
