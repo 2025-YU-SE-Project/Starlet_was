@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.email.entity;
+package com.example.starlet_be.domains.diary.entity;
 
 public enum Color {
     BLUE,
