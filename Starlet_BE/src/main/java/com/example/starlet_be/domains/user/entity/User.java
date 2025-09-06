@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.user.entity;
 
+import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -23,23 +24,17 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_id", nullable = false)
+    private Email email;
 
-    @Column(nullable = false)
-    private Boolean verified;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Token> tokens = new ArrayList<>();
-
-    @Builder public User(String nickname, String password, String email) {
+    @Builder public User(String nickname, String password, Email email) {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
-        this.verified = false;
     }
 
     public UserResDto toResDto() {
-        return UserResDto.builder().id(id).nickname(nickname).email(email).build();
+        return UserResDto.builder().id(id).nickname(nickname).email(email.getAddress()).build();
     }
 }
