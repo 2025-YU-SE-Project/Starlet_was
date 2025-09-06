@@ -8,7 +8,8 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      packages: write # Docker Hub에 이미지 푸시를 위한 권한 추가
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
