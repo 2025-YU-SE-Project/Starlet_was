@@ -1,6 +1,8 @@
 package com.example.starlet_be.domains.email.entity;
 
+import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.verify.entity.Verify;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,5 +32,8 @@ public class Email {
     @OneToOne
     @JoinColumn(name = "verify_id", nullable = false)
     private Verify verify;
+
+    @OneToOne(mappedBy = "email", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private User user;
 
 }
