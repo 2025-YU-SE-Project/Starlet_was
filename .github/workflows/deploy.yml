@@ -49,6 +49,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/my-app
+            # 기존 컨테이너 중지 및 삭제
+            docker-compose down
+            # 최신 이미지 강제 풀
             docker-compose pull app
+            # 새로운 컨테이너 시작
             docker-compose up -d --no-deps app
+            # 사용하지 않는 이미지 정리
             docker image prune -f
