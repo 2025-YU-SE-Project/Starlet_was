@@ -3,7 +3,6 @@ package com.example.starlet_be.domains.email.service;
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
-import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import jakarta.mail.MessagingException;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
