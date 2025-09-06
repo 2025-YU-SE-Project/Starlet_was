@@ -52,7 +52,7 @@ public class EmailService {
     // 4. 계정 생성 후 첫 인증 메일 전송
     @Transactional
     public void sendVerificationEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/auth/verify/email?token=" + token;
+        String link = baseUrl + "/api/v2/verify/email?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -94,7 +94,7 @@ public class EmailService {
 
     // 5. 비밀번호 초기화 인증 메일 전송
     public void sendPasswordResetEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/auth/verify/password?token=" + token;
+        String link = baseUrl + "/api/v2/verify/password?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
