@@ -52,12 +52,13 @@ public class EmailController {
     // 3. 비밀번호 재설정 이메일 전송
     @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody EmailAddressDto dto){
+        // 1. 이메일 조회
         Email email = emailService.findEmailByAddress(dto.getEmail());
 
-        // 1. 해당 계정의 이메일의 인증상태를 바꿀 것
+        // 2. 해당 계정의 이메일의 인증상태를 바꿀 것
         verifyService.passwordResetRequestStatus(email);
 
-        // 2. 재설정 이메일을 보낼 것
+        // 3. 재설정 이메일을 보낼 것
         emailService.sendPasswordResetEmail(email, email.getVerify().getToken());
 
         return ResponseEntity.ok().build();

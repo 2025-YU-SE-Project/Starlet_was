@@ -2,13 +2,17 @@ package com.example.starlet_be.domains.verify.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
+import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.entity.VerifyType;
 import com.example.starlet_be.domains.verify.repository.VerifyRepository;
 import com.example.starlet_be.domains.verify.reqdto.PasswordResetConfirmDto;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +24,9 @@ import java.util.UUID;
 public class VerifyService {
 
     private final VerifyRepository verifyRepository;
-    private final EmailRepository emailRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     // 토큰 랜덤 생성
     private String createToken(){
@@ -45,11 +50,11 @@ public class VerifyService {
     @Transactional
     public Verify validateToken(String token, VerifyType type){
         Verify verify = verifyRepository.findByToken(token).orElseThrow(
-                () -> new IllegalArgumentException("유효하지 않은 토큰")
+                () -> new CustomException(ErrorCode.VERIFY_NOT_FOUND)
         );
         // 기간이 지나면 알아서 삭제하도록 구현
         if(verify.getType() != type)
-            throw new IllegalArgumentException("토큰 타입이 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
         return verify;
     }
 
@@ -69,10 +74,15 @@ public class VerifyService {
     @Transactional
     public void passwordResetRequestStatus(Email email){
 
+        // 1. 이메일의 인증정보 가져오기
         Verify verify = email.getVerify();
+
+        // 2. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여
         verify.setType(VerifyType.REQUEST_PASSWORD_RESET);
         verify.setToken(createToken());
         verify.setExpireTime(LocalDateTime.now().plusHours(24));
+
+        // 3. 해당 인증정보를 저장
         verifyRepository.save(verify);
     }
 
@@ -90,10 +100,15 @@ public class VerifyService {
     // 2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
     @Transactional
     public void passwordResetVerification(String token) {
+        // 1. 토큰 문자열과 인증상태를 기반으로 인증 정보 가져오기
         Verify verify = validateToken(token, VerifyType.REQUEST_PASSWORD_RESET);
+
+        // 2. 새 비밀번호를 받을 준비가 되어있는 인증정보로 변경
         verify.setType(VerifyType.CHANGING_PASSWORD);
         verify.setToken(null);
         verify.setExpireTime(null);
+
+        // 3. 인증정보 저장
         verifyRepository.save(verify);
     }
 
@@ -102,20 +117,22 @@ public class VerifyService {
     @Transactional
     public void updatePassword(PasswordResetConfirmDto dto) {
         // 이메일이 맞는지 확인하고 새 비밀번호 암호화하여 넣기
-        Email email = emailRepository.findByAddress(dto.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("이메일 없음")
-        );
+        Email email = emailService.findEmailByAddress(dto.getEmail());
 
+        // 비밀번호 변경중인 계정인지 확인
         if(email.getVerify().getType() != VerifyType.CHANGING_PASSWORD)
-            throw new IllegalArgumentException("비밀번호 초기화중인 계정이 아닙니다.");
+            throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
 
+        // 사용자도 가져오기
         User user = userRepository.findByEmailAddress(dto.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("이메일을 가진 유저가 없음")
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
-        user.setPassword(dto.getNewPassword());
+        // 비밀번호 암호화 하여 저장
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
+        // 인증정보도 승인상태로 바꿔주기
         Verify verify = email.getVerify();
         verify.setType(VerifyType.VERIFY);
         verifyRepository.save(verify);

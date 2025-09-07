@@ -2,7 +2,6 @@ package com.example.starlet_be.domains.user.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
-import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;

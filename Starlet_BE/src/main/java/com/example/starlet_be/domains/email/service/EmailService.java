@@ -43,7 +43,7 @@ public class EmailService {
     @Transactional(readOnly = true)
     public Email findEmailByAddress(String address){
         return emailRepository.findByAddress(address).orElseThrow(
-                () -> new IllegalArgumentException("이메일 없음")
+                () -> new CustomException(ErrorCode.EMAIL_NOT_FOUND)
         );
     }
 
@@ -54,8 +54,7 @@ public class EmailService {
     }
 
 
-
-    // 4. 계정 생성 후 첫 인증 메일 전송
+    // 5. 계정 생성 후 첫 인증 메일 전송
     @Transactional
     public void sendVerificationEmail(Email email, String token){
         String link = baseUrl + "/api/v1/verify/init?token=" + token;
