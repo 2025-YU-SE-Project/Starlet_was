@@ -100,14 +100,22 @@ public class UserService {
         String refreshToken = jwtUtil.createRefreshToken(dto.getEmail());
 
         // 5. 리프레쉬 토큰 헤더에 붙이는 작업
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
                 .maxAge(7*24*60*60) // 일주일
                 .build();
-        res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        res.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
 
-        // 6. DTO 구성 반환
+        // 6. 액세스 토큰 헤더에 붙이는 작업
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(12*60*60) // 12시간
+                .build();
+        res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+
+        // 7. DTO 구성 반환
         return LoginInfoDto.builder()
                 .userId(user.getId())
                 .email(user.getEmail().getAddress())

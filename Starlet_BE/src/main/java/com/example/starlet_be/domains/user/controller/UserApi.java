@@ -103,11 +103,26 @@ public interface UserApi {
                                         "email": "이메일 형식을 맞춰주세요."
                                     }
                                     """),
-//                            @ExampleObject(name = "닉네임 길이 초과", value = """
-//                                    {
-//                                        "nickname": "닉네임은 최대 10글자 까지 가능합니다."
-//                                    }
-//                                    """)
+                            @ExampleObject(name = "닉네임 길이 초과", value = """
+                                    {
+                                        "nickname": "닉네임은 최소 2글자, 최대 10글자 까지 가능합니다."
+                                    }
+                                    """),
+                            @ExampleObject(name = "인증 되지 않은 계정", value = """
+                                    {
+                                        "status": 400,
+                                        "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "이메일 중복검사를 하고 인증메일을 발송하지 않은 경우, DB에 등록되지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 이메일은 존재하지 않습니다."
+                                    }
+                                    """)
                     })),
             @ApiResponse(responseCode = "409", description = "중복으로 인한 회원가입 실패",
                     content = @Content(mediaType = "application/json", examples = {
@@ -168,7 +183,7 @@ public interface UserApi {
                                         "<field>" : "<field>는 필수 입력입니다."
                                     }
                                     """),
-                            @ExampleObject(name = "이메일 미인증 / 비밀번호 초기화 중인 계정 차단", value = """
+                            @ExampleObject(name = "이메일 미인증 / 비밀번호 초기화 중인 계정 차단(예방용)", value = """
                                     {
                                         "status": 400,
                                         "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."

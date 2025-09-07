@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/verify")
 @RequiredArgsConstructor
-public class VerifyController {
+public class VerifyController implements VerifyApi {
 
     private final VerifyService verifyService;
 

@@ -51,7 +51,7 @@ public class VerifyService {
         Verify verify = verifyRepository.findByToken(token).orElseThrow(
                 () -> new CustomException(ErrorCode.VERIFY_NOT_FOUND)
         );
-        // 기간이 지나면 알아서 삭제하도록 구현
+
         if(verify.getType() != type)
             throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
         return verify;
