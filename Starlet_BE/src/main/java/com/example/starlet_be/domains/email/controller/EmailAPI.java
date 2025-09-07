@@ -34,7 +34,19 @@ public interface EmailAPI {
 
 
 
-
+    @Operation(summary = "가입가능 이메일 인증요청메일 발송", description = "가입할 이메일 주소에 대해 인증메일을 발송합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "이메일 발송 성공"),
+            @ApiResponse(responseCode = "409", description = "이메일 발송 실패(해당 문제가 뜬다면, 백엔드에 문의할 것)",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 500,
+                                        "message": "메일 전송을 실패하였습니다."
+                                    }
+                                    """)
+                    }))
+    })
     ResponseEntity<?> initEmail(@RequestBody EmailAddressDto dto);
 
 
