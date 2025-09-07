@@ -99,7 +99,7 @@ public class EmailService {
 
     // 5. 비밀번호 초기화 인증 메일 전송
     public void sendPasswordResetEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/verify/password?token=" + token;
+        String link = baseUrl + "/api/v1/verify/password-reset/confirm?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

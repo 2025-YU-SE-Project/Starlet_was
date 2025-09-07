@@ -1,7 +1,6 @@
 package com.example.starlet_be.domains.verify.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
-import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
@@ -77,12 +76,16 @@ public class VerifyService {
         // 1. 이메일의 인증정보 가져오기
         Verify verify = email.getVerify();
 
-        // 2. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여
+        // 2. 원래 정상인 계정이었는지
+        if(verify.getType() != VerifyType.VERIFY)
+            throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
+
+        // 3. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여
         verify.setType(VerifyType.REQUEST_PASSWORD_RESET);
         verify.setToken(createToken());
         verify.setExpireTime(LocalDateTime.now().plusHours(24));
 
-        // 3. 해당 인증정보를 저장
+        // 4. 해당 인증정보를 저장
         verifyRepository.save(verify);
     }
 

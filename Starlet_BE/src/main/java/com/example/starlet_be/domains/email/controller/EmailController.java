@@ -3,6 +3,7 @@ package com.example.starlet_be.domains.email.controller;
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.reqdto.EmailAddressDto;
 import com.example.starlet_be.domains.email.service.EmailService;
+import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.service.UserService;
 import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.service.VerifyService;
@@ -52,13 +53,16 @@ public class EmailController {
     // 3. 비밀번호 재설정 이메일 전송
     @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody EmailAddressDto dto){
-        // 1. 이메일 조회
+        // 1. 가입된 사용자 조회
+        User user = userService.findByEmailAddress(dto.getEmail());
+
+        // 2. 이메일 조회
         Email email = emailService.findEmailByAddress(dto.getEmail());
 
-        // 2. 해당 계정의 이메일의 인증상태를 바꿀 것
+        // 3. 해당 계정의 이메일의 인증상태를 바꿀 것
         verifyService.passwordResetRequestStatus(email);
 
-        // 3. 재설정 이메일을 보낼 것
+        // 4. 재설정 이메일을 보낼 것
         emailService.sendPasswordResetEmail(email, email.getVerify().getToken());
 
         return ResponseEntity.ok().build();

@@ -132,7 +132,9 @@ public class UserService {
 
     // 이메일 기반 찾기
     @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return userRepository.findByEmailAddress(email).orElseThrow( () -> new CustomException(ErrorCode.USER_NOT_FOUND) );
+    public User findByEmailAddress(String email) {
+        return userRepository.findByEmailAddress(email).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
     }
 }
