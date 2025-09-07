@@ -1,10 +1,10 @@
 package com.example.starlet_be.domains.user.reqdto;
 
+import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -19,11 +19,10 @@ public class SignUpDto {
     private String password;
 
     @Schema(description = "사용자 이메일", example = "starlet2025@gmail.com")
-    @Email(message = "이메일 형식을 맞춰주세요.")
     @NotBlank(message = "이메일은 필수 입력입니다.")
     private String email;
 
-    public User toEntity(String encodedPassword) {
+    public User toEntity(String encodedPassword, Email email) {
         return User.builder()
                 .nickname(nickname)
                 .password(encodedPassword)

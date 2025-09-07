@@ -1,8 +1,6 @@
 package com.example.starlet_be.domains.diary.entity;
 
 import com.example.starlet_be.domains.user.entity.User;
-import com.example.starlet_be.domains.user.entity.enums.Emotion;
-import com.example.starlet_be.domains.user.entity.enums.Factor;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

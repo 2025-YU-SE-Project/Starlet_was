@@ -21,10 +21,4 @@ public class LoginDto {
     @NotBlank(message = "이메일은 필수 입력입니다.")
     private String email;
 
-    public User toEntity() {
-        return User.builder()
-                .email(email)
-                .password(password)
-                .build();
-    }
 }

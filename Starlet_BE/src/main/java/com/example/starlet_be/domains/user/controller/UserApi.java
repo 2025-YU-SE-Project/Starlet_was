@@ -122,22 +122,6 @@ public interface UserApi {
     ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto);
 
 
-    @Operation(summary = "사용가능한 이메일 검사", description = "회원가입을 위한 이메일 검사 입니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "사용가능한 이메일"),
-            @ApiResponse(responseCode = "409", description = "이메일 중복",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    {
-                                        "status": 409,
-                                        "message": "이메일이 중복됩니다."
-                                    }
-                                    """)
-                    }))
-    })
-    ResponseEntity<?> existEmail(@RequestParam String email);
-
-
     @Operation(summary = "사용가능한 닉네임 검사", description = "회원가입을 위한 닉네임 검사 입니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "사용가능한 닉네임"),

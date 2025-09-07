@@ -1,15 +1,15 @@
 package com.example.starlet_be.domains.user.controller;
 
+import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
-import com.example.starlet_be.domains.user.entity.Token;
 import com.example.starlet_be.domains.user.entity.User;
-import com.example.starlet_be.domains.user.entity.enums.TokenType;
+import com.example.starlet_be.domains.verify.entity.VerifyType;
+import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
-import com.example.starlet_be.domains.user.service.AuthService;
-import com.example.starlet_be.domains.user.service.TokenService;
 import com.example.starlet_be.domains.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -19,7 +19,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -30,8 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController implements UserApi {
     private final UserService userService;
-    private final TokenService tokenService;
-    private final AuthService authService;
+    private final EmailService emailService;
 
     // 1-A. 사용자 조회(관리자 전용)
     @GetMapping("/get/{id}")
@@ -47,35 +45,27 @@ public class UserController implements UserApi {
         return ResponseEntity.ok().body(infos);
     }
 
-    // 3. 회원가입
+    // 3. 회원가입(이메일 인증이 끝났다는 가정하에 진행됨)
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto){
 
-        User user = userService.signUp(dto);
+        // 인증된 이메일 가져오기
+        Email email = emailService.findEmailByAddress(dto.getEmail());
+
+        if(email.getVerify().getType() != VerifyType.VERIFY)
+            throw new CustomException(ErrorCode.NOT_VERIFY_USER);
+
+        User user = userService.signUp(dto, email);
         if(user == null)
             throw new CustomException(ErrorCode.USER_CREATE_FAILED);
 
-        Token token = tokenService.createToken(user, TokenType.VERIFY);
-        if(token == null)
-            throw new CustomException(ErrorCode.VERIFY_TOKEN_CREATE_FAILD);
-
-        authService.sendVerificationEmail(user, token.getToken());
 
         return ResponseEntity.created(URI.create("/api/v1/user/" + user.getId())).build();
 
     }
 
-    // 3-1. 이메일 중복 확인만
-    @GetMapping("/signup/email_available")
-    public ResponseEntity<?> existEmail(@RequestParam String email){
-        // 존재하면 true, 존재하지 않으면 false.
-        if(userService.existEmail(email))
-            throw new CustomException(ErrorCode.EMAIL_CONFLICT);
-        else
-            return ResponseEntity.ok().build();
-    }
 
-    // 3-2. 닉네임 중복 확인만
+    // 3. 닉네임 중복 확인
     @GetMapping("/signup/nickname_available")
     public ResponseEntity<?> existNickname(@RequestParam String nickname){
         // 존재하면 true, 존재하지 않으면 false.
