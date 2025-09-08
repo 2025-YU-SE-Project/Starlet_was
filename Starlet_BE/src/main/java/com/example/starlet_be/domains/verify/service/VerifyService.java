@@ -11,11 +11,13 @@ import com.example.starlet_be.domains.verify.reqdto.PasswordResetConfirmDto;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,7 +38,7 @@ public class VerifyService {
     @Transactional
     public Verify createVerify(){
         String token = createToken();
-        LocalDateTime expireTime = LocalDateTime.now().plusHours(24);
+        LocalDateTime expireTime = LocalDateTime.now().plusHours(8);
         Verify verify = Verify.builder()
                 .token(token)
                 .type(VerifyType.EMAIL_VERIFICATION)
@@ -66,10 +68,45 @@ public class VerifyService {
 
     // 가입 인증 상태가 만료되면 이메일 객체와 인증 객체 삭제
     // 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
+    @Scheduled(cron = "0 * * * * *") // 1분마다 실행
+    @Transactional
+    public void cleanExpiredVerify(){
+        List<Verify> expireList = verifyRepository.findAllByExpireTimeBefore(LocalDateTime.now());
 
+        for(Verify verify : expireList){
+            // 가입 이메일 인증 조차 안할경우
+            if(verify.getType() == VerifyType.EMAIL_VERIFICATION){
+                emailService.deleteEmail(verify.getEmail());
+                verifyRepository.delete(verify);
+            }
+            // 비밀번호 초기화 요청을 받지 않아 취소되는 경우
+            else if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
+                verify.setToken(null);
+                verify.setExpireTime(null);
+                verify.setType(VerifyType.VERIFY);
+                verifyRepository.save(verify);
+            }
+            // 상태가 정상인 계정이거나 새 비밀번호를 입력해야 하는 경우엔 인증 만료기간이 null 이므로 해당 문제가 발생할 수 없음
+            else{
+                // 오류로 인해 남았었다면 토큰이랑 만료기간을 null로 주면됨
+                verify.setToken(null);
+                verify.setExpireTime(null);
+                verifyRepository.save(verify);
+            }
+        }
+    }
 
+    // 1. 가입 이메일 인증 받기
+    @Transactional
+    public void emailVerification(String token) {
+        Verify verify = validateToken(token, VerifyType.EMAIL_VERIFICATION);
+        verify.setType(VerifyType.VERIFY);
+        verify.setToken(null);
+        verify.setExpireTime(null);
+        verifyRepository.save(verify);
+    }
 
-    // 비밀번호 변경 요청에 따라 상태 변환
+    // 2-1. 비밀번호 변경 요청에 따라 상태 변환
     @Transactional
     public void passwordResetRequestStatus(Email email){
 
@@ -89,18 +126,7 @@ public class VerifyService {
         verifyRepository.save(verify);
     }
 
-    // 1. 가입 이메일 인증 받기
-    @Transactional
-    public void emailVerification(String token) {
-        Verify verify = validateToken(token, VerifyType.EMAIL_VERIFICATION);
-        verify.setType(VerifyType.VERIFY);
-        verify.setToken(null);
-        verify.setExpireTime(null);
-        verifyRepository.save(verify);
-    }
-
-
-    // 2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
+    // 2-2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
     @Transactional
     public void passwordResetVerification(String token) {
         // 1. 토큰 문자열과 인증상태를 기반으로 인증 정보 가져오기
@@ -114,7 +140,6 @@ public class VerifyService {
         // 3. 인증정보 저장
         verifyRepository.save(verify);
     }
-
 
     // 3. 새로운 비밀번호 반영(새로운 비밀번호 생성)
     @Transactional
