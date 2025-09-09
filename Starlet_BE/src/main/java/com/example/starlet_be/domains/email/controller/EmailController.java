@@ -35,7 +35,13 @@ public class EmailController implements EmailAPI {
         return ResponseEntity.ok().build();
     }
 
-    // 2. 초기 이메일 인증 전송
+    // 2. 이메일 인증상태 조회
+    @GetMapping("/verification-status")
+    public ResponseEntity<?> getVerificationStatus(@RequestParam String address){
+        return ResponseEntity.ok().body(emailService.getVerificationStatus(address));
+    }
+
+    // 3. 초기 이메일 인증 전송
     @PostMapping("/init")
     public ResponseEntity<?> initEmail(@RequestBody EmailAddressDto dto){
         // 인증 객체 최초 생성
@@ -50,7 +56,7 @@ public class EmailController implements EmailAPI {
     }
 
 
-    // 3. 비밀번호 재설정 이메일 전송
+    // 4. 비밀번호 재설정 이메일 전송
     @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody EmailAddressDto dto){
         // 1. 가입된 사용자 조회
