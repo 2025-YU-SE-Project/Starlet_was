@@ -27,6 +27,9 @@ public class EmailService {
     // 1. 이메일 추가
     @Transactional
     public Email createEmail(String address, Verify verify){
+        if(existsEmailAddress(address))
+            throw new CustomException(ErrorCode.EMAIL_CONFLICT);
+
         Email email = Email.builder()
                 .address(address)
                 .verify(verify)
