@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.user.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
+import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.reqdto.LoginDto;
 import com.example.starlet_be.domains.user.reqdto.SignUpDto;
 import com.example.starlet_be.domains.user.resdto.LoginInfoDto;
@@ -9,6 +10,7 @@ import com.example.starlet_be.domains.user.resdto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
+import com.example.starlet_be.domains.verify.entity.VerifyType;
 import com.example.starlet_be.domains.verify.repository.VerifyRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
@@ -35,6 +37,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final EmailRepository emailRepository;
     private final VerifyRepository verifyRepository;
+    private final EmailService emailService;
 
     // 유저 단일 조회
     @Transactional(readOnly = true)
@@ -59,12 +62,19 @@ public class UserService {
 
     // 회원가입
     @Transactional
-    public User signUp(SignUpDto dto, Email email) {
+    public User signUp(SignUpDto dto) {
+        // 인증된 이메일 가져오기
+        Email email = emailService.findEmailByAddress(dto.getEmail());
+
+        if(email.getVerify().getType() != VerifyType.VERIFY)
+            throw new CustomException(ErrorCode.NOT_VERIFY_USER);
+
         // 닉네임 및 이메일 중복 확인
         if(existNickname(dto.getNickname()))
             throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
 
         return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()), email));
+
     }
 
 
@@ -144,5 +154,16 @@ public class UserService {
         return userRepository.findByEmailAddress(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
+    }
+
+    @Transactional
+    public void logout(HttpServletResponse res) {
+        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+                .path("/")              // 로그인과 동일하게
+                .httpOnly(true)        // 동일하게
+                .maxAge(0)             // 즉시 만료
+                .build();
+
+        res.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
     }
 }
