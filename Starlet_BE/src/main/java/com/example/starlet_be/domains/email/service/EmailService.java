@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.email.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
+import com.example.starlet_be.domains.email.resdto.EmailInfoDto;
 import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
@@ -53,6 +54,24 @@ public class EmailService {
         return emailRepository.existsByAddress(address);
     }
 
+    // 5. 이메일 인증 상태 조회
+    @Transactional(readOnly = true)
+    public EmailInfoDto getVerificationStatus(String address) {
+        // 1. 해당 이메일 객체 조회
+        Email email = findEmailByAddress(address);
+
+        String expireTimeStr = null;
+        if(email.getVerify().getExpireTime() != null){
+            expireTimeStr = email.getVerify().getExpireTime().toString();
+        }
+
+        return EmailInfoDto.builder()
+                .emailId(email.getId())
+                .emailAddress(email.getAddress())
+                .verifyType(email.getVerify().getType().toString())
+                .verifyExpireAt(expireTimeStr)
+                .build();
+    }
 
     // 5. 계정 생성 후 첫 인증 메일 전송
     @Transactional
