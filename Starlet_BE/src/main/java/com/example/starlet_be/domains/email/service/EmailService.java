@@ -2,8 +2,12 @@ package com.example.starlet_be.domains.email.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
+import com.example.starlet_be.domains.email.reqdto.EmailAddressDto;
 import com.example.starlet_be.domains.email.resdto.EmailInfoDto;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.service.UserService;
 import com.example.starlet_be.domains.verify.entity.Verify;
+import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import jakarta.mail.MessagingException;
@@ -20,13 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final EmailRepository emailRepository;
+    private final VerifyService verifyService;
+    private final UserService userService;
 
     @Value("${app.frontend.base-url}")
     private String baseUrl;
 
     // 1. 이메일 추가
     @Transactional
-    public Email createEmail(String address, Verify verify){
+    protected Email createEmail(String address, Verify verify){
         if(existsEmailAddress(address))
             throw new CustomException(ErrorCode.EMAIL_CONFLICT);
 
@@ -76,9 +82,38 @@ public class EmailService {
                 .build();
     }
 
+    // 3. 초기 이메일 전송
+    @Transactional
+    public void initEmail(EmailAddressDto dto){
+        // 인증 객체 최초 생성
+        Verify verify = verifyService.createVerify();
+
+        // 이메일 생성 후 인증객체 붙이기
+        Email email = createEmail(dto.getEmail(), verify);
+
+        // 인증 이메일 전송
+        sendVerificationEmail(email, verify.getToken());
+    }
+
+    // 4. 비밀번호 재설정 이메일 전송
+    @Transactional
+    public void requestPasswordReset(EmailAddressDto dto){
+        // 1. 가입된 사용자 조회
+        User user = userService.findByEmailAddress(dto.getEmail());
+
+        // 2. 이메일 조회
+        Email email = findEmailByAddress(dto.getEmail());
+
+        // 3. 해당 계정의 이메일의 인증상태를 바꿀 것
+        verifyService.passwordResetRequestStatus(email);
+
+        // 4. 재설정 이메일을 보낼 것
+        sendPasswordResetEmail(email, email.getVerify().getToken());
+    }
+
     // 5. 계정 생성 후 첫 인증 메일 전송
     @Transactional
-    public void sendVerificationEmail(Email email, String token){
+    protected void sendVerificationEmail(Email email, String token){
         String link = baseUrl + "/api/v1/verify/init?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -120,7 +155,7 @@ public class EmailService {
 
 
     // 5. 비밀번호 초기화 인증 메일 전송
-    public void sendPasswordResetEmail(Email email, String token){
+    protected void sendPasswordResetEmail(Email email, String token){
         String link = baseUrl + "/api/v1/verify/password-reset/confirm?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();

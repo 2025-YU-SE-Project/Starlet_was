@@ -44,14 +44,7 @@ public class EmailController implements EmailAPI {
     // 3. 초기 이메일 인증 전송
     @PostMapping("/init")
     public ResponseEntity<?> initEmail(@RequestBody EmailAddressDto dto){
-        // 인증 객체 최초 생성
-        Verify verify = verifyService.createVerify();
-
-        // 이메일 생성 후 인증객체 붙이기
-        Email email = emailService.createEmail(dto.getEmail(), verify);
-
-        // 인증 이메일 전송
-        emailService.sendVerificationEmail(email, verify.getToken());
+        emailService.initEmail(dto);
         return ResponseEntity.ok().build();
     }
 
@@ -59,18 +52,7 @@ public class EmailController implements EmailAPI {
     // 4. 비밀번호 재설정 이메일 전송
     @PostMapping("/password-reset/request")
     public ResponseEntity<?> requestPasswordReset(@RequestBody EmailAddressDto dto){
-        // 1. 가입된 사용자 조회
-        User user = userService.findByEmailAddress(dto.getEmail());
-
-        // 2. 이메일 조회
-        Email email = emailService.findEmailByAddress(dto.getEmail());
-
-        // 3. 해당 계정의 이메일의 인증상태를 바꿀 것
-        verifyService.passwordResetRequestStatus(email);
-
-        // 4. 재설정 이메일을 보낼 것
-        emailService.sendPasswordResetEmail(email, email.getVerify().getToken());
-
+        emailService.requestPasswordReset(dto);
         return ResponseEntity.ok().build();
     }
 
