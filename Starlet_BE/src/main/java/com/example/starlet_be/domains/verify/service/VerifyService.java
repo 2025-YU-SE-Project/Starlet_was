@@ -1,6 +1,7 @@
 package com.example.starlet_be.domains.verify.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
@@ -26,7 +27,7 @@ public class VerifyService {
 
     private final VerifyRepository verifyRepository;
     private final UserRepository userRepository;
-    private final EmailService emailService;
+    private final EmailRepository emailRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 토큰 랜덤 생성
@@ -76,7 +77,7 @@ public class VerifyService {
         for(Verify verify : expireList){
             // 가입 이메일 인증 조차 안할경우
             if(verify.getType() == VerifyType.EMAIL_VERIFICATION){
-                emailService.deleteEmail(verify.getEmail());
+                emailRepository.delete(verify.getEmail());
                 verifyRepository.delete(verify);
             }
             // 비밀번호 초기화 요청을 받지 않아 취소되는 경우
@@ -145,7 +146,9 @@ public class VerifyService {
     @Transactional
     public void updatePassword(PasswordResetConfirmDto dto) {
         // 이메일이 맞는지 확인하고 새 비밀번호 암호화하여 넣기
-        Email email = emailService.findEmailByAddress(dto.getEmail());
+        Email email = emailRepository.findByAddress(dto.getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.EMAIL_NOT_FOUND)
+        );
 
         // 비밀번호 변경중인 계정인지 확인
         if(email.getVerify().getType() != VerifyType.CHANGING_PASSWORD)

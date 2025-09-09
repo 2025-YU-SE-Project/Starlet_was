@@ -5,6 +5,7 @@ import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.email.reqdto.EmailAddressDto;
 import com.example.starlet_be.domains.email.resdto.EmailInfoDto;
 import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.user.service.UserService;
 import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.service.VerifyService;
@@ -25,7 +26,7 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final EmailRepository emailRepository;
     private final VerifyService verifyService;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Value("${app.frontend.base-url}")
     private String baseUrl;
@@ -99,7 +100,9 @@ public class EmailService {
     @Transactional
     public void requestPasswordReset(EmailAddressDto dto){
         // 1. 가입된 사용자 조회
-        User user = userService.findByEmailAddress(dto.getEmail());
+        User user = userRepository.findByEmailAddress(dto.getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
 
         // 2. 이메일 조회
         Email email = findEmailByAddress(dto.getEmail());
