@@ -31,6 +31,32 @@ public interface EmailAPI {
     ResponseEntity<?> checkDuplication(@RequestParam String address);
 
 
+    @Operation(summary = "이메일 정보 확인",
+            description = "이메일에 속한 정보를 조회합니다. 인증상태는 VERIFY, EMAIL_VERIFICATION, " +
+                    "REQUEST_PASSWORD_RESET, CHANGING_PASSWORD가 있으며 날짜는 null를 허용합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "emailId": 3,
+                                        "emailAddress": "starlet2025@gmail.com",
+                                        "verifyType": "VERIFY",
+                                        "verifyExpireAt": null
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "이메일 정보 없음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 이메일은 존재하지 않습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> getVerificationStatus(@RequestParam String address);
 
 
 
