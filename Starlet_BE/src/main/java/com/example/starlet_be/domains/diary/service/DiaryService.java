@@ -124,11 +124,6 @@ public class DiaryService {
                 .toList();
     }
 
-    /* ======== */
-
-    /**
-     * null 안전하게 factors 리스트 생성
-     */
     private List<Factor> safeFactors(List<Factor> in) {
         return (in != null) ? new ArrayList<>(in) : new ArrayList<>();
     }
