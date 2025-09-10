@@ -186,7 +186,7 @@ public interface UserApi {
                             @ExampleObject(name = "이메일 미인증 / 비밀번호 초기화 중인 계정 차단(예방용)", value = """
                                     {
                                         "status": 400,
-                                        "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."
+                                        "message": "이메일 미인증 / 비밀번호 재설정 중인 유저입니다."
                                     }
                                     """),
                             @ExampleObject(name = "이메일 형식 비일치", value = """

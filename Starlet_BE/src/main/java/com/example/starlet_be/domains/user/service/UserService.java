@@ -19,8 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +31,6 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final EmailRepository emailRepository;
     private final VerifyRepository verifyRepository;
@@ -96,12 +93,12 @@ public class UserService {
         if(!passwordEncoder.matches(dto.getPassword(), user.getPassword()))
             throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
 
-        // 3. 이메일인증, 비밀번호 분실 계정이 아닌지 검증
-        try{
-            UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
-            authenticationManager.authenticate(token);
-        } catch (Exception e) {
+        // 3. 인증상태 검증 - 초기화 요청했던 계정은 그냥 로그인 성공했으므로 철회, 나머지는 방어
+        Verify verify = user.getEmail().getVerify();
+        if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
+            verify.setType(VerifyType.VERIFY);
+            verifyRepository.save(verify);
+        } else if(verify.getType() != VerifyType.VERIFY) {
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
         }
 
