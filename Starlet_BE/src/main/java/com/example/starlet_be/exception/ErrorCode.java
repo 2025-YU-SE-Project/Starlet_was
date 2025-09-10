@@ -26,8 +26,11 @@ public enum ErrorCode {
     DUPLICATE_INFO_CONFLICT(409, "이미 사용중인 정보가 있습니다. 이메일과 닉네임 중복검사를 시행하세요."),
     USER_CREATE_FAILED(500, "유저 생성에 실패하였습니다."),
 
-
-
+    // diary 관련
+    DIARY_ALREADY_EXISTS(409, "해당 날짜에는 이미 감정 일기가 존재합니다."),
+    DIARY_NOT_FOUND(404, "해당 날짜의 감정 일기를 찾을 수 없습니다."),
+    DIARY_INVALID_PARAM(400, "요청 값이 올바르지 않습니다."),
+    DIARY_INVALID_MONTH(400, "month는 1~12 사이여야 합니다."),
 
 
     // 기타 관련
