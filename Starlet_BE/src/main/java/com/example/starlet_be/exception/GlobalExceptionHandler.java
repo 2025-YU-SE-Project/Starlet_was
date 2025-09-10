@@ -44,6 +44,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    // @RequestParam 누락
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorDto> handleMissingParam(
+            org.springframework.web.bind.MissingServletRequestParameterException ex) {
+        String msg = ex.getParameterName() + " 파라미터는 필수입니다.";
+        return ResponseEntity.badRequest().body(new ErrorDto(400, msg));
+    }
+
+    // 타입/형식 변환 실패
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<ErrorDto> handleTypeMismatch(
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex) {
+
+        Throwable cause = ex.getCause();
+        if (cause instanceof java.time.format.DateTimeParseException) {
+            return ResponseEntity.badRequest().body(new ErrorDto(400, "날짜 형식이 올바르지 않습니다. (yyyy-MM-dd)"));
+        }
+
+        String name = ex.getName(); // year, month 등 파라미터 이름
+        return ResponseEntity.badRequest().body(new ErrorDto(400, name + " 파라미터 형식이 올바르지 않습니다."));
+    }
+
+
     // 이미지와 같은 파일을 올릴때 사용할 예외들(현재 비활성화)
 
 //    // RequestPart에 대한 누락
