@@ -26,10 +26,14 @@ public class Diary {
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
 
-    @Column(nullable = false)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "diary_factor",
+            joinColumns = @JoinColumn(name = "diary_id")
+    )
+    @Column(name = "factor", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private List<Factor> factors = new ArrayList<>();
-    // 필드에서 바로 리스트 할 필요 있을지도
 
     @Column
     private String content;
@@ -44,4 +48,12 @@ public class Diary {
         this.content = content;
         this.createAt = createAt;
     }
+
+    @Version
+    private Long version;
+
+    public void updateContent(String newContent) {
+        this.content = newContent;
+    }
+
 }
