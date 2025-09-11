@@ -137,12 +137,13 @@ public class UserService {
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmailAddress(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Email userEmail = user.getEmail();
-        Verify userVerify = userEmail.getVerify();
+//        Email userEmail = user.getEmail();
+//        Verify userVerify = userEmail.getVerify();
 
+        // Cascade 설정으로 나머지 주석처리
         userRepository.delete(user);
-        emailRepository.delete(userEmail);
-        verifyRepository.delete(userVerify);
+//        emailRepository.delete(userEmail);
+//        verifyRepository.delete(userVerify);
     }
 
     // 이메일 기반 찾기

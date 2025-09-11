@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.diary.entity;
 
+import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -40,6 +41,9 @@ public class Diary {
 
     @Column(nullable = false)
     private LocalDate createAt;
+
+    @OneToOne(mappedBy = "diary", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Star star;
 
     @Builder public Diary(User user, Emotion emotion, List<Factor> factors, String content, LocalDate createAt) {
         this.user = user;
