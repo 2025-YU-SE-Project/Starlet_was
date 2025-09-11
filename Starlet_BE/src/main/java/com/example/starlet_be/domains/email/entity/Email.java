@@ -28,7 +28,7 @@ public class Email {
     @Column
     private String address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "verify_id", nullable = false)
     private Verify verify;
 

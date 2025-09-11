@@ -1,6 +1,9 @@
 package com.example.starlet_be.domains.user.entity;
 
+import com.example.starlet_be.domains.constellation.entity.Constellation;
+import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -24,9 +27,18 @@ public class User{
     @Column(nullable = false)
     private String password;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "email_id", nullable = false)
     private Email email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Star> stars = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Diary> diaries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Constellation> constellations = new ArrayList<>();
 
     @Builder public User(String nickname, String password, Email email) {
         this.nickname = nickname;
