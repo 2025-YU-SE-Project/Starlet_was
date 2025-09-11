@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.star.entity;
 
-import com.example.starlet_be.domains.connection.connection.Connection;
+import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Color;
 import com.example.starlet_be.domains.diary.entity.Diary;

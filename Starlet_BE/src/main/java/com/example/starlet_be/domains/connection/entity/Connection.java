@@ -1,15 +1,13 @@
-package com.example.starlet_be.domains.connection.connection;
+package com.example.starlet_be.domains.connection.entity;
 
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.star.entity.Star;
-import com.example.starlet_be.domains.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
