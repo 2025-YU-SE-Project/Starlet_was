@@ -6,7 +6,13 @@ import com.example.starlet_be.domains.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Repository
 public interface StarRepository extends JpaRepository<Star, Long> {
     boolean existsByUserAndDiary(User user, Diary diary);
+
+    // 일기의 마감기한을 기준으로 가져오기
+    List<Star> findByDiary_CreateAtBetween(LocalDate startDate, LocalDate endDate);
 }

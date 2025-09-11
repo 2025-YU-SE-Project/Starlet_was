@@ -7,16 +7,21 @@ import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.DiaryToStarReqDto;
 import com.example.starlet_be.domains.star.resdto.StarInfoDto;
+import com.example.starlet_be.domains.star.resdto.StarryNightDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StarService {
@@ -69,19 +74,41 @@ public class StarService {
                 () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
         );
 
-        // 2. 별자리가 존재하는지 보기
-        Long constellationId;
-        if(star.getConstellation() == null)
-            constellationId = null;
-        else
-            constellationId = star.getConstellation().getId();
 
-        // 3. DTO에 담기
+        // 2. DTO에 담기
         return StarInfoDto.builder()
                 .starId(star.getId())
                 .userId(star.getUser().getId())
-                .constellationId(constellationId)
                 .diaryId(star.getDiary().getId())
                 .build();
+    }
+
+    public List<StarryNightDto> getStarryNightStar(LocalDate date) {
+        // 시작일 정의
+        int year = date.getYear();
+        int month = date.getMonthValue();
+
+        if(month % 2 == 0)
+            month--;
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(2).minusDays(1);
+
+        List<Star> stars = starRepository.findByDiary_CreateAtBetween(startDate, endDate);
+
+        List<StarryNightDto> dtos = new ArrayList<>();
+
+        for(Star star : stars) {
+            dtos.add(StarryNightDto.builder()
+                            .starId(star.getId())
+                            .userId(star.getUser().getId())
+                            .color(star.getColor().toString())
+                            .date(star.getDiary().getCreateAt().toString())
+                            .x(star.getX())
+                            .y(star.getY())
+                            .build());
+        }
+
+        return dtos;
     }
 }
