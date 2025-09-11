@@ -37,6 +37,7 @@ public enum ErrorCode {
     STAR_ALREADY_EXISTS(409, "해당 일기에는 이미 별이 존재합니다."),
     DATE_PARSE_ERROR(400, "날짜 문자열 입력이 유효하지 않습니다."),
     STAR_NOT_FOUND(404, "해당 별을 찾을 수 없습니다."),
+    STAR_POSITION_OUT_OF_SCOPE(400, "입력된 좌표가 범위 밖입니다."),
 
     // 기타 관련
     INTERNAL_SERVER_ERROR(500, "내부 서버 오류입니다.");

@@ -6,6 +6,7 @@ import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.DiaryToStarReqDto;
+import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
 import com.example.starlet_be.domains.star.resdto.StarInfoDto;
 import com.example.starlet_be.domains.star.resdto.StarryNightDto;
 import com.example.starlet_be.domains.user.entity.User;
@@ -67,6 +68,7 @@ public class StarService {
 
     }
 
+    // 별 상세조회
     public StarInfoDto getStar(Long id) {
 
         // 1. 별 정보 불러오기
@@ -83,6 +85,7 @@ public class StarService {
                 .build();
     }
 
+    // 밤하늘 페이지 별들 불러오기
     public List<StarryNightDto> getStarryNightStar(LocalDate date) {
         // 시작일 정의
         int year = date.getYear();
@@ -110,5 +113,25 @@ public class StarService {
         }
 
         return dtos;
+    }
+
+    // 별 위치 최신화
+    public void repositionStar(StarPositionDto dto) {
+
+        // 1. 별의 존재 확인
+        Star star = starRepository.findById(dto.getStarId()).orElseThrow(
+                () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
+        );
+
+        // 2. 좌표가 범위 안에 있는지
+        if(dto.getX() < 0 || dto.getX() > 1 || dto.getY() < 0 || dto.getY() > 1)
+            throw new CustomException(ErrorCode.STAR_POSITION_OUT_OF_SCOPE);
+
+        // 3. 위치 적용
+        star.setX(dto.getX());
+        star.setY(dto.getY());
+
+        // 4. 저장
+        starRepository.save(star);
     }
 }
