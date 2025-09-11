@@ -53,7 +53,6 @@ public class Star {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Star.java에 추가 (이 방법은 복잡성이 증가하여 특별한 이유가 없다면 추천하지 않습니다)
     @OneToMany(mappedBy = "start", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Connection> connectionsAsStart = new ArrayList<>();
 
