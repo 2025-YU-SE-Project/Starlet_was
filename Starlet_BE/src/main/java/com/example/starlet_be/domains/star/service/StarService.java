@@ -1,6 +1,5 @@
 package com.example.starlet_be.domains.star.service;
 
-import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.star.entity.Star;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public class StarService {
     private final StarRepository starRepository;
     private final DiaryRepository diaryRepository;
 
+    @Transactional
     public void createStar(UserDetails userDetails, DiaryToStarReqDto dto) {
         // 1. 사용자 조회
         User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
@@ -69,6 +70,7 @@ public class StarService {
     }
 
     // 별 상세조회
+    @Transactional(readOnly = true)
     public StarInfoDto getStar(Long id) {
 
         // 1. 별 정보 불러오기
@@ -86,6 +88,7 @@ public class StarService {
     }
 
     // 밤하늘 페이지 별들 불러오기
+    @Transactional(readOnly = true)
     public List<StarryNightDto> getStarryNightStar(LocalDate date) {
         // 시작일 정의
         int year = date.getYear();
@@ -116,6 +119,7 @@ public class StarService {
     }
 
     // 별 위치 최신화
+    @Transactional
     public void repositionStar(StarPositionDto dto) {
 
         // 1. 별의 존재 확인
