@@ -1,10 +1,12 @@
 package com.example.starlet_be.domains.star.service;
 
+import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.DiaryToStarReqDto;
+import com.example.starlet_be.domains.star.resdto.StarInfoDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
@@ -58,5 +60,28 @@ public class StarService {
         // 6. 저장
         starRepository.save(star);
 
+    }
+
+    public StarInfoDto getStar(Long id) {
+
+        // 1. 별 정보 불러오기
+        Star star = starRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
+        );
+
+        // 2. 별자리가 존재하는지 보기
+        Long constellationId;
+        if(star.getConstellation() == null)
+            constellationId = null;
+        else
+            constellationId = star.getConstellation().getId();
+
+        // 3. DTO에 담기
+        return StarInfoDto.builder()
+                .starId(star.getId())
+                .userId(star.getUser().getId())
+                .constellationId(constellationId)
+                .diaryId(star.getDiary().getId())
+                .build();
     }
 }
