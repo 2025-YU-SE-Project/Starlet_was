@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.star.entity;
 
-import com.example.starlet_be.domains.connection.connection.Connection;
+import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Color;
 import com.example.starlet_be.domains.diary.entity.Diary;
@@ -17,6 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +27,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Getter
+@Data
 public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +60,15 @@ public class Star {
 
     @OneToMany(mappedBy = "end", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Connection> connectionsAsEnd = new ArrayList<>();
+
+    @Builder
+    public Star(Color color, Double x, Double y, Constellation constellation, Diary diary, User user) {
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.constellation = constellation;
+        this.diary = diary;
+        this.user = user;
+    }
 
 }

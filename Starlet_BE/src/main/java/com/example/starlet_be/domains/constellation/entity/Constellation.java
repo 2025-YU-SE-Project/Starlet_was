@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.constellation.entity;
 
-import com.example.starlet_be.domains.connection.connection.Connection;
+import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.entity.User;
 import jakarta.persistence.CascadeType;
