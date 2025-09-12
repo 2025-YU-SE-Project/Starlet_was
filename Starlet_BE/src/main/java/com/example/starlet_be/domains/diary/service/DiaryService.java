@@ -1,5 +1,8 @@
 package com.example.starlet_be.domains.diary.service;
 
+import com.example.starlet_be.domains.star.entity.Star;
+import com.example.starlet_be.domains.star.repository.StarRepository;
+import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.entity.Factor;
@@ -31,6 +34,8 @@ import java.util.List;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
+    private final UserRepository userRepository;
+    private final StarRepository starRepository;
     private final EntityManager em;
 
     /**
@@ -38,6 +43,7 @@ public class DiaryService {
      *
      * date가 null이면 오늘 날짜로 기본 설정
      * 동일 사용자/날짜의 일기가 이미 있으면 DiaryExceptions.AlreadyExists 예외 발생
+     * 감정 일기 생성 후, star 생성
      *
      * @param userId 작성자 ID
      * @param req    생성 요청 DTO
@@ -62,6 +68,15 @@ public class DiaryService {
                 .createAt(date)
                 .build();
 
+        Star star = Star.builder()
+                .color(diary.getEmotion().getColor())
+                .x(Math.random())
+                .y(Math.random())
+                .user(userRef)
+                .diary(diary)
+                .build();
+
+        starRepository.save(star);
         diaryRepository.save(diary);
 
         return DiaryResDto.of(diary);

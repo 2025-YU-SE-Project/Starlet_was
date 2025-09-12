@@ -28,6 +28,7 @@ public interface DiaryApi {
             summary = "감정 일기 생성",
             description = """
             사용자가 하루에 하나 감정 일기를 작성할 수 있습니다.
+            감정일기 생성 후, 별이 생성됩니다.
             """
     )
     @ApiResponses({
