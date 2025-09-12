@@ -68,7 +68,7 @@ public class VerifyService {
 
     // 가입 인증 상태가 만료되면 이메일 객체와 인증 객체 삭제
     // 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
-    @Scheduled(cron = "0 * * * * *") // 1분마다 실행
+    @Scheduled(cron = "0 */30 * * * *") // 1분마다 실행
     @Transactional
     public void cleanExpiredVerify(){
         List<Verify> expireList = verifyRepository.findAllByExpireTimeBefore(LocalDateTime.now());

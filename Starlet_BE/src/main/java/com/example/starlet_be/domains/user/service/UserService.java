@@ -97,6 +97,8 @@ public class UserService {
         Verify verify = user.getEmail().getVerify();
         if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
             verify.setType(VerifyType.VERIFY);
+            verify.setToken(null);
+            verify.setExpireTime(null);
             verifyRepository.save(verify);
         } else if(verify.getType() != VerifyType.VERIFY) {
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
