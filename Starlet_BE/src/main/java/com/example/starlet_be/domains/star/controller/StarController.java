@@ -24,15 +24,6 @@ import java.time.LocalDate;
 public class StarController {
     private final StarService starService;
 
-    // 별 생성(수동, 일기가 써지며 바로 진행되게 검토중)
-    @PostMapping
-    public ResponseEntity<?> createStar(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody DiaryToStarReqDto dto) {
-        starService.createStar(userDetails, dto);
-        return ResponseEntity.ok().build();
-    }
-
     // 별 상세조회
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getStar(@PathVariable Long id){
