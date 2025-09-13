@@ -104,7 +104,38 @@ public interface StarApi {
 
 
 
-
+    @Operation(summary = "별 위치 최신화",
+            description = "밤하늘에서 별을 이동할때 최신화하는 api입니다. 좌표의 범위는 0이상 1이하의 실수값입니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "최신화 성공"),
+            @ApiResponse(responseCode = "400", description = "좌표 범위 벗어남",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력된 좌표가 범위 밖입니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 401,
+                                        "message": "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 별",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별을 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
     ResponseEntity<?> repositionStar(@RequestBody StarPositionDto dto);
 
 }
