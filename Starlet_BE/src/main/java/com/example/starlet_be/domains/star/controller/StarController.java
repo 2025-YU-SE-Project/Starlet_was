@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/star")
-public class StarController {
+public class StarController implements StarApi {
     private final StarService starService;
 
     // 별 상세조회

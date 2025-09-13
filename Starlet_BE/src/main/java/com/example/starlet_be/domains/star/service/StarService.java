@@ -52,8 +52,10 @@ public class StarService {
     @Transactional(readOnly = true)
     public List<StarryNightDto> getStarryNightStar(LocalDate date) {
         // 시작일 정의
+
         int year = date.getYear();
         int month = date.getMonthValue();
+
 
         if(month % 2 == 0)
             month--;
