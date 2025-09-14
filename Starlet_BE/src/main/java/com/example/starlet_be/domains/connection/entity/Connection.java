@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,10 @@ public class Connection {
     @ManyToOne
     @JoinColumn(name = "end_star_id", nullable = false)
     private Star end;
+
+    @Builder public Connection(Constellation constellation, Star start, Star end) {
+        this.constellation = constellation;
+        this.start = start;
+        this.end = end;
+    }
 }

@@ -71,4 +71,8 @@ public class Star {
         this.user = user;
     }
 
+    public void joinConstellation(Constellation constellation) {
+        this.constellation = constellation;
+    }
+
 }
