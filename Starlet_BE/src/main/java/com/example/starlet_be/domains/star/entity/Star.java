@@ -75,4 +75,9 @@ public class Star {
         this.constellation = constellation;
     }
 
+    public void changePosition(Double x, Double y) {
+        this.x = x;
+        this.y = y;
+    }
+
 }

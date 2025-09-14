@@ -11,13 +11,13 @@ import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDt
 import com.example.starlet_be.domains.constellation.resdto.StarryNightConstellationDto;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
+import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
 import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ConstellationService {
@@ -55,11 +54,14 @@ public class ConstellationService {
         constellationRepository.save(constellation);
 
         // 별들 저장
-        for(Long starId : dto.getStars()){
-            Star star = starRepository.findById(starId).orElseThrow(
+        for(StarPositionDto starDto : dto.getStars()){
+            Star star = starRepository.findById(starDto.getStarId()).orElseThrow(
                     () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
             );
+            if(star.getConstellation() != null)
+                throw new CustomException(ErrorCode.ALREADY_BELONG_TO_CONSTELLATION);
             star.joinConstellation(constellation);
+            star.changePosition(starDto.getX(), starDto.getY());
             starRepository.save(star);
         }
 
