@@ -83,10 +83,10 @@ public class StarService {
 
     // 별 위치 최신화
     @Transactional
-    public void repositionStar(StarPositionDto dto) {
+    public void repositionStar(Long id, StarPositionDto dto) {
 
         // 1. 별의 존재 확인
-        Star star = starRepository.findById(dto.getStarId()).orElseThrow(
+        Star star = starRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
         );
 

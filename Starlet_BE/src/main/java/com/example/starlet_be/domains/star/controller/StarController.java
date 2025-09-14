@@ -41,9 +41,9 @@ public class StarController implements StarApi {
 
 
     // 별 위치 최신화
-    @PatchMapping("/reposition")
-    public ResponseEntity<?> repositionStar(@RequestBody StarPositionDto dto){
-        starService.repositionStar(dto);
+    @PatchMapping("/reposition/{id}")
+    public ResponseEntity<?> repositionStar(@PathVariable Long id, @RequestBody StarPositionDto dto){
+        starService.repositionStar(id, dto);
         return ResponseEntity.ok().build();
     }
 

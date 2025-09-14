@@ -136,6 +136,6 @@ public interface StarApi {
                                     """)
                     }))
     })
-    ResponseEntity<?> repositionStar(@RequestBody StarPositionDto dto);
+    ResponseEntity<?> repositionStar(@PathVariable Long id, @RequestBody StarPositionDto dto);
 
 }
