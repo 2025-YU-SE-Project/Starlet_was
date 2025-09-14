@@ -127,6 +127,7 @@ public class ConstellationService {
             List<StarryNightConnectionDto> connectionsInfo = new ArrayList<>();
             for(Connection connection : connections){
                 connectionsInfo.add(StarryNightConnectionDto.builder()
+                                .connectionId(connection.getId())
                                 .startStarId(connection.getStart().getId())
                                 .endStarId(connection.getEnd().getId())
                                 .build()
