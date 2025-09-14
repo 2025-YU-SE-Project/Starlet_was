@@ -6,6 +6,7 @@ import com.example.starlet_be.domains.connection.reqdto.CreateConnectionDto;
 import com.example.starlet_be.domains.connection.resdto.StarryNightConnectionDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
+import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.resdto.StarryNightConstellationDto;
 import com.example.starlet_be.domains.star.entity.Star;
@@ -16,6 +17,7 @@ import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ConstellationService {
@@ -142,5 +145,26 @@ public class ConstellationService {
 
 
         return constellationsInfo;
+    }
+
+    // 별자리 위치 최신화
+    @Transactional
+    public void repositionConstellation(Long id, ConstellationPositionDto dto) {
+
+        // 1. 별자리 존재 확인
+        Constellation constellation = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        // 2. 좌표가 범위 안인지 검사
+        if(dto.getX() < 0 || dto.getX() > 1 || dto.getY() < 0 || dto.getY() > 1)
+            throw new CustomException(ErrorCode.CONSTELLATION_POSITION_OUT_OF_SCOPE);
+
+        // 3. 위치 적용
+        constellation.changePosition(dto.getX(), dto.getY());
+
+        // 4. 저장
+        constellationRepository.save(constellation);
+
     }
 }

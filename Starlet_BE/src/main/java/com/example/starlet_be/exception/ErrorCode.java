@@ -38,6 +38,11 @@ public enum ErrorCode {
     STAR_NOT_FOUND(404, "해당 별을 찾을 수 없습니다."),
     STAR_POSITION_OUT_OF_SCOPE(400, "입력된 좌표가 범위 밖입니다."),
 
+
+    // 별자리 관련
+    CONSTELLATION_POSITION_OUT_OF_SCOPE(400, "입력된 좌표가 범위 밖입니다."),
+    CONSTELLATION_NOT_FOUND(404, "해당 별자리를 찾을 수 없습니다."),
+
     // 기타 관련
     INTERNAL_SERVER_ERROR(500, "내부 서버 오류입니다.");
 

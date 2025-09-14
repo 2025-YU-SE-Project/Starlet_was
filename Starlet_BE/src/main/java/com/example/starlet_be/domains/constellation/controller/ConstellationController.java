@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.constellation.controller;
 
+import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +60,8 @@ public class ConstellationController {
 
     // 6. 별자리 위치 최신화
     @PatchMapping("/reposition/{id}")
-    public ResponseEntity<?> repositionConstellation(@PathVariable Long id){
-
+    public ResponseEntity<?> repositionConstellation(@PathVariable Long id, @RequestBody ConstellationPositionDto dto){
+        constellationService.repositionConstellation(id, dto);
         return ResponseEntity.ok().build();
     }
 
