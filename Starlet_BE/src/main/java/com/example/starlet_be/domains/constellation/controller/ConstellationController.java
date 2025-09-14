@@ -3,15 +3,19 @@ package com.example.starlet_be.domains.constellation.controller;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +25,13 @@ public class ConstellationController {
 
 
     // 1. 2달 간격 별자리들 조회(밤하늘페이지 별자리조회)
-
+    @GetMapping("/{date}")
+    public ResponseEntity<?> getStarryNightConstellation(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ){
+        return ResponseEntity.ok().body(constellationService.getStarryNightConstellation(userDetails, date));
+    }
 
 
     // 2. 별자리 아카이브 조회(별자리 전체조회)

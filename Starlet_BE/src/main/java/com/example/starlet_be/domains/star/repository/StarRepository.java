@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.star.repository;
 
+import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.entity.User;
@@ -15,4 +16,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
 
     // 사용자와 일기의 마감기한을 기준으로 가져오기
     List<Star> findByUserAndDiary_CreateAtBetween(User user, LocalDate startDate, LocalDate endDate);
+
+    List<Star> findByConstellation(Constellation constellation);
 }

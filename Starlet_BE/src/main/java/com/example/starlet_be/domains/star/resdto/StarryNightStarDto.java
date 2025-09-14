@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class StarryNightDto {
+public class StarryNightStarDto {
     private Long starId;
     private Long userId;
     private String color;
@@ -14,7 +14,7 @@ public class StarryNightDto {
     private Double x;
     private Double y;
 
-    @Builder public StarryNightDto(Long starId, Long userId, String color, String date, Double x, Double y) {
+    @Builder public StarryNightStarDto(Long starId, Long userId, String color, String date, Double x, Double y) {
         this.starId = starId;
         this.userId = userId;
         this.color = color;
