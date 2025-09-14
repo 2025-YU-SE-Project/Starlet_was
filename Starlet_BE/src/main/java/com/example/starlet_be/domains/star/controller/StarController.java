@@ -34,16 +34,17 @@ public class StarController implements StarApi {
     // 밤하늘 페이지 별 불러오기(2달 간격)
     @GetMapping("/{date}")
     public ResponseEntity<?> getStarryNightStar(
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ){
-        return ResponseEntity.ok().body(starService.getStarryNightStar(date));
+        return ResponseEntity.ok().body(starService.getStarryNightStar(userDetails, date));
     }
 
 
     // 별 위치 최신화
-    @PatchMapping("/reposition")
-    public ResponseEntity<?> repositionStar(@RequestBody StarPositionDto dto){
-        starService.repositionStar(dto);
+    @PatchMapping("/reposition/{id}")
+    public ResponseEntity<?> repositionStar(@PathVariable Long id, @RequestBody StarPositionDto dto){
+        starService.repositionStar(id, dto);
         return ResponseEntity.ok().build();
     }
 

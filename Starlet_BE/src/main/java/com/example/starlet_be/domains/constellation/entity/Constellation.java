@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,9 @@ public class Constellation {
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private String description;
+
     @Column(nullable = false)
     private LocalDate createAt;
 
@@ -51,5 +55,25 @@ public class Constellation {
 
     @OneToMany(mappedBy = "constellation", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Connection> connections = new ArrayList<>();
+
+
+    @Builder public Constellation(User user, String name, String description, LocalDate createAt, boolean isRepresentative, Double x, Double y) {
+        this.user = user;
+        this.name = name;
+        this.description = description;
+        this.createAt = createAt;
+        this.isRepresentative = isRepresentative;
+        this.x = x;
+        this.y = y;
+    }
+
+    public void changeRepresentative() {
+        this.isRepresentative = !this.isRepresentative;
+    }
+
+    public void changePosition(Double x, Double y) {
+        this.x = x;
+        this.y = y;
+    }
 
 }

@@ -1,13 +1,11 @@
 package com.example.starlet_be.domains.star.service;
 
-import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
-import com.example.starlet_be.domains.star.reqdto.DiaryToStarReqDto;
 import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
 import com.example.starlet_be.domains.star.resdto.StarInfoDto;
-import com.example.starlet_be.domains.star.resdto.StarryNightDto;
+import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
@@ -50,7 +48,11 @@ public class StarService {
 
     // 밤하늘 페이지 별들 불러오기
     @Transactional(readOnly = true)
-    public List<StarryNightDto> getStarryNightStar(LocalDate date) {
+    public List<StarryNightStarDto> getStarryNightStar(UserDetails userDetails, LocalDate date) {
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
         // 시작일 정의
 
         int year = date.getYear();
@@ -63,12 +65,12 @@ public class StarService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(2).minusDays(1);
 
-        List<Star> stars = starRepository.findByDiary_CreateAtBetween(startDate, endDate);
+        List<Star> stars = starRepository.findByUserAndDiary_CreateAtBetween(user, startDate, endDate);
 
-        List<StarryNightDto> dtos = new ArrayList<>();
+        List<StarryNightStarDto> dtos = new ArrayList<>();
 
         for(Star star : stars) {
-            dtos.add(StarryNightDto.builder()
+            dtos.add(StarryNightStarDto.builder()
                             .starId(star.getId())
                             .userId(star.getUser().getId())
                             .color(star.getColor().toString())
@@ -83,10 +85,10 @@ public class StarService {
 
     // 별 위치 최신화
     @Transactional
-    public void repositionStar(StarPositionDto dto) {
+    public void repositionStar(Long id, StarPositionDto dto) {
 
         // 1. 별의 존재 확인
-        Star star = starRepository.findById(dto.getStarId()).orElseThrow(
+        Star star = starRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
         );
 
