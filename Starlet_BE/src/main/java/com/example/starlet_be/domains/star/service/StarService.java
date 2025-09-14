@@ -50,7 +50,11 @@ public class StarService {
 
     // 밤하늘 페이지 별들 불러오기
     @Transactional(readOnly = true)
-    public List<StarryNightDto> getStarryNightStar(LocalDate date) {
+    public List<StarryNightDto> getStarryNightStar(UserDetails userDetails, LocalDate date) {
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
         // 시작일 정의
 
         int year = date.getYear();
@@ -63,7 +67,7 @@ public class StarService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(2).minusDays(1);
 
-        List<Star> stars = starRepository.findByDiary_CreateAtBetween(startDate, endDate);
+        List<Star> stars = starRepository.findByUserAndDiary_CreateAtBetween(user, startDate, endDate);
 
         List<StarryNightDto> dtos = new ArrayList<>();
 

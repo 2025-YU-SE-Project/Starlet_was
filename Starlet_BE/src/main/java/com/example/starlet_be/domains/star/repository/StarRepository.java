@@ -13,6 +13,6 @@ import java.util.List;
 public interface StarRepository extends JpaRepository<Star, Long> {
     boolean existsByUserAndDiary(User user, Diary diary);
 
-    // 일기의 마감기한을 기준으로 가져오기
-    List<Star> findByDiary_CreateAtBetween(LocalDate startDate, LocalDate endDate);
+    // 사용자와 일기의 마감기한을 기준으로 가져오기
+    List<Star> findByUserAndDiary_CreateAtBetween(User user, LocalDate startDate, LocalDate endDate);
 }
