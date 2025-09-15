@@ -191,6 +191,38 @@ public interface ConstellationApi {
     );
 
 
+    @Operation(summary = "별자리 위치 최신화",
+            description = "별자리 위치가 변경되었을때 요청하는 API 입니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "위치 최신화 성공"),
+            @ApiResponse(responseCode = "400", description = "좌표 오기입",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력된 좌표가 범위 밖입니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 401,
+                                        "message": "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 별자리",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별자리를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
     ResponseEntity<?> repositionConstellation(
             @PathVariable Long id,
             @RequestBody ConstellationPositionDto dto
