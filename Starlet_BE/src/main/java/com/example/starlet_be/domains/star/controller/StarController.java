@@ -33,6 +33,7 @@ public class StarController implements StarApi {
 
 
     // 밤하늘 페이지 별 불러오기(2달 간격)
+    // 별자리에 속한 별들을 제외하고 불러오도록 구현
     @GetMapping
     public ResponseEntity<?> getStarryNightStar(
             @AuthenticationPrincipal UserDetails userDetails,
