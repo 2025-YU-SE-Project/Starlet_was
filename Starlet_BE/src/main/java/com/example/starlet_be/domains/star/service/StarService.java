@@ -1,6 +1,5 @@
 package com.example.starlet_be.domains.star.service;
 
-import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
@@ -26,9 +25,15 @@ import java.util.List;
 public class StarService {
     private final UserRepository userRepository;
     private final StarRepository starRepository;
-    private final DiaryRepository diaryRepository;
 
-    // 별 상세조회
+    /**
+     * 별 상세조회
+     *
+     * 아직 프론트엔드 요구사항이 반영되지 않아서 연관관계 id만 가져오게 만들었습니다.
+     *
+     * @param id 별ID
+     * @return StarInfoDto 별, 일기, 사용자 ID 반환
+     */
     @Transactional(readOnly = true)
     public StarInfoDto getStar(Long id) {
 
@@ -46,7 +51,19 @@ public class StarService {
                 .build();
     }
 
-    // 밤하늘 페이지 별들 불러오기
+    /**
+     * 밤하늘 별 불러오기
+     *
+     * 사용자의 별들 중 별자리에 소속되지 않고 요청한 분기에 맞는 별들을 가져옴
+     *
+     * 사용자가 없을 때 USER_NOT_FOUND
+     * 월 입력 오류가 발생했을때 DIARY_INVALID_MONTH -> 일단 같은 뜻의 예외라서 재활용함
+     *
+     * @param userDetails 액세스 토큰 기반 사용자 정보
+     * @param year 연도
+     * @param month 월
+     * @return List<StarryNightStarDto> 조회한 별 리스트
+     */
     @Transactional(readOnly = true)
     public List<StarryNightStarDto> getStarryNightStar(
             UserDetails userDetails, int year, int month
@@ -83,7 +100,17 @@ public class StarService {
         return dtos;
     }
 
-    // 별 위치 최신화
+    /**
+     * 별 위치 최신화
+     *
+     * 밤하늘 별자리에서 별의 위치를 바꾸고 요청했을때 반영해주는 API 입니다
+     *
+     * id로 별을 검색했으나 별이 없다면 STAR_NOT_FOUND
+     * 좌표를 범위 밖으로 입력했다면 STAR_POSITION_OUT_OF_SCOPE
+     *
+     * @param id 별ID
+     * @param dto x,y가 담긴 위치정보
+     */
     @Transactional
     public void repositionStar(Long id, StarPositionDto dto) {
 
