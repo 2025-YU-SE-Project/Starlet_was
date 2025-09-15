@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/constellation")
-public class ConstellationController {
+public class ConstellationController implements ConstellationApi {
     private final ConstellationService constellationService;
 
 
@@ -62,7 +62,10 @@ public class ConstellationController {
 
     // 6. 별자리 위치 최신화
     @PatchMapping("/reposition/{id}")
-    public ResponseEntity<?> repositionConstellation(@PathVariable Long id, @RequestBody ConstellationPositionDto dto){
+    public ResponseEntity<?> repositionConstellation(
+            @PathVariable Long id,
+            @RequestBody ConstellationPositionDto dto
+    ){
         constellationService.repositionConstellation(id, dto);
         return ResponseEntity.ok().build();
     }

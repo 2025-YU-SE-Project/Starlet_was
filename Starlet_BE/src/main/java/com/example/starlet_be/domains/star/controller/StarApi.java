@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
-@Tag(name = "Star API", description = "별 관련 CRU가 구현되어 있고, 별을 렌더링하기 위한 필수 API입니다.")
+@Tag(name = "Star API", description = "별 관련 API입니다.")
 public interface StarApi {
 
     @Operation(summary = "별 정보 조회", description = "별과 그의 연관관계들의 id를 가져옵니다.")
