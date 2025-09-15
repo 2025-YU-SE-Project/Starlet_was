@@ -26,6 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 사용자(User) 관리 서비스
+ * 회원가입, 로그인, 회원탈퇴, 로그아웃, 이메일 기반 검색, 닉네임 중복 확인
+ * 로그아웃은 백엔드에 구현하지 않고 프론트엔드에서 토큰 삭제해주는 정도로 끝낼 예정
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -35,7 +40,18 @@ public class UserService {
     private final VerifyRepository verifyRepository;
     private final EmailService emailService;
 
-    // 유저 단일 조회
+    /**
+     * 사용자 단일 조회
+     *
+     * ID 기반으로 사용자 정보를 가져온다.
+     * 사용자가 존재하지 않는다면 USER_NOT_FOUND 예외 발생
+     *
+     * SRS에서 별도로 지정된 기능이 아니며 프론트엔드의 테스트 용도로 이용된다.
+     * 사용 용도가 없다면 폐기예정
+     *
+     * @param id 사용자 ID
+     * @return UserResDto 응답 DTO
+     */
     @Transactional(readOnly = true)
     public UserResDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(
@@ -44,7 +60,16 @@ public class UserService {
         return user.toResDto();
     }
 
-    // 유저 전체 조회
+    /**
+     * 사용자 목록 조회
+     *
+     * 서비스를 이용중인 모든 사용자 정보를 가져온다.
+     *
+     * SRS에서 별도로 지정된 기능이 아니며 프론트엔드의 테스트 용도로 이용된다.
+     * 사용 용도가 없다면 폐기예정
+     *
+     * @return List<UserResDto> 응답 DTO 리스트
+     */
     @Transactional(readOnly = true)
     public List<UserResDto> getUserList() {
         List<User> users = userRepository.findAll();
@@ -56,7 +81,16 @@ public class UserService {
         return dtos;
     }
 
-    // 회원가입
+    /**
+     * 회원가입
+     *
+     * dto에 제대로 정보가 담기지 않는다면 400 응답
+     * 이메일을 생성조차 하지 않으면(인증 메일 발송을 하지 않으면 객체가 없음) EMAIL_NOT_FOUND 예외 404 응답
+     * 이메일 생성 후 인증하지 않으면 NOT_VERIFY_USER 예외 400 응답
+     * 닉네임이 중복될 경우
+     * @param dto 회원가입을 위한 기본정보들. 이메일, 닉네임, 비밀번호
+     * @return User 만들어진 객체 반환
+     */
     @Transactional
     public User signUp(SignUpDto dto) {
         // 인증된 이메일 가져오기
@@ -73,14 +107,33 @@ public class UserService {
 
     }
 
-
-    // 닉네임 존재(중복) 확인
+    /**
+     * 닉네임 유효성 확인
+     *
+     * 이미 존재하는 닉네임이 있으면 NICKNAME_CONFLICT 409 응답
+     *
+     * @param nickname
+     * @return boolean 중복되면 true, 아니면 false
+     */
     @Transactional(readOnly = true)
     public boolean existNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
-    // 로그인
+    /**
+     * 로그인
+     *
+     * dto에 모든 정보가 담기지 않으면 400 응답
+     * 가입된 사용자가 존재하지 않으면 USER_NOT_FOUND 응답
+     * 비밀번호가 틀리면 INCORRECT_PASSWORD 응답
+     * 인증상태가 비정상적일 경우 NOT_VERIFY_USER 응답
+     * 비밀번호 초기화 요청상태에서 로그인을 성공할경우 요청 철회 후 정상계정으로 변경
+     * 프론트엔드 작업 끝나기전까지 헤더와 응답에 모두 AccessToken 및 RefreshToken 반영
+     *
+     * @param dto 로그인에 필요한 정보. 이메일 및 비밀번호
+     * @param res 헤더
+     * @return LoginInfoDto -> userId, email, nickname, 토큰 2개 응답
+     */
     @Transactional
     public LoginInfoDto login(LoginDto dto, HttpServletResponse res) {
         // 1. 유저 찾기
@@ -131,21 +184,28 @@ public class UserService {
                 .build();
     }
 
-    // 로그인 되어있는 유저가 계정 삭제
+    /**
+     * 회원탈퇴
+     *
+     * 이메일 기반 조회했을때 사용자가 없다면 USER_NOT_FOUND 응답
+     *
+     * @param email
+     */
     @Transactional
     public void deleteCurrentUser(String email) {
         User user = userRepository.findByEmailAddress(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND));
-//        Email userEmail = user.getEmail();
-//        Verify userVerify = userEmail.getVerify();
-
-        // Cascade 설정으로 나머지 주석처리
         userRepository.delete(user);
-//        emailRepository.delete(userEmail);
-//        verifyRepository.delete(userVerify);
     }
 
-    // 이메일 기반 찾기
+    /**
+     * 이메일 기반 조회
+     *
+     * 사용자가 없다면 USER_NOT_FOUND 응답
+     *
+     * @param email 이메일
+     * @return User 찾은 엔티티 반환
+     */
     @Transactional(readOnly = true)
     public User findByEmailAddress(String email) {
         return userRepository.findByEmailAddress(email).orElseThrow(
@@ -153,6 +213,13 @@ public class UserService {
         );
     }
 
+    /**
+     * 로그아웃
+     *
+     * 사실 프론트단에서 토큰 삭제해주는게 가장깔끔한 방법이라 형태만 구현하였습니다.
+     *
+     * @param res 헤더
+     */
     @Transactional
     public void logout(HttpServletResponse res) {
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
