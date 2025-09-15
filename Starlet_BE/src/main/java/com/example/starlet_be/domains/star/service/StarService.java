@@ -97,8 +97,7 @@ public class StarService {
             throw new CustomException(ErrorCode.STAR_POSITION_OUT_OF_SCOPE);
 
         // 3. 위치 적용
-        star.setX(dto.getX());
-        star.setY(dto.getY());
+        star.changePosition(dto.getX(), dto.getY());
 
         // 4. 저장
         starRepository.save(star);
