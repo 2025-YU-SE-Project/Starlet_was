@@ -6,8 +6,10 @@ import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.resdto.UserResDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -15,7 +17,8 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,5 +51,9 @@ public class User{
 
     public UserResDto toResDto() {
         return UserResDto.builder().id(id).nickname(nickname).email(email.getAddress()).build();
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

@@ -149,7 +149,7 @@ public class VerifyService {
         );
 
         // 비밀번호 암호화 하여 저장
-        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.changePassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
         // 인증정보도 승인상태로 바꿔주기
