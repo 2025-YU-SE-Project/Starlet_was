@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,17 +22,18 @@ import java.time.LocalDate;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/constellation")
-public class ConstellationController {
+public class ConstellationController implements ConstellationApi {
     private final ConstellationService constellationService;
 
 
-    // 1. 2달 간격 별자리들 조회(밤하늘페이지 별자리조회)
-    @GetMapping("/{date}")
+    // 1. 밤하늘 페이지 별자리 조회
+    @GetMapping
     public ResponseEntity<?> getStarryNightConstellation(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            @RequestParam int year,
+            @RequestParam int month
     ){
-        return ResponseEntity.ok().body(constellationService.getStarryNightConstellation(userDetails, date));
+        return ResponseEntity.ok().body(constellationService.getStarryNightConstellation(userDetails, year, month));
     }
 
 
@@ -60,7 +62,10 @@ public class ConstellationController {
 
     // 6. 별자리 위치 최신화
     @PatchMapping("/reposition/{id}")
-    public ResponseEntity<?> repositionConstellation(@PathVariable Long id, @RequestBody ConstellationPositionDto dto){
+    public ResponseEntity<?> repositionConstellation(
+            @PathVariable Long id,
+            @RequestBody ConstellationPositionDto dto
+    ){
         constellationService.repositionConstellation(id, dto);
         return ResponseEntity.ok().build();
     }

@@ -81,16 +81,13 @@ public class ConstellationService {
     }
 
     @Transactional(readOnly = true)
-    public List<StarryNightConstellationDto> getStarryNightConstellation(UserDetails userDetails, LocalDate date) {
+    public List<StarryNightConstellationDto> getStarryNightConstellation(
+            UserDetails userDetails, int year, int month
+    ) {
         // 유저 불러오기
         User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
-
-        // 불러올 날짜 지정
-        int year = date.getYear();
-        int month = date.getMonthValue();
-
 
         if(month % 2 == 0)
             month--;

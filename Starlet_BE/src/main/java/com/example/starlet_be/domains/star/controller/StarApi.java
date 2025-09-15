@@ -14,10 +14,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
-@Tag(name = "Star API", description = "별 관련 CRU가 구현되어 있고, 별을 렌더링하기 위한 필수 API입니다.")
+@Tag(name = "Star API", description = "별 관련 API입니다.")
 public interface StarApi {
 
     @Operation(summary = "별 정보 조회", description = "별과 그의 연관관계들의 id를 가져옵니다.")
@@ -55,8 +56,8 @@ public interface StarApi {
 
 
 
-    @Operation(summary = "특정 날짜 기간 별들 조회",
-            description = "YYYY-MM-DD 형식의 날짜로 두 달씩 묶은 단위로 별들을 조회합니다. 예) 2025-09-13 -> 9~10월 조회, 2025-12-13 -> 11~12월 조회")
+    @Operation(summary = "밤하늘 별 조회",
+            description = "두 달씩 묶은 단위로 별들을 조회합니다. 예) 2025년 9월 -> 9~10월 조회, 2025년 12월 -> 11~12월 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(mediaType = "application/json", examples = {
@@ -81,12 +82,12 @@ public interface StarApi {
                                     ]
                                     """)
                     })),
-            @ApiResponse(responseCode = "400", description = "날짜 오기입",
+            @ApiResponse(responseCode = "400", description = "월 오기입",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
                                     {
                                         "status": 400,
-                                        "message": "date 파라미터 형식이 올바르지 않습니다."
+                                        "message": "month는 1~12 사이여야 합니다."
                                     }
                                     """)
                     })),
@@ -102,7 +103,8 @@ public interface StarApi {
     })
     ResponseEntity<?> getStarryNightStar(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            @RequestParam int year,
+            @RequestParam int month
     );
 
 
