@@ -96,9 +96,7 @@ public class UserService {
         // 3. 인증상태 검증 - 초기화 요청했던 계정은 그냥 로그인 성공했으므로 철회, 나머지는 방어
         Verify verify = user.getEmail().getVerify();
         if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
-            verify.setType(VerifyType.VERIFY);
-            verify.setToken(null);
-            verify.setExpireTime(null);
+            verify.updateStatus(null, VerifyType.VERIFY, null);
             verifyRepository.save(verify);
         } else if(verify.getType() != VerifyType.VERIFY) {
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);

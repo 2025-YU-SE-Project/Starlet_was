@@ -11,15 +11,14 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Getter
 public class Verify {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +36,16 @@ public class Verify {
     @OneToOne(mappedBy = "verify", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Email email;
 
+
+    @Builder public Verify(String token, VerifyType type, LocalDateTime expireTime) {
+        this.token = token;
+        this.type = type;
+        this.expireTime = expireTime;
+    }
+
+    public void updateStatus(String token, VerifyType type, LocalDateTime expireTime) {
+        this.token = token;
+        this.type = type;
+        this.expireTime = expireTime;
+    }
 }

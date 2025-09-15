@@ -81,16 +81,12 @@ public class VerifyService {
             }
             // 비밀번호 초기화 요청을 받지 않아 취소되는 경우
             else if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
-                verify.setToken(null);
-                verify.setExpireTime(null);
-                verify.setType(VerifyType.VERIFY);
+                verify.updateStatus(null, VerifyType.VERIFY, null);
                 verifyRepository.save(verify);
             }
             // 상태가 정상인 계정이거나 새 비밀번호를 입력해야 하는 경우엔 인증 만료기간이 null 이므로 해당 문제가 발생할 수 없음
             else{
-                // 오류로 인해 남았었다면 토큰이랑 만료기간을 null로 주면됨
-                verify.setToken(null);
-                verify.setExpireTime(null);
+                verify.updateStatus(null, verify.getType(), null);
                 verifyRepository.save(verify);
             }
         }
@@ -100,9 +96,7 @@ public class VerifyService {
     @Transactional
     public void emailVerification(String token) {
         Verify verify = validateToken(token, VerifyType.EMAIL_VERIFICATION);
-        verify.setType(VerifyType.VERIFY);
-        verify.setToken(null);
-        verify.setExpireTime(null);
+        verify.updateStatus(null, VerifyType.VERIFY, null);
         verifyRepository.save(verify);
     }
 
@@ -118,9 +112,7 @@ public class VerifyService {
             throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
 
         // 3. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여
-        verify.setType(VerifyType.REQUEST_PASSWORD_RESET);
-        verify.setToken(createToken());
-        verify.setExpireTime(LocalDateTime.now().plusHours(24));
+        verify.updateStatus(createToken(), VerifyType.REQUEST_PASSWORD_RESET, LocalDateTime.now().plusHours(24));
 
         // 4. 해당 인증정보를 저장
         verifyRepository.save(verify);
@@ -133,9 +125,7 @@ public class VerifyService {
         Verify verify = validateToken(token, VerifyType.REQUEST_PASSWORD_RESET);
 
         // 2. 새 비밀번호를 받을 준비가 되어있는 인증정보로 변경
-        verify.setType(VerifyType.CHANGING_PASSWORD);
-        verify.setToken(null);
-        verify.setExpireTime(null);
+        verify.updateStatus(null, VerifyType.CHANGING_PASSWORD, null);
 
         // 3. 인증정보 저장
         verifyRepository.save(verify);
@@ -164,7 +154,7 @@ public class VerifyService {
 
         // 인증정보도 승인상태로 바꿔주기
         Verify verify = email.getVerify();
-        verify.setType(VerifyType.VERIFY);
+        verify.updateStatus(null, VerifyType.VERIFY, null);
         verifyRepository.save(verify);
     }
 
