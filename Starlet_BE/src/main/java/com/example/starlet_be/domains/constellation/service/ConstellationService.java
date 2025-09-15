@@ -26,6 +26,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 별자리 서비스
+ * 별자리 생성, 밤하늘 별자리 조회, 별 위치 최신화
+ *
+ * 미구현 3개 더 남아있음
+ * 프론트엔드 요청사항에 따라 수정이 잦을 수 있음
+ */
 @Service
 @RequiredArgsConstructor
 public class ConstellationService {
@@ -34,6 +42,16 @@ public class ConstellationService {
     private final StarRepository starRepository;
     private final UserRepository userRepository;
 
+    /**
+     * 별자리 만들기
+     *
+     * 사용자가 존재하지 않으면 USER_NOT_FOUND
+     * 별이 존재하지 않으면 STAR_NOT_FOUND
+     * 선택한 별이 이미 별자리에 소속되어있으면 ALREADY_BELONG_TO_CONSTELLATION, 이 부분은 프론트 단에서 막아주긴 해야함
+     *
+     * @param userDetails 토큰 기반 로그인 정보
+     * @param dto 생성할 별자리 기본 정보 -> 별자리 이름, 설명, 별 리스트, 선 리스트
+     */
     @Transactional
     public void createConstellation(UserDetails userDetails, CreateConstellationDto dto) {
         // 유저 조회
@@ -80,6 +98,17 @@ public class ConstellationService {
         }
     }
 
+    /**
+     * 밤하늘 별자리 조회
+     *
+     * 사용자가 존재하지 않으면 USER_NOT_FOUND
+     * 월 입력 오류가 발생했을때 DIARY_INVALID_MONTH -> 일단 같은 뜻의 예외라서 재활용함
+     *
+     * @param userDetails 토큰 기반 로그인 정보
+     * @param year 연도
+     * @param month 월
+     * @return List<StarryNightConstellationDto> 밤하늘 별자리 리스트
+     */
     @Transactional(readOnly = true)
     public List<StarryNightConstellationDto> getStarryNightConstellation(
             UserDetails userDetails, int year, int month
@@ -88,6 +117,9 @@ public class ConstellationService {
         User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
+
+        if(month > 12 || month < 1)
+            throw new CustomException(ErrorCode.DIARY_INVALID_MONTH);
 
         if(month % 2 == 0)
             month--;
@@ -147,7 +179,15 @@ public class ConstellationService {
         return constellationsInfo;
     }
 
-    // 별자리 위치 최신화
+    /**
+     * 별자리 위치 최신화
+     *
+     * 별자리를 찾을 수 없으면 CONSTELLATION_NOT_FOUND
+     * 범위 밖의 위치 값이 들어오면 CONSTELLATION_POSITION_OUT_OF_SCOPE
+     *
+     * @param id 별자리ID
+     * @param dto 별자리 위치정보 : x, y
+     */
     @Transactional
     public void repositionConstellation(Long id, ConstellationPositionDto dto) {
 
