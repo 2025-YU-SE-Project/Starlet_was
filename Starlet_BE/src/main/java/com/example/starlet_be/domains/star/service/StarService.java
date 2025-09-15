@@ -10,7 +10,7 @@ import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+
+/**
+ * 별 서비스
+ * 별 정보 조회, 밤하늘 별 조회, 별 위치 최신화
+ *
+ * 별 생성은 일기 생성에 포함되어있음
+ */
 @Service
 @RequiredArgsConstructor
 public class StarService {
