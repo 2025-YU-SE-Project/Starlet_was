@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 인증 서비스
+ * 인증 객체 생성, 토큰 인증, 만료 인증객체 정리, 가입 이메일 인증 받기, 비밀번호 변경 인증 받기, 새로운 비밀번호 반영
+ */
 @Service
 @RequiredArgsConstructor
 public class VerifyService {
@@ -29,12 +33,21 @@ public class VerifyService {
     private final EmailRepository emailRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 토큰 랜덤 생성
+    /**
+     * 토큰 문자열 랜덤 생성
+     * @return String
+     */
     private String createToken(){
         return UUID.randomUUID().toString();
     }
 
-    // 이메일 생성과 함께 인증 객체 생성
+    /**
+     * 토큰 객체 생성
+     *
+     * 이메일 인증이 필요한 상태로 세팅 EMAIL_VERIFICATION
+     *
+     * @return Verify
+     */
     @Transactional
     public Verify createVerify(){
         String token = createToken();
@@ -47,9 +60,20 @@ public class VerifyService {
         return verifyRepository.save(verify);
     }
 
-    // 토큰 인증
+    /**
+     * 토큰 인증
+     *
+     * 서비스 내 메소드에 의해 호출되므로 protected
+     *
+     * 인증 객체가 없다면 VERIFY_NOT_FOUND
+     * 인자로 전달한 타입과 일치하지 않으면 VERIFY_TYPE_NOT_MATCHED
+     *
+     * @param token 토큰 문자열
+     * @param type 확인을 해볼 타입
+     * @return Verify
+     */
     @Transactional
-    public Verify validateToken(String token, VerifyType type){
+    protected Verify validateToken(String token, VerifyType type){
         Verify verify = verifyRepository.findByToken(token).orElseThrow(
                 () -> new CustomException(ErrorCode.VERIFY_NOT_FOUND)
         );
@@ -60,14 +84,18 @@ public class VerifyService {
     }
 
     // 인증 상태 가져오기(관리자용)
-    @Transactional(readOnly = true)
-    public VerifyType getVerifyType(Email email){
-        return email.getVerify().getType();
-    }
+//    @Transactional(readOnly = true)
+//    public VerifyType getVerifyType(Email email){
+//        return email.getVerify().getType();
+//    }
 
-
-    // 가입 인증 상태가 만료되면 이메일 객체와 인증 객체 삭제
-    // 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
+    /**
+     * 만료 인증객체 정리
+     *
+     * 가입 인증 상태가 만료되면 이메일 객체와 인증 객체 삭제
+     * 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
+     *
+     */
     @Scheduled(cron = "0 */30 * * * *") // 1분마다 실행
     @Transactional
     public void cleanExpiredVerify(){
@@ -92,7 +120,13 @@ public class VerifyService {
         }
     }
 
-    // 1. 가입 이메일 인증 받기
+    /**
+     * 가입 이메일 인증 받기
+     *
+     * 인증 객체를 얻어와서 상태를 업데이트
+     *
+     * @param token 메일로 받은 토큰정보로 검증
+     */
     @Transactional
     public void emailVerification(String token) {
         Verify verify = validateToken(token, VerifyType.EMAIL_VERIFICATION);
@@ -100,7 +134,15 @@ public class VerifyService {
         verifyRepository.save(verify);
     }
 
-    // 2-1. 비밀번호 변경 요청에 따라 상태 변환
+    /**
+     * 비밀번호 변경 요청에 따른 상태변환
+     *
+     * VERIFY -> REQUEST_PASSWORD_RESET
+     *
+     * 이전에 VERIFY가 아닌 계정이 초기화하려할 때, VERIFY_TYPE_NOT_MATCHED -> 이 부분은 메일 재전송을 위해 고칠 가능성 있음
+     *
+     * @param email 이메일 객체
+     */
     @Transactional
     public void passwordResetRequestStatus(Email email){
 
@@ -118,7 +160,13 @@ public class VerifyService {
         verifyRepository.save(verify);
     }
 
-    // 2-2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
+    /**
+     * 인증 후 비밀번호 변경 가능 상태로 전환
+     *
+     * REQUEST_PASSWORD_RESET -> CHANGING_PASSWORD
+     *
+     * @param token 메일로 받은 토큰 문자열
+     */
     @Transactional
     public void passwordResetVerification(String token) {
         // 1. 토큰 문자열과 인증상태를 기반으로 인증 정보 가져오기
@@ -131,7 +179,17 @@ public class VerifyService {
         verifyRepository.save(verify);
     }
 
-    // 3. 새로운 비밀번호 반영(새로운 비밀번호 생성)
+    /**
+     * 새로운 비밀번호 반영
+     *
+     * 비밀번호를 반영 후 인증정보를 VERIFY로 원상복구함
+     *
+     * 이메일이 없다면 EMAIL_NOT_FOUND
+     * CHANGING_PASSWORD 상태가 아닌데 접근한다면 VEIRFY_TYPE_NOT_MATCHED
+     * 사용자가 없다면 USER_NOT_FOUND -> 사실 이메일이 없다면 발생하지 않을 예외이긴함
+     *
+     * @param dto 이메일과 새로운 비밀번호
+     */
     @Transactional
     public void updatePassword(PasswordResetConfirmDto dto) {
         // 이메일이 맞는지 확인하고 새 비밀번호 암호화하여 넣기
