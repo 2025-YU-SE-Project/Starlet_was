@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -32,12 +33,13 @@ public class StarController implements StarApi {
 
 
     // 밤하늘 페이지 별 불러오기(2달 간격)
-    @GetMapping("/{date}")
+    @GetMapping
     public ResponseEntity<?> getStarryNightStar(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            @RequestParam int year,
+            @RequestParam int month
     ){
-        return ResponseEntity.ok().body(starService.getStarryNightStar(userDetails, date));
+        return ResponseEntity.ok().body(starService.getStarryNightStar(userDetails, year, month));
     }
 
 
