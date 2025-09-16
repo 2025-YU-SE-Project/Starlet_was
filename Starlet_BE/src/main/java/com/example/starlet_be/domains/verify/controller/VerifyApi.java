@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Verify API", description = "인증 및 보안에 관련된 API 입니다.")
 public interface VerifyApi {
-    
+
     @Operation(summary = "새 비밀번호 반영", description = "새로운 비밀번호로 최종적으로 변경하는 API입니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "변경 성공"),
