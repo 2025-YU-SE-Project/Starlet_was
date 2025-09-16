@@ -181,7 +181,7 @@ public class EmailService {
      */
     @Transactional
     protected void sendVerificationEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/verify/init?token=" + token;
+        String link = baseUrl + "/view/v1/verify/init?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -232,7 +232,7 @@ public class EmailService {
      * @param token Verify 토큰 부분
      */
     protected void sendPasswordResetEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/verify/password-reset/confirm?token=" + token;
+        String link = baseUrl + "/view/v1/verify/password-reset/confirm?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
