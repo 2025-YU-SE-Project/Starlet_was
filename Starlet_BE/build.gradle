@@ -55,6 +55,9 @@ dependencies {
     // 메일
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // 서버단 뷰 템플릿
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 }
 
 bootBuildImage{
