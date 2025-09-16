@@ -225,7 +225,6 @@ public class EmailService {
             String html = htmlTemplate.replace("%s", link);
             helper.setText(html, true);
 
-            helper.addInline("background-image", new ClassPathResource("static/images/email-background.jpeg"));
             helper.addInline("star-icon", new ClassPathResource("static/images/star-icon.png"));
 
             mailSender.send(message);
