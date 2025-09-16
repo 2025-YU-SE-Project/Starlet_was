@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -181,38 +182,52 @@ public class EmailService {
      */
     @Transactional
     protected void sendVerificationEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/verify/init?token=" + token;
+        String link = baseUrl + "/view/v1/verify/init?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(email.getAddress());
-            helper.setSubject("StarLet 회원가입 이메일 인증을 완료해주세요");
+            helper.setSubject("✨ Starlet에 오신 것을 환영합니다! 별빛 여정을 시작해보세요.");
 
-            String html = """
-                <html>
-                  <body>
-                    <p>안녕하세요</p>
-                    <p>가입을 완료하려면 아래 버튼을 클릭해주세요:</p>
-                    <p style="text-align:center;">
-                      <a href="%s"
-                         style="
-                           background-color:#4CAF50;
-                           color:white;
-                           padding:10px 20px;
-                           text-decoration:none;
-                           border-radius:5px;
-                         ">
-                        이메일 인증하기
-                      </a>
-                    </p>
-                    <p>버튼이 작동하지 않으면, 아래 토큰을 복사해서 브라우저에 붙여넣어 주세요:</p>
-                    <p>%s</p>
-                  </body>
-                </html>
-                """.formatted(link, token);
+            String htmlTemplate = """
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <style> @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap'); </style>
+        </head>
+        <body style="margin:0; padding:0; background-color:#000000;">
+            <table width="100%%" border="0" cellpadding="0" cellspacing="0" background="cid:background-image" style="background-image:url('cid:background-image'); background-size:cover; background-position:center; background-color:#000000;">
+                <tr>
+                    <td align="center" style="padding: 50px 20px;">
+                        <table width="100%%"  border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: rgba(27, 39, 53, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); text-align: center; color: #ffffff; font-family: 'Gowun Dodum', sans-serif;">
+                            <tr><td style="padding: 20px;"></td></tr>
+                            <tr><td style="font-size: 38px; font-weight: bold; letter-spacing: 5px;">S t a r l e t</td></tr>
+                            <tr><td style="height: 20px;"></td></tr>
+                            <tr><td><img src="cid:star-icon" alt="Welcome Star" width="120" style="border-radius: 50%%;"></td></tr>
+                            <tr><td style="height: 20px;"></td></tr>
+                            <tr><td style="font-size: 24px; font-weight: bold; padding: 0 40px;">별의 세계에 오신 것을 환영합니다</td></tr>
+                            <tr><td style="height: 15px;"></td></tr>
+                            <tr><td style="font-size: 16px; line-height: 1.7; padding: 0 40px; color: #dddddd;">당신의 소중한 감정들이 밤하늘의 별이 될 준비를 마쳤습니다. <br>아래 버튼을 눌러 별자리로 향하는 마지막 관문을 통과해주세요.</td></tr>
+                            <tr><td style="height: 40px;"></td></tr>
+                            <tr><td><a href="%s" target="_blank" style="background-color: #9370DB; color: #ffffff; padding: 15px 35px; text-decoration: none; border-radius: 50px; font-size: 18px; font-weight: bold; display: inline-block;">여정 시작하기</a></td></tr>
+                            <tr><td style="padding: 30px;"></td></tr>
+                            <tr><td style="font-size: 12px; color: #999999; border-top: 1px solid rgba(255, 255, 255, 0.2); padding: 20px 0;">© 2025 Starlet. All rights reserved.</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
+        """;
 
+            String html = htmlTemplate.replace("%s", link);
             helper.setText(html, true);
+
+            helper.addInline("background-image", new ClassPathResource("static/images/email-background.jpeg"));
+            helper.addInline("star-icon", new ClassPathResource("static/images/star-icon.png"));
+
             mailSender.send(message);
 
         } catch (MessagingException e) {
@@ -232,38 +247,47 @@ public class EmailService {
      * @param token Verify 토큰 부분
      */
     protected void sendPasswordResetEmail(Email email, String token){
-        String link = baseUrl + "/api/v1/verify/password-reset/confirm?token=" + token;
+        String link = baseUrl + "/view/v1/verify/password-reset/confirm?token=" + token;
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
+            helper.setSubject("🔑 Starlet 비밀번호 재설정을 위한 안내입니다.");
             helper.setTo(email.getAddress());
-            helper.setSubject("StarLet 비밀번호 변경 인증 메일입니다.");
 
-            String html = """
-                <html>
-                  <body>
-                    <p>안녕하세요</p>
-                    <p>비밀번호를 변경 인증을 원하시면 아래 버튼을 눌러주세요:</p>
-                    <p style="text-align:center;">
-                      <a href="%s"
-                         style="
-                           background-color:#4CAF50;
-                           color:white;
-                           padding:10px 20px;
-                           text-decoration:none;
-                           border-radius:5px;
-                         ">
-                        이메일 인증하기
-                      </a>
-                    </p>
-                    <p>버튼이 작동하지 않으면, 아래 토큰을 복사해서 브라우저에 붙여넣어 주세요:</p>
-                    <p>%s</p>
-                  </body>
-                </html>
-                """.formatted(link, token);
+            String htmlTemplate = """
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <style> @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap'); </style>
+        </head>
+        <body style="margin:0; padding:0; background-color:#1B2735;">
+            <table width="100%%" border="0" cellpadding="0" cellspacing="0" style="background-color:#1B2735;">
+                <tr>
+                    <td align="center" style="padding: 50px 20px;">
+                        <table width="100%%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #2C3E50; border-radius: 20px; text-align: center; color: #ffffff; font-family: 'Gowun Dodum', sans-serif;">
+                            <tr><td style="padding: 20px;"></td></tr>
+                            <tr><td style="font-size: 38px; font-weight: bold; letter-spacing: 5px;">S t a r l e t</td></tr>
+                            <tr><td style="height: 40px;"></td></tr>
+                            <tr><td style="font-size: 24px; font-weight: bold; padding: 0 40px;">새로운 비밀의 문을 열 시간입니다</td></tr>
+                            <tr><td style="height: 15px;"></td></tr>
+                            <tr><td style="font-size: 16px; line-height: 1.7; padding: 0 40px; color: #dddddd;">잊혀진 별의 길을 다시 찾기 위한 요청을 받았습니다. <br>아래 버튼을 눌러 새로운 비밀번호를 설정하고, 당신의 우주로 다시 접속하세요.</td></tr>
+                            <tr><td style="height: 40px;"></td></tr>
+                            <tr><td><a href="%s" target="_blank" style="background-color: #4682B4; color: #ffffff; padding: 15px 35px; text-decoration: none; border-radius: 50px; font-size: 18px; font-weight: bold; display: inline-block;">비밀번호 재설정</a></td></tr>
+                            <tr><td style="padding: 30px;"></td></tr>
+                            <tr><td style="font-size: 12px; color: #999999; border-top: 1px solid #4E5D6C; padding: 20px 0;">© 2025 Starlet. All rights reserved.</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
+        """;
 
+            String html = htmlTemplate.replace("%s", link);
             helper.setText(html, true);
+
             mailSender.send(message);
 
         } catch (MessagingException e) {
