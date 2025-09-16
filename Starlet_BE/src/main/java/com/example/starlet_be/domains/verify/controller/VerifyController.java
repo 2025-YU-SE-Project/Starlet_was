@@ -19,35 +19,12 @@ public class VerifyController implements VerifyApi {
 
     private final VerifyService verifyService;
 
-    // 1. 가입 이메일 인증 받기
-    @GetMapping("/init")
-    public ResponseEntity<?> emailVerification(@RequestParam String token){
-        verifyService.emailVerification(token);
-        return ResponseEntity.ok().build();
-    }
-
-
-    // 2. 비밀번호 변경 허용 인증 이후 비밀번호 변경상태로 전환
-    @GetMapping("/password-reset/confirm")
-    public ResponseEntity<?> passwordResetVerification(@RequestParam String token){
-        verifyService.passwordResetVerification(token);
-        return ResponseEntity.ok().build();
-    }
-
-
-    // 3. 새로운 비밀번호 반영(새로운 비밀번호 생성)
+    // 새로운 비밀번호 반영(새로운 비밀번호 생성)
     @PostMapping("/password-reset/new-password")
     public ResponseEntity<?> confirmChangePassword(@RequestBody PasswordResetConfirmDto dto){
         verifyService.updatePassword(dto);
         return ResponseEntity.ok().build();
     }
-
-
-    // 가입 인증 상태가 만료되면 이메일 객체와 인증 객체 삭제
-    // 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
-
-
-
 
 //    @PostMapping("/reissue")
 //    public ResponseEntity<?> reissue(HttpServletRequest request) {
