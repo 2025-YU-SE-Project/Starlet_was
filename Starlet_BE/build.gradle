@@ -60,6 +60,10 @@ dependencies {
     // 서버단 뷰 템플릿
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    //s3
+    implementation platform("software.amazon.awssdk:bom:2.25.48")
+    implementation "software.amazon.awssdk:s3"
+
     // ai
     implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.2'
     implementation 'org.springframework.ai:spring-ai-openai'
