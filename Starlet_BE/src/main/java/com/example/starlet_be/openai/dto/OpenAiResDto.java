@@ -1,4 +1,4 @@
-package com.example.starlet_be.openai;
+package com.example.starlet_be.openai.dto;
 
 import lombok.Data;
 

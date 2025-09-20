@@ -60,12 +60,6 @@ dependencies {
     // 서버단 뷰 템플릿
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    // 코틀린 의존성 추가
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-
-
     // ai
     implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.2'
     implementation 'org.springframework.ai:spring-ai-openai'

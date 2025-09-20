@@ -32,6 +32,11 @@ spring:
       base-url: api.openai.com
       organization-id: ${ORGANIZATION_ID}
       project-id: ${PROJECT_ID}
+      moderation:
+        options:
+          model: text-moderation-latest
+    model:
+      moderation: openai
 
 jwt:
   secret-key: ${SECRET_KEY}
