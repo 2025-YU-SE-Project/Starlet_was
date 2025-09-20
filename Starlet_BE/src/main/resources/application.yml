@@ -26,9 +26,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: api.openai.com
+      organization-id: ${ORGANIZATION_ID}
+      project-id: ${PROJECT_ID}
+
 jwt:
   secret-key: ${SECRET_KEY}
 
 app:
   frontend:
     base-url: ${APP_FRONTEND_BASE_URL}
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
