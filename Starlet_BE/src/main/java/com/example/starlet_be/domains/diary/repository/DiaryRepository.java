@@ -19,4 +19,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findAllByUser_IdAndCreateAtBetweenOrderByCreateAtAsc(
             Long userId, LocalDate from, LocalDate to
     );
+
+    Optional<Diary> findByIdAndUser_Id(Long diaryId, Long userId);
 }

@@ -10,8 +10,6 @@ import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -85,5 +83,15 @@ public class DiaryController implements DiaryApi {
         return userRepository.findByEmailAddress(email)
                 .map(User::getId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다: " + email));
+    }
+
+    @DeleteMapping("/{diaryId}")
+    public ResponseEntity<Object> removeDiary(
+            @AuthenticationPrincipal UserDetails principal,
+            @PathVariable("diaryId") Long diaryId ) {
+        Long userId = resolveUserId(principal);
+
+        diaryService.delete(userId, diaryId);
+        return ResponseEntity.noContent().build();
     }
 }
