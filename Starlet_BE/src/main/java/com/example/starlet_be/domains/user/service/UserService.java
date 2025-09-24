@@ -127,7 +127,7 @@ public class UserService {
      * 가입된 사용자가 존재하지 않으면 USER_NOT_FOUND 응답
      * 비밀번호가 틀리면 INCORRECT_PASSWORD 응답
      * 인증상태가 비정상적일 경우 NOT_VERIFY_USER 응답
-     * 비밀번호 초기화 요청상태에서 로그인을 성공할경우 요청 철회 후 정상계정으로 변경
+     * 가입된 모든 상태(비밀번호 변경 절차 포함)에서 로그인을 성공할경우 정상계정으로 변경
      * 프론트엔드 작업 끝나기전까지 헤더와 응답에 모두 AccessToken 및 RefreshToken 반영
      *
      * @param dto 로그인에 필요한 정보. 이메일 및 비밀번호
@@ -147,10 +147,12 @@ public class UserService {
 
         // 3. 인증상태 검증 - 초기화 요청했던 계정은 그냥 로그인 성공했으므로 철회, 나머지는 방어
         Verify verify = user.getEmail().getVerify();
-        if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET){
+        if(verify.getType() == VerifyType.REQUEST_PASSWORD_RESET
+        || verify.getType() == VerifyType.CHANGING_PASSWORD){
             verify.updateStatus(null, VerifyType.VERIFY, null);
             verifyRepository.save(verify);
-        } else if(verify.getType() != VerifyType.VERIFY) {
+        }
+        if(verify.getType() == VerifyType.EMAIL_VERIFICATION) {
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
         }
 
