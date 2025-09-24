@@ -139,6 +139,19 @@ public class DiaryService {
                 .toList();
     }
 
+    /**
+     * (개발용) 일기 삭제
+     *
+     * @param userId 사용자 ID
+     * @param diaryId 삭제할 diary ID
+     */
+    public void delete(Long userId, Long diaryId) {
+        Diary diary = diaryRepository.findByIdAndUser_Id(diaryId, userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND)); // 타인/없음 은닉
+
+        diaryRepository.delete(diary);
+    }
+
     private List<Factor> safeFactors(List<Factor> in) {
         return (in != null) ? new ArrayList<>(in) : new ArrayList<>();
     }
