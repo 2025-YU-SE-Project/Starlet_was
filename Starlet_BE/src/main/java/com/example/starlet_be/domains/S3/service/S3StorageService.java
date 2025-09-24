@@ -33,6 +33,10 @@ public class S3StorageService {
      * @return 발급한 presigned url
      */
     public URL createUploadUrl(String key, String contentType) {
+        if (!contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 contentType만 허용됩니다.");
+        }
+
         PutObjectRequest putReq = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
@@ -55,6 +59,12 @@ public class S3StorageService {
      * @return 최종 사진 url
      */
     public String publishProfile(Long userId, String tempKey) {
+
+        String allowedPrefix = "uploads/users/" + userId + "/";
+        if (tempKey == null || !tempKey.startsWith(allowedPrefix)) {
+            throw new IllegalArgumentException("잘못된 tempKey입니다.");
+        }
+
         String publicKey = "public/users/" + userId + "/profile.png";
 
         CopyObjectRequest copyReq = CopyObjectRequest.builder()
