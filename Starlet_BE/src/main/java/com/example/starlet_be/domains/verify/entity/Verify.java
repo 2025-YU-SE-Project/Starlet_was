@@ -37,7 +37,8 @@ public class Verify {
     private Email email;
 
 
-    @Builder public Verify(String token, VerifyType type, LocalDateTime expireTime) {
+    @Builder
+    public Verify(String token, VerifyType type, LocalDateTime expireTime) {
         this.token = token;
         this.type = type;
         this.expireTime = expireTime;

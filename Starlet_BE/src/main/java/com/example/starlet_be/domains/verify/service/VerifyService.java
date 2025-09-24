@@ -37,7 +37,7 @@ public class VerifyService {
      * 토큰 문자열 랜덤 생성
      * @return String
      */
-    private String createToken(){
+    public String createToken(){
         return UUID.randomUUID().toString();
     }
 
