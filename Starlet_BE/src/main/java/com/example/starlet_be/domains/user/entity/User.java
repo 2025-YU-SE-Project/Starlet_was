@@ -34,6 +34,9 @@ public class User{
     @JoinColumn(name = "email_id", nullable = false)
     private Email email;
 
+    @Column
+    private String profilePhotoUrl;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Star> stars = new ArrayList<>();
 
@@ -43,10 +46,11 @@ public class User{
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Constellation> constellations = new ArrayList<>();
 
-    @Builder public User(String nickname, String password, Email email) {
+    @Builder public User(String nickname, String password, Email email, String profilePhotoUrl) {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public UserResDto toResDto() {
@@ -55,5 +59,9 @@ public class User{
 
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void changeProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 }
