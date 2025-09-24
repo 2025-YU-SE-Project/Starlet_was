@@ -37,7 +37,7 @@ public class VerifyService {
      * 토큰 문자열 랜덤 생성
      * @return String
      */
-    private String createToken(){
+    public String createToken(){
         return UUID.randomUUID().toString();
     }
 
@@ -96,7 +96,7 @@ public class VerifyService {
      * 비밀번호 변경 요청이었다면 이거는 그냥 만료시킴
      *
      */
-    @Scheduled(cron = "0 */30 * * * *") // 1분마다 실행
+    @Scheduled(cron = "0 */30 * * * *") // 30분마다 실행
     @Transactional
     public void cleanExpiredVerify(){
         List<Verify> expireList = verifyRepository.findAllByExpireTimeBefore(LocalDateTime.now());
@@ -139,7 +139,7 @@ public class VerifyService {
      *
      * VERIFY -> REQUEST_PASSWORD_RESET
      *
-     * 이전에 VERIFY가 아닌 계정이 초기화하려할 때, VERIFY_TYPE_NOT_MATCHED -> 이 부분은 메일 재전송을 위해 고칠 가능성 있음
+     * 가입된 계정 범위 안에서 초기화 이메일을 계속 전송할 수 있음.
      *
      * @param email 이메일 객체
      */
@@ -149,8 +149,8 @@ public class VerifyService {
         // 1. 이메일의 인증정보 가져오기
         Verify verify = email.getVerify();
 
-        // 2. 원래 정상인 계정이었는지
-        if(verify.getType() != VerifyType.VERIFY)
+        // 2. 가입 된 계정이 아니라면
+        if(verify.getType() == VerifyType.EMAIL_VERIFICATION)
             throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
 
         // 3. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여

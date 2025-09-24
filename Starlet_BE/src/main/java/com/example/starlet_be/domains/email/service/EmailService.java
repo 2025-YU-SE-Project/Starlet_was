@@ -5,9 +5,12 @@ import com.example.starlet_be.domains.email.repository.EmailRepository;
 import com.example.starlet_be.domains.email.reqdto.EmailAddressDto;
 import com.example.starlet_be.domains.email.resdto.EmailInfoDto;
 import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.entity.enums.TokenType;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.user.service.UserService;
 import com.example.starlet_be.domains.verify.entity.Verify;
+import com.example.starlet_be.domains.verify.entity.VerifyType;
+import com.example.starlet_be.domains.verify.repository.VerifyRepository;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
@@ -21,6 +24,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 /**
  * 이메일(Email) 서비스
  *
@@ -33,6 +38,7 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final VerifyService verifyService;
     private final UserRepository userRepository;
+    private final VerifyRepository verifyRepository;
 
     @Value("${app.frontend.base-url}")
     private String baseUrl;
@@ -128,19 +134,45 @@ public class EmailService {
      * 초기 가입 인증 이메일 전송
      *
      * 사용가능한 이메일인 경우 해당 메소드가 실행되어 인증을 요구하게됨
+     * 이메일을 재전송할 수 있게 아래와 같이 구현함
      *
      * @param dto 이메일 주소
      */
     @Transactional
     public void initEmail(EmailAddressDto dto){
-        // 인증 객체 최초 생성
-        Verify verify = verifyService.createVerify();
 
-        // 이메일 생성 후 인증객체 붙이기
-        Email email = createEmail(dto.getEmail(), verify);
+        if(emailRepository.existsByAddress(dto.getEmail())){
+            // 이미 가입되어있으면 방어
+            if(userRepository.existsByEmailAddress(dto.getEmail()))
+                throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
 
-        // 인증 이메일 전송
-        sendVerificationEmail(email, verify.getToken());
+            // 인증정보 불러오기
+            Verify verify = verifyRepository.findByEmail_Address(dto.getEmail()).orElseThrow(
+                    () -> new CustomException(ErrorCode.VERIFY_NOT_FOUND)
+            );
+            // 인증정보 최신화
+            verify.updateStatus(
+                    verifyService.createToken(),
+                    VerifyType.EMAIL_VERIFICATION,
+                    LocalDateTime.now().plusHours(8)
+            );
+            // 저장
+            verifyRepository.save(verify);
+
+            sendVerificationEmail(
+                    findEmailByAddress(dto.getEmail()),
+                    verify.getToken()
+            );
+        } else {
+            // 인증 객체 최초 생성
+            Verify verify = verifyService.createVerify();
+
+            // 이메일 최초 생성 후 인증 이메일 전송
+            sendVerificationEmail(
+                    createEmail(dto.getEmail(), verify),
+                    verify.getToken()
+            );
+        }
     }
 
     /**
@@ -148,6 +180,8 @@ public class EmailService {
      *
      * 사용자가 비밀번호를 잊어버렸을경우 인증 메일을 전송한다.
      * 해당 계정을 비밀번호 요청 상태로 변경한 후 메일을 전송한다.
+     *
+     * VerifyService에 의해서 인증 상태를 검사하니 해당 메소드를 따라갈 것.
      *
      * 이메일 기반으로 검색해서 사용자가 없을경우 USER_NOT_FOUND
      *

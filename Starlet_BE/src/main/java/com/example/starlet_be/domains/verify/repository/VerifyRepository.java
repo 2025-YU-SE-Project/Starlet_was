@@ -11,4 +11,6 @@ public interface VerifyRepository extends JpaRepository<Verify, Long> {
     Optional<Verify> findByToken(String token);
 
     List<Verify> findAllByExpireTimeBefore(LocalDateTime now);
+
+    Optional<Verify> findByEmail_Address(String emailAddress);
 }
