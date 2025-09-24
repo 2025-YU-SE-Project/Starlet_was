@@ -149,8 +149,8 @@ public class VerifyService {
         // 1. 이메일의 인증정보 가져오기
         Verify verify = email.getVerify();
 
-        // 2. 원래 정상인 계정이었는지
-        if(verify.getType() != VerifyType.VERIFY)
+        // 2. 가입 된 계정이 아니라면
+        if(verify.getType() == VerifyType.EMAIL_VERIFICATION)
             throw new CustomException(ErrorCode.VERIFY_TYPE_NOT_MATCHED);
 
         // 3. 비밀번호 초기화 요청 상태로 변경과, 인증 유효 토큰 부여
