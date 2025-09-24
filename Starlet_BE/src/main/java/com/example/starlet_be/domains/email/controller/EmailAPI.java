@@ -63,12 +63,12 @@ public interface EmailAPI {
     @Operation(summary = "가입가능 이메일 인증메일 발송", description = "가입할 이메일 주소에 대해 인증메일을 발송합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "이메일 발송 성공"),
-            @ApiResponse(responseCode = "409", description = "이메일 중복",
+            @ApiResponse(responseCode = "409", description = "이미 가입된 회원",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
                                     {
                                         "status": 409,
-                                        "message": "이메일이 중복됩니다."
+                                        "message": "해당 이메일로 가입한 사용자가 이미 존재합니다."
                                     }
                                     """)
                     })),

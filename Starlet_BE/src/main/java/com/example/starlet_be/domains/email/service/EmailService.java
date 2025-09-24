@@ -142,6 +142,10 @@ public class EmailService {
     public void initEmail(EmailAddressDto dto){
 
         if(emailRepository.existsByAddress(dto.getEmail())){
+            // 이미 가입되어있으면 방어
+            if(userRepository.existsByEmailAddress(dto.getEmail()))
+                throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
+
             // 인증정보 불러오기
             Verify verify = verifyRepository.findByEmail_Address(dto.getEmail()).orElseThrow(
                     () -> new CustomException(ErrorCode.VERIFY_NOT_FOUND)
