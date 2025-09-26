@@ -49,8 +49,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/starlet
-            docker-compose down
-            docker system prune -a --volumes --force
-            docker-compose pull
-            docker-compose up -d
+            docker-compose pull app
+            docker-compose up -d --no-deps app
             docker image prune -f
