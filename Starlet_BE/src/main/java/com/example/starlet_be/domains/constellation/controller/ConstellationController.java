@@ -67,6 +67,10 @@ public class ConstellationController implements ConstellationApi {
 
 
     // 2. 별자리 아카이브 상세조회
+    @GetMapping("/archive/{id}")
+    public ResponseEntity<?> getArchiveDetail(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id){
+        return ResponseEntity.ok("sd");
+    }
 
 
 

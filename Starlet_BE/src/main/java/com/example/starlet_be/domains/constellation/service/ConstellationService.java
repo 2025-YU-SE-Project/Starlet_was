@@ -211,9 +211,12 @@ public class ConstellationService {
     }
 
     /**
+     * 별자리 아카이브 목록 조회
      *
-     * @param userDetails
-     * @return
+     * 사용자가 만든 별자리를 모두 조회
+     *
+     * @param userDetails 사용자 로그인 정보
+     * @return 별자리 아카이브 DTO 리스트
      */
     @Transactional(readOnly = true)
     public List<ArchiveDto> getArchiveList(UserDetails userDetails){
@@ -235,6 +238,8 @@ public class ConstellationService {
             for(Star star : stars){
                 starArchiveList.add(StarArchiveDto.builder()
                         .starId(star.getId())
+                        .x(star.getX())
+                        .y(star.getY())
                         .color(star.getColor().toString())
                         .build());
             }
@@ -244,9 +249,9 @@ public class ConstellationService {
 
             for(Connection connection : connections){
                 connectionList.add(ConnectionDto.builder()
-                .startStarId(connection.getStart().getId())
-                .endStarId(connection.getEnd().getId())
-                .build());
+                    .startStarId(connection.getStart().getId())
+                    .endStarId(connection.getEnd().getId())
+                    .build());
             }
 
             archiveList.add(ArchiveDto.builder()
@@ -262,4 +267,5 @@ public class ConstellationService {
 
         return archiveList;
     }
+
 }

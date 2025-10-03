@@ -7,5 +7,7 @@ import lombok.Getter;
 @Builder
 public class StarArchiveDto {
     private Long starId;
+    private Double x;
+    private Double y;
     private String color;
 }
