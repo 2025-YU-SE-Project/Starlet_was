@@ -1,6 +1,7 @@
 package com.example.starlet_be.domains.star.repository;
 
 import com.example.starlet_be.domains.constellation.entity.Constellation;
+import com.example.starlet_be.domains.diary.entity.Color;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.entity.User;
@@ -20,4 +21,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
     List<Star> findByConstellation(Constellation constellation);
 
     List<Star> findByUserAndDiary_CreateAtBetweenAndConstellationIsNull(User user, LocalDate startDate, LocalDate endDate);
+
+    Integer countByConstellationAndColor(Constellation constellation, Color color);
 }
