@@ -271,7 +271,14 @@ public class ConstellationService {
         return archiveList;
     }
 
-
+    /**
+     * 별자리 아카이브 상세조회
+     *
+     * 사용자가 클릭한 하나의 별자리에 대해 상세정보를 조회
+     *
+     * @param id 별자리 id
+     * @return 별자리 정보, 감정별 별의 개수 통합 DTO
+     */
     @Transactional(readOnly = true)
     public ArchiveDetailDto getArchiveDetail(Long id){
 
@@ -319,6 +326,15 @@ public class ConstellationService {
                 .build();
     }
 
+
+    /**
+     * 별자리 이름 및 설명 API
+     *
+     * 별자리 아카이브에서 별자리의 이름과 설명을 수정하는 API 입니다.
+     *
+     * @param id
+     * @param dto
+     */
     @Transactional
     public void updateConstellationInfo(Long id, UpdateConstellationInfo dto){
 
