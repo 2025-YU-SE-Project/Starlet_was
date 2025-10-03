@@ -1,11 +1,8 @@
 package com.example.starlet_be.domains.email.controller;
 
-import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.reqdto.EmailAddressDto;
 import com.example.starlet_be.domains.email.service.EmailService;
-import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.service.UserService;
-import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;

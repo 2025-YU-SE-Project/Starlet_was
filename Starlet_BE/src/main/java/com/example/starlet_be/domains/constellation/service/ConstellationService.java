@@ -2,16 +2,18 @@ package com.example.starlet_be.domains.constellation.service;
 
 import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.connection.repository.ConnectionRepository;
-import com.example.starlet_be.domains.connection.reqdto.CreateConnectionDto;
+import com.example.starlet_be.domains.connection.reqdto.ConnectionDto;
 import com.example.starlet_be.domains.connection.resdto.StarryNightConnectionDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.resdto.ArchiveDto;
 import com.example.starlet_be.domains.constellation.resdto.StarryNightConstellationDto;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
+import com.example.starlet_be.domains.star.resdto.StarArchiveDto;
 import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
@@ -84,7 +86,7 @@ public class ConstellationService {
         }
 
         // 연결 저장
-        for(CreateConnectionDto con : dto.getConnections()){
+        for(ConnectionDto con : dto.getConnections()){
             connectionRepository.save(Connection.builder()
                             .constellation(constellation)
                             .start(starRepository.findById(con.getStartStarId()).orElseThrow(
@@ -206,5 +208,58 @@ public class ConstellationService {
         // 4. 저장
         constellationRepository.save(constellation);
 
+    }
+
+    /**
+     *
+     * @param userDetails
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<ArchiveDto> getArchiveList(UserDetails userDetails){
+
+        // 1. 사용자 조회
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        // 2. 사용자의 별자리 모두 들고오기
+        List<Constellation> constellations = constellationRepository.findByUser(user);
+
+        List<ArchiveDto> archiveList = new ArrayList<>();
+
+        for(Constellation con : constellations){
+            List<Star> stars = starRepository.findByConstellation(con);
+            List<StarArchiveDto> starArchiveList = new ArrayList<>();
+
+            for(Star star : stars){
+                starArchiveList.add(StarArchiveDto.builder()
+                        .starId(star.getId())
+                        .color(star.getColor().toString())
+                        .build());
+            }
+
+            List<Connection> connections = connectionRepository.findByConstellation(con);
+            List<ConnectionDto> connectionList = new ArrayList<>();
+
+            for(Connection connection : connections){
+                connectionList.add(ConnectionDto.builder()
+                .startStarId(connection.getStart().getId())
+                .endStarId(connection.getEnd().getId())
+                .build());
+            }
+
+            archiveList.add(ArchiveDto.builder()
+                            .constellationId(con.getId())
+                            .name(con.getName())
+                            .description(con.getDescription())
+                            .date(con.getCreateAt())
+                            .isRepresentative(con.isRepresentative())
+                            .stars(starArchiveList)
+                            .connections(connectionList)
+                    .build());
+        }
+
+        return archiveList;
     }
 }
