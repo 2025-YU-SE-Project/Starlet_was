@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.constellation.controller;
 
 import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.reqdto.UpdateConstellationInfo;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -73,8 +74,12 @@ public class ConstellationController implements ConstellationApi {
     }
 
 
-
-    // 3. 별자리 이름 수정
+    // 3. 별자리 이름 및 설명 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationInfo dto){
+        constellationService.updateConstellationInfo(id, dto);
+        return ResponseEntity.ok().build();
+    }
 
 
 

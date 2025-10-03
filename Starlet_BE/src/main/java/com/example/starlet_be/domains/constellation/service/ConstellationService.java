@@ -8,6 +8,7 @@ import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.reqdto.UpdateConstellationInfo;
 import com.example.starlet_be.domains.constellation.resdto.ArchiveDetailDto;
 import com.example.starlet_be.domains.constellation.resdto.ArchiveDto;
 import com.example.starlet_be.domains.constellation.resdto.StarryNightConstellationDto;
@@ -273,6 +274,8 @@ public class ConstellationService {
 
     @Transactional(readOnly = true)
     public ArchiveDetailDto getArchiveDetail(Long id){
+
+        // 1. 별자리 찾기
         Constellation con = constellationRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
         );
@@ -314,6 +317,19 @@ public class ConstellationService {
                 .angerCount(starRepository.countByConstellationAndColor(con, Color.RED))
                 .sadnessCount(starRepository.countByConstellationAndColor(con, Color.BLUE))
                 .build();
+    }
+
+    @Transactional
+    public void updateConstellationInfo(Long id, UpdateConstellationInfo dto){
+
+        // 1. 별자리 찾기
+        Constellation con = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        // 2. 정보 수정
+        con.updateInfo(dto.getName(), dto.getDescription());
+
     }
 
 }
