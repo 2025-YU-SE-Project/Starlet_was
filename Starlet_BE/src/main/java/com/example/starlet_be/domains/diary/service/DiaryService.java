@@ -14,7 +14,7 @@ import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,34 +52,41 @@ public class DiaryService {
      */
     @Transactional
     public DiaryResDto create(Long userId, DiaryCreateReqDto req) {
-        LocalDate date = req.getDate();
+        LocalDate date = (req.getDate() != null) ? req.getDate() : LocalDate.now();
 
         if (diaryRepository.existsByUser_IdAndCreateAt(userId, date)) {
             throw new CustomException(ErrorCode.DIARY_ALREADY_EXISTS);
         }
+        try
+        {
+            User userRef = em.getReference(User.class, userId);
 
-        User userRef = em.getReference(User.class, userId);
+            Diary diary = Diary.builder()
+                    .user(userRef)
+                    .emotion(req.getEmotion())
+                    .factors(safeFactors(req.getFactors()))
+                    .content(req.getContent())
+                    .createAt(date)
+                    .build();
 
-        Diary diary = Diary.builder()
-                .user(userRef)
-                .emotion(req.getEmotion())
-                .factors(safeFactors(req.getFactors()))
-                .content(req.getContent())
-                .createAt(date)
-                .build();
+            diaryRepository.save(diary);
 
-        Star star = Star.builder()
-                .color(diary.getEmotion().getColor())
-                .x(Math.random())
-                .y(Math.random())
-                .user(userRef)
-                .diary(diary)
-                .build();
+            Star star = Star.builder()
+                    .color(diary.getEmotion().getColor())
+                    .x(Math.random())
+                    .y(Math.random())
+                    .user(userRef)
+                    .diary(diary)
+                    .build();
 
-        starRepository.save(star);
-        diaryRepository.save(diary);
+            starRepository.save(star);
 
-        return DiaryResDto.of(diary);
+
+            return DiaryResDto.of(diary);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new CustomException(ErrorCode.DIARY_ALREADY_EXISTS);
+        }
+
     }
 
     /**
