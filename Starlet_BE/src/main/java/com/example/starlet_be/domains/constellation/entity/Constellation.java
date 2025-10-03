@@ -76,4 +76,9 @@ public class Constellation {
         this.y = y;
     }
 
+    public void updateInfo(String name, String description) {
+        if(name != null && !name.isBlank()) this.name = name;
+        if(description != null && !description.isBlank()) this.description = description;
+    }
+
 }

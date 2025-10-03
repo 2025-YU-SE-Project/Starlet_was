@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.constellation.controller;
 
 import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.reqdto.UpdateConstellationInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -228,5 +229,213 @@ public interface ConstellationApi {
             @RequestBody ConstellationPositionDto dto
     );
 
+    @Operation(summary = "별자리 아카이브 조회", description = "사용자가 생성한 모든 별자리를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 아카이브 조회 성공",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    [
+                                        {
+                                            "constellationId": 1,
+                                            "name": "카시오페이아자리",
+                                            "description": "카시오페아 자리 입니다.",
+                                            "date": "2025-10-03",
+                                            "isRepresentative": false,
+                                            "stars": [
+                                                {
+                                                    "starId": 1,
+                                                    "x": -0.15,
+                                                    "y": 0.0,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 2,
+                                                    "x": -0.05,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 3,
+                                                    "x": 0.05,
+                                                    "y": -0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 4,
+                                                    "x": 0.15,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 5,
+                                                    "x": 0.2,
+                                                    "y": 0.0,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 6,
+                                                    "x": -0.1,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 7,
+                                                    "x": 0.1,
+                                                    "y": -0.1,
+                                                    "color": "YELLOW"
+                                                }
+                                            ],
+                                            "connections": [
+                                                {
+                                                    "startStarId": 1,
+                                                    "endStarId": 6
+                                                },
+                                                {
+                                                    "startStarId": 6,
+                                                    "endStarId": 2
+                                                },
+                                                {
+                                                    "startStarId": 2,
+                                                    "endStarId": 7
+                                                },
+                                                {
+                                                    "startStarId": 7,
+                                                    "endStarId": 4
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                    """)
+                    })
+            ),
+            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 401,
+                                        "message": "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 유저를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> getArchiveList(@AuthenticationPrincipal UserDetails userDetails);
 
+    @Operation(summary = "별자리 아카이브 상세 조회", description = "특정 별자리의 상세 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 상세 조회 성공",
+                content = @Content(mediaType = "application/json", examples = {
+                        @ExampleObject(value = """
+                                {
+                                    "constellationId": 1,
+                                    "name": "카시오페이아자리",
+                                    "description": "북쪽 하늘의 W자 모양 별자리입니다.",
+                                    "date": "2025-10-03",
+                                    "isRepresentative": false,
+                                    "stars": [
+                                        {
+                                            "starId": 1,
+                                            "x": -0.15,
+                                            "y": 0.0,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 2,
+                                            "x": -0.05,
+                                            "y": 0.1,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 3,
+                                            "x": 0.05,
+                                            "y": -0.1,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 4,
+                                            "x": 0.15,
+                                            "y": 0.1,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 5,
+                                            "x": 0.2,
+                                            "y": 0.0,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 6,
+                                            "x": -0.1,
+                                            "y": 0.1,
+                                            "color": "YELLOW"
+                                        },
+                                        {
+                                            "starId": 7,
+                                            "x": 0.1,
+                                            "y": -0.1,
+                                            "color": "YELLOW"
+                                        }
+                                    ],
+                                    "connections": [
+                                        {
+                                            "startStarId": 1,
+                                            "endStarId": 6
+                                        },
+                                        {
+                                            "startStarId": 6,
+                                            "endStarId": 2
+                                        },
+                                        {
+                                            "startStarId": 2,
+                                            "endStarId": 7
+                                        },
+                                        {
+                                            "startStarId": 7,
+                                            "endStarId": 4
+                                        }
+                                    ],
+                                    "happynessCount": 7,
+                                    "funnyCount": 0,
+                                    "neutralCount": 0,
+                                    "surprisingCount": 0,
+                                    "angerCount": 0,
+                                    "sadnessCount": 0
+                                }
+                                """)
+                })
+            ),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 별자리",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별자리를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> getArchiveDetail(@PathVariable Long id);
+
+    @Operation(summary = "별자리 정보 수정", description = "별자리의 이름과 설명을 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 정보 수정 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 별자리",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별자리를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationInfo dto);
 }

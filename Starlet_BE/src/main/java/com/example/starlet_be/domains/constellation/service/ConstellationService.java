@@ -2,16 +2,21 @@ package com.example.starlet_be.domains.constellation.service;
 
 import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.connection.repository.ConnectionRepository;
-import com.example.starlet_be.domains.connection.reqdto.CreateConnectionDto;
+import com.example.starlet_be.domains.connection.reqdto.ConnectionDto;
 import com.example.starlet_be.domains.connection.resdto.StarryNightConnectionDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.reqdto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.resdto.ArchiveDetailDto;
+import com.example.starlet_be.domains.constellation.resdto.ArchiveDto;
 import com.example.starlet_be.domains.constellation.resdto.StarryNightConstellationDto;
+import com.example.starlet_be.domains.diary.entity.Color;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
+import com.example.starlet_be.domains.star.resdto.StarArchiveDto;
 import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
@@ -84,7 +89,7 @@ public class ConstellationService {
         }
 
         // 연결 저장
-        for(CreateConnectionDto con : dto.getConnections()){
+        for(ConnectionDto con : dto.getConnections()){
             connectionRepository.save(Connection.builder()
                             .constellation(constellation)
                             .start(starRepository.findById(con.getStartStarId()).orElseThrow(
@@ -207,4 +212,140 @@ public class ConstellationService {
         constellationRepository.save(constellation);
 
     }
+
+    /**
+     * 별자리 아카이브 목록 조회
+     *
+     * 사용자가 만든 별자리를 모두 조회
+     *
+     * @param userDetails 사용자 로그인 정보
+     * @return 별자리 아카이브 DTO 리스트
+     */
+    @Transactional(readOnly = true)
+    public List<ArchiveDto> getArchiveList(UserDetails userDetails){
+
+        // 1. 사용자 조회
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        // 2. 사용자의 별자리 모두 들고오기
+        List<Constellation> constellations = constellationRepository.findByUser(user);
+
+        List<ArchiveDto> archiveList = new ArrayList<>();
+
+        for(Constellation con : constellations){
+            List<Star> stars = starRepository.findByConstellation(con);
+            List<StarArchiveDto> starArchiveList = new ArrayList<>();
+
+            for(Star star : stars){
+                starArchiveList.add(StarArchiveDto.builder()
+                        .starId(star.getId())
+                        .x(star.getX())
+                        .y(star.getY())
+                        .color(star.getColor().toString())
+                        .build());
+            }
+
+            List<Connection> connections = connectionRepository.findByConstellation(con);
+            List<ConnectionDto> connectionList = new ArrayList<>();
+
+            for(Connection connection : connections){
+                connectionList.add(ConnectionDto.builder()
+                    .startStarId(connection.getStart().getId())
+                    .endStarId(connection.getEnd().getId())
+                    .build());
+            }
+
+            archiveList.add(ArchiveDto.builder()
+                            .constellationId(con.getId())
+                            .name(con.getName())
+                            .description(con.getDescription())
+                            .date(con.getCreateAt())
+                            .isRepresentative(con.isRepresentative())
+                            .stars(starArchiveList)
+                            .connections(connectionList)
+                    .build());
+        }
+
+        return archiveList;
+    }
+
+    /**
+     * 별자리 아카이브 상세조회
+     *
+     * 사용자가 클릭한 하나의 별자리에 대해 상세정보를 조회
+     *
+     * @param id 별자리 id
+     * @return 별자리 정보, 감정별 별의 개수 통합 DTO
+     */
+    @Transactional(readOnly = true)
+    public ArchiveDetailDto getArchiveDetail(Long id){
+
+        // 1. 별자리 찾기
+        Constellation con = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        List<Star> stars = starRepository.findByConstellation(con);
+        List<StarArchiveDto> starArchiveList = new ArrayList<>();
+
+        for(Star star : stars){
+            starArchiveList.add(StarArchiveDto.builder()
+                    .starId(star.getId())
+                    .x(star.getX())
+                    .y(star.getY())
+                    .color(star.getColor().toString())
+                    .build());
+        }
+
+        List<Connection> connections = connectionRepository.findByConstellation(con);
+        List<ConnectionDto> connectionList = new ArrayList<>();
+
+        for(Connection connection : connections){
+            connectionList.add(ConnectionDto.builder()
+                    .startStarId(connection.getStart().getId())
+                    .endStarId(connection.getEnd().getId())
+                    .build());
+        }
+
+        return ArchiveDetailDto.builder()
+                .constellationId(con.getId())
+                .name(con.getName())
+                .description(con.getDescription())
+                .date(con.getCreateAt())
+                .isRepresentative(con.isRepresentative())
+                .stars(starArchiveList)
+                .connections(connectionList)
+                .happynessCount(starRepository.countByConstellationAndColor(con, Color.YELLOW))
+                .funnyCount(starRepository.countByConstellationAndColor(con, Color.ORANGE))
+                .neutralCount(starRepository.countByConstellationAndColor(con, Color.WHITE))
+                .surprisingCount(starRepository.countByConstellationAndColor(con, Color.SKYBLUE))
+                .angerCount(starRepository.countByConstellationAndColor(con, Color.RED))
+                .sadnessCount(starRepository.countByConstellationAndColor(con, Color.BLUE))
+                .build();
+    }
+
+
+    /**
+     * 별자리 이름 및 설명 API
+     *
+     * 별자리 아카이브에서 별자리의 이름과 설명을 수정하는 API 입니다.
+     *
+     * @param id
+     * @param dto
+     */
+    @Transactional
+    public void updateConstellationInfo(Long id, UpdateConstellationInfo dto){
+
+        // 1. 별자리 찾기
+        Constellation con = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        // 2. 정보 수정
+        con.updateInfo(dto.getName(), dto.getDescription());
+
+    }
+
 }
