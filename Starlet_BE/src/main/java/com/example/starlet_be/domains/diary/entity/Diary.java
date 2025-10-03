@@ -14,13 +14,17 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(
+        name = "diary",
+        uniqueConstraints = @UniqueConstraint(name = "uk_diary_user_date", columnNames = {"user_id", "create_at"})
+)
 public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -39,7 +43,7 @@ public class Diary {
     @Column
     private String content;
 
-    @Column(nullable = false)
+    @Column(name = "create_at", nullable = false)
     private LocalDate createAt;
 
     @OneToOne(mappedBy = "diary", cascade = CascadeType.REMOVE, orphanRemoval = true)
