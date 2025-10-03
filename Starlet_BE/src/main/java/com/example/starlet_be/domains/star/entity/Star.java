@@ -50,7 +50,7 @@ public class Star {
     private Constellation constellation;
 
     @OneToOne
-    @JoinColumn(name = "diary_id")
+    @JoinColumn(name = "diary_id", nullable = false, unique = true)
     private Diary diary;
 
     @ManyToOne
