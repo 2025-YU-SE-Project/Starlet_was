@@ -335,79 +335,86 @@ public interface ConstellationApi {
                 content = @Content(mediaType = "application/json", examples = {
                         @ExampleObject(value = """
                                 {
-                                    "constellationId": 1,
-                                    "name": "카시오페이아자리",
-                                    "description": "북쪽 하늘의 W자 모양 별자리입니다.",
-                                    "date": "2025-10-03",
-                                    "isRepresentative": false,
-                                    "stars": [
-                                        {
-                                            "starId": 1,
-                                            "x": -0.15,
-                                            "y": 0.0,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 2,
-                                            "x": -0.05,
-                                            "y": 0.1,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 3,
-                                            "x": 0.05,
-                                            "y": -0.1,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 4,
-                                            "x": 0.15,
-                                            "y": 0.1,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 5,
-                                            "x": 0.2,
-                                            "y": 0.0,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 6,
-                                            "x": -0.1,
-                                            "y": 0.1,
-                                            "color": "YELLOW"
-                                        },
-                                        {
-                                            "starId": 7,
-                                            "x": 0.1,
-                                            "y": -0.1,
-                                            "color": "YELLOW"
-                                        }
-                                    ],
-                                    "connections": [
-                                        {
-                                            "startStarId": 1,
-                                            "endStarId": 6
-                                        },
-                                        {
-                                            "startStarId": 6,
-                                            "endStarId": 2
-                                        },
-                                        {
-                                            "startStarId": 2,
-                                            "endStarId": 7
-                                        },
-                                        {
-                                            "startStarId": 7,
-                                            "endStarId": 4
-                                        }
-                                    ],
-                                    "happynessCount": 7,
-                                    "funnyCount": 0,
-                                    "neutralCount": 0,
-                                    "surprisingCount": 0,
-                                    "angerCount": 0,
-                                    "sadnessCount": 0
+                                     "constellationId": 1,
+                                     "name": "카시오페이아자리",
+                                     "description": "카시오페아 자리 입니다.",
+                                     "date": "2025-10-03",
+                                     "isRepresentative": false,
+                                     "stars": [
+                                         {
+                                             "starId": 1,
+                                             "x": -0.15,
+                                             "y": 0.0,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-01"
+                                         },
+                                         {
+                                             "starId": 2,
+                                             "x": -0.05,
+                                             "y": 0.1,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-02"
+                                         },
+                                         {
+                                             "starId": 3,
+                                             "x": 0.05,
+                                             "y": -0.1,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-03"
+                                         },
+                                         {
+                                             "starId": 4,
+                                             "x": 0.15,
+                                             "y": 0.1,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-04"
+                                         },
+                                         {
+                                             "starId": 5,
+                                             "x": 0.2,
+                                             "y": 0.0,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-05"
+                                         },
+                                         {
+                                             "starId": 6,
+                                             "x": -0.1,
+                                             "y": 0.1,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-06"
+                                         },
+                                         {
+                                             "starId": 7,
+                                             "x": 0.1,
+                                             "y": -0.1,
+                                             "color": "YELLOW",
+                                             "date": "2025-09-07"
+                                         }
+                                     ],
+                                     "connections": [
+                                         {
+                                             "startStarId": 1,
+                                             "endStarId": 6
+                                         },
+                                         {
+                                             "startStarId": 6,
+                                             "endStarId": 2
+                                         },
+                                         {
+                                             "startStarId": 2,
+                                             "endStarId": 7
+                                         },
+                                         {
+                                             "startStarId": 7,
+                                             "endStarId": 4
+                                         }
+                                     ],
+                                     "happynessCount": 7,
+                                     "funnyCount": 0,
+                                     "neutralCount": 0,
+                                     "surprisingCount": 0,
+                                     "angerCount": 0,
+                                     "sadnessCount": 0
                                 }
                                 """)
                 })
