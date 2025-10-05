@@ -16,6 +16,7 @@ import com.example.starlet_be.domains.diary.entity.Color;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
+import com.example.starlet_be.domains.star.resdto.StarArchiveDetailDto;
 import com.example.starlet_be.domains.star.resdto.StarArchiveDto;
 import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
@@ -288,14 +289,15 @@ public class ConstellationService {
         );
 
         List<Star> stars = starRepository.findByConstellation(con);
-        List<StarArchiveDto> starArchiveList = new ArrayList<>();
+        List<StarArchiveDetailDto> starArchiveDetailList = new ArrayList<>();
 
         for(Star star : stars){
-            starArchiveList.add(StarArchiveDto.builder()
+            starArchiveDetailList.add(StarArchiveDetailDto.builder()
                     .starId(star.getId())
                     .x(star.getX())
                     .y(star.getY())
                     .color(star.getColor().toString())
+                    .date(star.getDiary().getCreateAt())
                     .build());
         }
 
@@ -315,7 +317,7 @@ public class ConstellationService {
                 .description(con.getDescription())
                 .date(con.getCreateAt())
                 .isRepresentative(con.isRepresentative())
-                .stars(starArchiveList)
+                .stars(starArchiveDetailList)
                 .connections(connectionList)
                 .happynessCount(starRepository.countByConstellationAndColor(con, Color.YELLOW))
                 .funnyCount(starRepository.countByConstellationAndColor(con, Color.ORANGE))

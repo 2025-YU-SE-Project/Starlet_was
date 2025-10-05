@@ -1,7 +1,7 @@
 package com.example.starlet_be.domains.constellation.resdto;
 
 import com.example.starlet_be.domains.connection.reqdto.ConnectionDto;
-import com.example.starlet_be.domains.star.resdto.StarArchiveDto;
+import com.example.starlet_be.domains.star.resdto.StarArchiveDetailDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,7 +16,7 @@ public class ArchiveDetailDto {
     private String description;
     private LocalDate date;
     private Boolean isRepresentative;
-    private List<StarArchiveDto> stars;
+    private List<StarArchiveDetailDto> stars;
     private List<ConnectionDto> connections;
     private Integer happynessCount;
     private Integer funnyCount;
