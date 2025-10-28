@@ -81,13 +81,15 @@ public class ConstellationController implements ConstellationApi {
         return ResponseEntity.ok().build();
     }
 
-
-
-
-
-
-
-
+    // 4. 대표별자리 설정 및 해제
+    @PostMapping("/archive/{id}/representative")
+    public ResponseEntity<?> changeRepresentativeConstellation(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        constellationService.changeRepresentativeConstellation(id, userDetails);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

@@ -350,4 +350,31 @@ public class ConstellationService {
 
     }
 
+    @Transactional
+    public void changeRepresentativeConstellation(Long id, UserDetails userDetails) {
+
+        // 1. 사용자 찾기
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        // 2. 별자리 찾기
+        Constellation after = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        // 3. 이전에 대표별자리였던것 불러오기
+        Constellation prev = constellationRepository.findByUserAndIsRepresentative(user, true).orElse(null);
+
+        // 4. 만약 대표별자리가 있었을경우 대표별자리 취소
+        if(prev != null){
+            prev.changeRepresentative();
+            constellationRepository.save(prev);
+        }
+
+        // 5. 대표별자리 지정
+        after.changeRepresentative();
+        constellationRepository.save(after);
+
+    }
 }
