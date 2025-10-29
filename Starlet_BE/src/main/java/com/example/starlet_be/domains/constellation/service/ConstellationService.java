@@ -330,12 +330,12 @@ public class ConstellationService {
 
 
     /**
-     * 별자리 이름 및 설명 API
+     * 별자리 이름 및 설명 수정 API
      *
      * 별자리 아카이브에서 별자리의 이름과 설명을 수정하는 API 입니다.
      *
-     * @param id
-     * @param dto
+     * @param id 수정할 별자리 id 입니다.
+     * @param dto 수정할 별자리 정보들 입니다.
      */
     @Transactional
     public void updateConstellationInfo(Long id, UpdateConstellationInfo dto){
@@ -350,4 +350,40 @@ public class ConstellationService {
 
     }
 
+    /**
+     * 대표별자리 지정/변경 API
+     *
+     * Constellation의 boolean필드를 통해 대표별자리 변경을 시도합니다.
+     * 이미 대표별자리가 있을 경우 이전 별자리의 대표를 해제하고 새로운 별자리를 대표로 등록합니다.
+     *
+     * @param id 새로 대표로 만들 별자리의 id 입니다.
+     * @param userDetails 유저 정보 입니다.
+     */
+    @Transactional
+    public void changeRepresentativeConstellation(Long id, UserDetails userDetails) {
+
+        // 1. 사용자 찾기
+        User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        // 2. 별자리 찾기
+        Constellation after = constellationRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
+        );
+
+        // 3. 이전에 대표별자리였던것 불러오기
+        Constellation prev = constellationRepository.findByUserAndIsRepresentative(user, true).orElse(null);
+
+        // 4. 만약 대표별자리가 있었을경우 대표별자리 취소
+        if(prev != null){
+            prev.changeRepresentative();
+            constellationRepository.save(prev);
+        }
+
+        // 5. 대표별자리 지정
+        after.changeRepresentative();
+        constellationRepository.save(after);
+
+    }
 }

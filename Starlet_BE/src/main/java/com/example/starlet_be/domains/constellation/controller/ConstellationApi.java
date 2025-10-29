@@ -445,4 +445,28 @@ public interface ConstellationApi {
                     }))
     })
     ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationInfo dto);
+
+
+    @Operation(summary = "대표 별자리 설정", description = "대표 별자리를 지정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 정보 수정 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 정보",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(name = "사용자 정보 없음", value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 유저를 찾을 수 없습니다."
+                                    }
+                                    """),
+                            @ExampleObject(name = "별자리 정보 없음", value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별자리를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> changeRepresentativeConstellation(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails);
 }
