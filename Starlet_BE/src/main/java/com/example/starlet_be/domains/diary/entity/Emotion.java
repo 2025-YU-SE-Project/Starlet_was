@@ -13,8 +13,8 @@ public enum Emotion {
         return switch (this) {
             case HAPPINESS -> Color.YELLOW;
             case FUNNY -> Color.ORANGE;
-            case NEUTRAL -> Color.WHITE;
-            case SURPRISING -> Color.SKYBLUE;
+            case NEUTRAL -> Color.GREEN;
+            case SURPRISING -> Color.PURPLE;
             case ANGER -> Color.RED;
             case SADNESS -> Color.BLUE;
         };
