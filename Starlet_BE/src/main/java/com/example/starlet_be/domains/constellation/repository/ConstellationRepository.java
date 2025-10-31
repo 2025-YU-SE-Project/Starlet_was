@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ConstellationRepository extends JpaRepository<Constellation, Long> {
-    List<Constellation> findByUserAndCreateAtBetween(User user, LocalDate startDate, LocalDate endDate);
+    List<Constellation> findByUserAndBelongDateBetween(User user, LocalDate startDate, LocalDate endDate);
     List<Constellation> findByUser(User user);
 
     Optional<Constellation> findByUserAndIsRepresentative(User user, boolean isRepresentative);

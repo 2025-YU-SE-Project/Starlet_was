@@ -42,6 +42,9 @@ public class Constellation {
     private LocalDate createAt;
 
     @Column
+    private LocalDate belongDate;
+
+    @Column
     private boolean isRepresentative;
 
     @Column(nullable = false)
@@ -79,6 +82,10 @@ public class Constellation {
     public void updateInfo(String name, String description) {
         if(name != null && !name.isBlank()) this.name = name;
         if(description != null && !description.isBlank()) this.description = description;
+    }
+
+    public void setBelongDate(LocalDate belongDate) {
+        this.belongDate = belongDate;
     }
 
 }

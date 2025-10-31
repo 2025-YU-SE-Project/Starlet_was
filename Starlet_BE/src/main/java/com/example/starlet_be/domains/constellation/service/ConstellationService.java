@@ -102,6 +102,15 @@ public class ConstellationService {
                             .build()
             );
         }
+
+        // 별자리가 속한 월 저장, 그냥 아무 별이나 가져와서 일기 생성일자 저장
+
+        Star star = starRepository.findByConstellation(constellation).get(0);
+
+        constellation.setBelongDate(star.getDiary().getCreateAt());
+
+        constellationRepository.save(constellation);
+
     }
 
     /**
@@ -135,7 +144,7 @@ public class ConstellationService {
 
         // 해당 분기의 별자리 불러오기
         List<Constellation> constellations =
-                constellationRepository.findByUserAndCreateAtBetween(user, startDate, endDate);
+                constellationRepository.findByUserAndBelongDateBetween(user, startDate, endDate);
 
         List<StarryNightConstellationDto> constellationsInfo = new ArrayList<>();
 
@@ -175,6 +184,7 @@ public class ConstellationService {
                             .userId(con.getUser().getId())
                             .x(con.getX())
                             .y(con.getY())
+                            .belongDate(con.getBelongDate())
                             .stars(starsInfo)
                             .connections(connectionsInfo)
                             .build()

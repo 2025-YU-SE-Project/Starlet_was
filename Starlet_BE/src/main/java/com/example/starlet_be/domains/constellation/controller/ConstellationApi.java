@@ -31,6 +31,7 @@ public interface ConstellationApi {
                                             "userId": 1,
                                             "x": 0.1,
                                             "y": 0.2,
+                                            "belongDate": "2025-09-01"
                                             "stars": [
                                                 {
                                                     "starId": 1,
