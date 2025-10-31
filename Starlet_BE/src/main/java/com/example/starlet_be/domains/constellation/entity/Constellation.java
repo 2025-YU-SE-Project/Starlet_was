@@ -42,10 +42,7 @@ public class Constellation {
     private LocalDate createAt;
 
     @Column
-    private Integer year;
-
-    @Column
-    private Integer month;
+    private LocalDate belongDate;
 
     @Column
     private boolean isRepresentative;
@@ -87,9 +84,8 @@ public class Constellation {
         if(description != null && !description.isBlank()) this.description = description;
     }
 
-    public void setYearAndMonth(Integer year, Integer month) {
-        this.year = year;
-        this.month = month;
+    public void setBelongDate(LocalDate belongDate) {
+        this.belongDate = belongDate;
     }
 
 }
