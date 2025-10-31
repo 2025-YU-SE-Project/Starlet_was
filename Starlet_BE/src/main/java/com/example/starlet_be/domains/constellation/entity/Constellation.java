@@ -42,6 +42,12 @@ public class Constellation {
     private LocalDate createAt;
 
     @Column
+    private Integer year;
+
+    @Column
+    private Integer month;
+
+    @Column
     private boolean isRepresentative;
 
     @Column(nullable = false)
@@ -79,6 +85,11 @@ public class Constellation {
     public void updateInfo(String name, String description) {
         if(name != null && !name.isBlank()) this.name = name;
         if(description != null && !description.isBlank()) this.description = description;
+    }
+
+    public void setYearAndMonth(Integer year, Integer month) {
+        this.year = year;
+        this.month = month;
     }
 
 }
