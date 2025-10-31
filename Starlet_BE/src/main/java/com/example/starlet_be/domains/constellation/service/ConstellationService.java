@@ -144,7 +144,7 @@ public class ConstellationService {
 
         // 해당 분기의 별자리 불러오기
         List<Constellation> constellations =
-                constellationRepository.findByUserAndCreateAtBetween(user, startDate, endDate);
+                constellationRepository.findByUserAndBelongDateBetween(user, startDate, endDate);
 
         List<StarryNightConstellationDto> constellationsInfo = new ArrayList<>();
 
