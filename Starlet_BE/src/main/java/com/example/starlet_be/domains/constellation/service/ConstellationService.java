@@ -102,6 +102,13 @@ public class ConstellationService {
                             .build()
             );
         }
+
+        // 별자리가 속한 월 저장, 그냥 아무 별이나 가져와서 소속 연도와 월을 저장
+        constellation.setYearAndMonth(
+                constellation.getStars().get(0).getDiary().getCreateAt().getYear(),
+                constellation.getStars().get(0).getDiary().getCreateAt().getMonthValue()
+        );
+
     }
 
     /**
