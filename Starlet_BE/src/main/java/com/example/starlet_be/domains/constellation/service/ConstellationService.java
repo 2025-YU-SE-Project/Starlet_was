@@ -75,6 +75,7 @@ public class ConstellationService {
                 .x(Math.random())
                 .y(Math.random())
                 .build();
+        constellationRepository.save(constellation);
 
         // 별들 저장
         for(StarPositionDto starDto : dto.getStars()){
@@ -102,8 +103,11 @@ public class ConstellationService {
             );
         }
 
-        // 별자리가 속한 월 저장, 그냥 아무 별이나 가져와서 소속 연도와 월을 저장
-        constellation.setBelongDate(constellation.getStars().get(0).getDiary().getCreateAt());
+        // 별자리가 속한 월 저장, 그냥 아무 별이나 가져와서 일기 생성일자 저장
+
+        Star star = starRepository.findByConstellation(constellation).get(0);
+
+        constellation.setBelongDate(star.getDiary().getCreateAt());
 
         constellationRepository.save(constellation);
 
