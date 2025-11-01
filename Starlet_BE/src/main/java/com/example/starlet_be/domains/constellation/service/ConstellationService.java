@@ -331,8 +331,8 @@ public class ConstellationService {
                 .connections(connectionList)
                 .happynessCount(starRepository.countByConstellationAndColor(con, Color.YELLOW))
                 .funnyCount(starRepository.countByConstellationAndColor(con, Color.ORANGE))
-                .neutralCount(starRepository.countByConstellationAndColor(con, Color.WHITE))
-                .surprisingCount(starRepository.countByConstellationAndColor(con, Color.SKYBLUE))
+                .neutralCount(starRepository.countByConstellationAndColor(con, Color.GREEN))
+                .surprisingCount(starRepository.countByConstellationAndColor(con, Color.PURPLE))
                 .angerCount(starRepository.countByConstellationAndColor(con, Color.RED))
                 .sadnessCount(starRepository.countByConstellationAndColor(con, Color.BLUE))
                 .build();
