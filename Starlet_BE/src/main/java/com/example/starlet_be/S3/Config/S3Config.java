@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.S3.Config;
+package com.example.starlet_be.S3.Config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

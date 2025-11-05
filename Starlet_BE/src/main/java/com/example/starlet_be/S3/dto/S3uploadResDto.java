@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.S3.dto;
+package com.example.starlet_be.S3.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

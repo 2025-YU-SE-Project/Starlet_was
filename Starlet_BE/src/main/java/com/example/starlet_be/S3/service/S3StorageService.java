@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.S3.service;
+package com.example.starlet_be.S3.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

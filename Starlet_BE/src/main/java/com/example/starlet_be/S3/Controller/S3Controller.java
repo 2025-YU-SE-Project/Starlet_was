@@ -1,8 +1,7 @@
-package com.example.starlet_be.domains.S3.Controller;
+package com.example.starlet_be.S3.Controller;
 
-import com.example.starlet_be.domains.S3.dto.S3tempResDto;
-import com.example.starlet_be.domains.S3.dto.S3uploadResDto;
-import com.example.starlet_be.domains.S3.service.S3StorageService;
+import com.example.starlet_be.S3.dto.S3tempResDto;
+import com.example.starlet_be.S3.service.S3StorageService;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.example.starlet_be.domains.user.entity.User;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
