@@ -2,8 +2,6 @@ package com.example.starlet_be.domains.email.controller;
 
 import com.example.starlet_be.domains.email.dto.EmailAddressDto;
 import com.example.starlet_be.domains.email.service.EmailService;
-import com.example.starlet_be.domains.user.service.UserService;
-import com.example.starlet_be.domains.verify.service.VerifyService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EmailController implements EmailAPI {
 
-    private final UserService userService;
     private final EmailService emailService;
-    private final VerifyService verifyService;
 
     // 1. 이메일 중복 확인
     @GetMapping("/check-duplication")
