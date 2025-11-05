@@ -2,9 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22' // 코틀린 JVM 플러그인 추가
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22' // 코틀린 스프링 플러그인 추가
-    id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22' // 코틀린 JPA 플러그인 추가, 최신버전인지 혹인 필요
 }
 
 group = 'com.example'

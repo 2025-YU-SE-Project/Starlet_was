@@ -2,9 +2,9 @@ package com.example.starlet_be.domains.star.service;
 
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.star.repository.StarRepository;
-import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
-import com.example.starlet_be.domains.star.resdto.StarInfoDto;
-import com.example.starlet_be.domains.star.resdto.StarryNightStarDto;
+import com.example.starlet_be.domains.star.dto.StarPositionDto;
+import com.example.starlet_be.domains.star.dto.StarInfoDto;
+import com.example.starlet_be.domains.star.dto.StarryNightStarDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;

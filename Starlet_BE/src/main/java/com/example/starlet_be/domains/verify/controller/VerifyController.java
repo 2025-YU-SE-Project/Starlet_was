@@ -1,14 +1,12 @@
 package com.example.starlet_be.domains.verify.controller;
 
-import com.example.starlet_be.domains.verify.reqdto.PasswordResetConfirmDto;
+import com.example.starlet_be.domains.verify.dto.PasswordResetConfirmDto;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 

@@ -7,7 +7,7 @@ import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
 import com.example.starlet_be.domains.verify.entity.VerifyType;
 import com.example.starlet_be.domains.verify.repository.VerifyRepository;
-import com.example.starlet_be.domains.verify.reqdto.PasswordResetConfirmDto;
+import com.example.starlet_be.domains.verify.dto.PasswordResetConfirmDto;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
