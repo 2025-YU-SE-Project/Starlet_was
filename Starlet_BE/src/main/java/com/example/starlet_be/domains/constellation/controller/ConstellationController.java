@@ -1,8 +1,8 @@
 package com.example.starlet_be.domains.constellation.controller;
 
-import com.example.starlet_be.domains.constellation.reqdto.ConstellationPositionDto;
-import com.example.starlet_be.domains.constellation.reqdto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.reqdto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
+import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

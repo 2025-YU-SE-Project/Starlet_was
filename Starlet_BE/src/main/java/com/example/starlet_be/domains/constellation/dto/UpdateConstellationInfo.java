@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.constellation.reqdto;
+package com.example.starlet_be.domains.constellation.dto;
 
 import lombok.Getter;
 

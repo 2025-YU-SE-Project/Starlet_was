@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.email.resdto;
+package com.example.starlet_be.domains.email.dto;
 
 import lombok.Builder;
 import lombok.Getter;

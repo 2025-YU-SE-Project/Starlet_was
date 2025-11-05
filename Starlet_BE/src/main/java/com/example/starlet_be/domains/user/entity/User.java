@@ -4,11 +4,10 @@ import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.star.entity.Star;
-import com.example.starlet_be.domains.user.resdto.UserResDto;
+import com.example.starlet_be.domains.user.dto.UserResDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

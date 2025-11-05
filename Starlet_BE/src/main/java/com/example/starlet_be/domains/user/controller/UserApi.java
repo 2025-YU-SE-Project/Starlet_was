@@ -1,12 +1,10 @@
 package com.example.starlet_be.domains.user.controller;
 
-import com.example.starlet_be.domains.user.reqdto.LoginDto;
-import com.example.starlet_be.domains.user.reqdto.SignUpDto;
-import com.example.starlet_be.domains.user.resdto.UserResDto;
+import com.example.starlet_be.domains.user.dto.LoginDto;
+import com.example.starlet_be.domains.user.dto.SignUpDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;

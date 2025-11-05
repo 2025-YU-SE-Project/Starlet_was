@@ -1,7 +1,7 @@
-package com.example.starlet_be.domains.constellation.reqdto;
+package com.example.starlet_be.domains.constellation.dto;
 
-import com.example.starlet_be.domains.connection.reqdto.ConnectionDto;
-import com.example.starlet_be.domains.star.reqdto.StarPositionDto;
+import com.example.starlet_be.domains.connection.dto.ConnectionDto;
+import com.example.starlet_be.domains.star.dto.StarPositionDto;
 import lombok.Getter;
 
 import java.util.List;

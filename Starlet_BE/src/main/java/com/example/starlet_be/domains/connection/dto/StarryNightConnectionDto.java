@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.connection.resdto;
+package com.example.starlet_be.domains.connection.dto;
 
 import lombok.Builder;
 import lombok.Getter;

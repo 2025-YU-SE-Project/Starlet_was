@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.user.reqdto;
+package com.example.starlet_be.domains.user.dto;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.user.entity.User;
