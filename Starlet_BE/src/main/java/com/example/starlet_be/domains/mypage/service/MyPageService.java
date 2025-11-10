@@ -54,7 +54,6 @@ public class MyPageService {
      *
      * @throws com.example.starlet_be.exception.CustomException USER_NOT_FOUND - 존재하지 않는 사용자일 경우 발생
      */
-
     @Transactional(readOnly = true)
     public MyPageSummaryResDto getSummary(Long userId, Integer year, Integer month) {
         LocalDate now = LocalDate.now();
