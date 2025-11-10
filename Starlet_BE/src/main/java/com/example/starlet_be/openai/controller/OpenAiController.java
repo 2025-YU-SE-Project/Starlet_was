@@ -7,9 +7,11 @@ import com.example.starlet_be.openai.service.ModerationService;
 import com.example.starlet_be.openai.service.OpenAIBasicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,10 +44,11 @@ public class OpenAiController {
     }
 
 
-    // 한달 일기 분석요약, 파라미터로 연월 입력
-
-
-    // 한달 감정 분석 요약, 파라미터로 연월 입력, 3이랑 합칠지도
+    // 한달 일기 종합 분석요약, 파라미터로 연월 입력
+    @GetMapping("/calendar/diary/summary")
+    public ResponseEntity<?> getDiaryMonthSummary(@RequestParam String diaryId){
+        return ResponseEntity.ok().build();
+    }
 
 
     // 별자리 이름과 설명 추천(일기의 내용, 요인, 감정 종합적 분석)
