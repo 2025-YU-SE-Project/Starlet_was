@@ -1,5 +1,7 @@
 package com.example.starlet_be.openai.controller;
 
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.openai.dto.ModerationDto;
 import com.example.starlet_be.openai.service.ModerationService;
 import com.example.starlet_be.openai.service.OpenAIBasicService;
@@ -23,6 +25,7 @@ public class OpenAiController {
         return ResponseEntity.ok().body(openAIBasicService.getAssistance(prompt, "사용자에게 응답해주세요"));
     }
 
+    // 1. 모더레이션 - 닉네임 및 일기 유해성 확인
     @PostMapping("/moderation")
     public ResponseEntity<?> moderation(@RequestBody String prompt){
         ModerationDto.ModerationResponse moderationResponse = moderationService.moderate(prompt);
@@ -32,28 +35,26 @@ public class OpenAiController {
 
         boolean isFlagged = moderationResponse.getResults().get(0).isFlagged();
 
-        return ResponseEntity.ok().body(isFlagged);
+        if(isFlagged)
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+
+        return ResponseEntity.ok().build();
     }
 
-    // 1. 닉네임 유해정보 감지 단일 - 중복검사때 한번에 처리 가능
+
+    // 한달 일기 분석요약, 파라미터로 연월 입력
 
 
-    // 2. 일기 유해정보 감지 단일
+    // 한달 감정 분석 요약, 파라미터로 연월 입력, 3이랑 합칠지도
 
 
-    // 3-1. 한달 일기 분석요약, 파라미터로 연월 입력
-
-
-    // 3-2. 한달 감정 분석 요약, 파라미터로 연월 입력, 3이랑 합칠지도
-
-
-    // 4. 별자리 이름과 설명 추천(일기의 내용, 요인, 감정 종합적 분석)
+    // 별자리 이름과 설명 추천(일기의 내용, 요인, 감정 종합적 분석)
 
     // (어려움) 별자리 모양 추천
 
-    // 5. 일기 상세조회 AI의 견해 추가
+    // 일기 상세조회 AI의 견해 추가
 
 
-    // 6. 일기 내용을 통한 감정과 요인 추론
+    // 일기 내용을 통한 감정과 요인 추론
 
 }
