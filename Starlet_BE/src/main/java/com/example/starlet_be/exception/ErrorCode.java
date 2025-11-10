@@ -48,6 +48,7 @@ public enum ErrorCode {
 
     // OpenAI 관련
     INAPPROPRIATE_CONTENT(400, "입력 내용에 부적절한 내용이 포함되었습니다."),
+    OPENAI_SERVER_ERROR(500, "외부 서버(OpenAI) 오류입니다."),
 
 
     // 기타 관련
