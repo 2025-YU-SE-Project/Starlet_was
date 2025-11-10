@@ -13,6 +13,7 @@ import com.example.starlet_be.domains.diary.dto.resdto.DiaryResDto;
 import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.service.ModerationService;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,14 @@ public class DiaryService {
     private final UserRepository userRepository;
     private final StarRepository starRepository;
     private final EntityManager em;
+    private final ModerationService moderationService;
 
     /**
      * 새로운 감정 일기를 생성한다.
      *
      * date가 null이면 오늘 날짜로 기본 설정
      * 동일 사용자/날짜의 일기가 이미 있으면 DiaryExceptions.AlreadyExists 예외 발생
+     * 일기에 부적절한 표현이 심하게 존재하면 INAPPROPRIATE_CONTENT 예외 발생
      * 감정 일기 생성 후, star 생성
      *
      * @param userId 작성자 ID
@@ -57,6 +60,11 @@ public class DiaryService {
         if (diaryRepository.existsByUser_IdAndCreateAt(userId, date)) {
             throw new CustomException(ErrorCode.DIARY_ALREADY_EXISTS);
         }
+
+        if (moderationService.moderate(req.getContent()).getResults().get(0).isFlagged()) {
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
+
         try
         {
             User userRef = em.getReference(User.class, userId);
@@ -92,6 +100,7 @@ public class DiaryService {
     /**
      * 특정 날짜의 감정 일기를 수정한다.
      * 수정 가능한 필드: content
+     * 일기에 부적절한 표현이 심하게 존재하면 INAPPROPRIATE_CONTENT 예외 발생
      *
      * @param userId 사용자 ID
      * @param req    수정 요청 DTO
@@ -105,6 +114,9 @@ public class DiaryService {
                 .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND));
 
         if (req.getContent() != null) {
+            if (moderationService.moderate(req.getContent()).getResults().get(0).isFlagged()) {
+                throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+            }
             diary.updateContent(req.getContent());
         }
 
