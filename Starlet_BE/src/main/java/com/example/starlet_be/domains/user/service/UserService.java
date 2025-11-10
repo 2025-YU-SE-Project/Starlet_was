@@ -113,18 +113,28 @@ public class UserService {
     }
 
     /**
-     * 닉네임 유효성 확인
+     * 닉네임 중복 확인 (대체예정)
      *
      * 이미 존재하는 닉네임이 있으면 NICKNAME_CONFLICT 409 응답
      *
      * @param nickname
      * @return boolean 중복되면 true, 아니면 false
      */
-    @Transactional(readOnly = true)
-    public boolean existNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
+//    @Transactional(readOnly = true)
+//    public boolean existNickname(String nickname) {
+//        return userRepository.existsByNickname(nickname);
+//    }
 
+
+    /**
+     * 닉네임 유효성 확인
+     *
+     * 이미 존재하는 닉네임이 있으면 NICKNAME_CONFLICT 409 응답
+     * 닉네임에 유해한 정보가 심하게 포함되어 있다면 INAPPROPRIATE_CONTENT 400 응답
+     *
+     * @param nickname
+     * @return boolean 중복되면 true, 아니면 false
+     */
     @Transactional(readOnly = true)
     public void validNickname(String nickname) {
         if(userRepository.existsByNickname(nickname))

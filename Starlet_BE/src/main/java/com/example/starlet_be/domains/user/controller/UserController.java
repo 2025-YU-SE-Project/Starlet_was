@@ -47,14 +47,12 @@ public class UserController implements UserApi {
     }
 
 
-    // 3. 닉네임 중복 확인
+    // 3. 닉네임 유효성 확인
     @GetMapping("/signup/nickname_available")
     public ResponseEntity<?> existNickname(@RequestParam String nickname){
-        // 존재하면 true, 존재하지 않으면 false.
-        if(userService.existNickname(nickname))
-            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
-        else
-            return ResponseEntity.ok().build();
+        // 안에 예외처리 코드가 포함되어있음
+        userService.validNickname(nickname);
+        return ResponseEntity.ok().build();
     }
 
     // 4. 로그인
