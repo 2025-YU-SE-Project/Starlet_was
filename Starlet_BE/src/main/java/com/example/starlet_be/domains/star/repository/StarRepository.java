@@ -23,4 +23,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
     List<Star> findByUserAndDiary_CreateAtBetweenAndConstellationIsNull(User user, LocalDate startDate, LocalDate endDate);
 
     Integer countByConstellationAndColor(Constellation constellation, Color color);
+
+    Long countByUser(User user);
 }

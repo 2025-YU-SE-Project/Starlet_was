@@ -13,4 +13,10 @@ public interface ConstellationRepository extends JpaRepository<Constellation, Lo
     List<Constellation> findByUser(User user);
 
     Optional<Constellation> findByUserAndIsRepresentative(User user, boolean isRepresentative);
+
+    // 총 별자리 수
+    long countByUser(User user);
+
+    List<Constellation> findAllByUserAndCreateAtBetween(User user, LocalDate start, LocalDate end);
+
 }
