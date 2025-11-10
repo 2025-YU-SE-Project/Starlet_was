@@ -31,7 +31,7 @@ public class OpenAiController {
         ModerationDto.ModerationResponse moderationResponse = moderationService.moderate(prompt);
 
         if(moderationResponse == null || moderationResponse.getResults() == null)
-            return ResponseEntity.badRequest().build();
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
 
         boolean isFlagged = moderationResponse.getResults().get(0).isFlagged();
 
