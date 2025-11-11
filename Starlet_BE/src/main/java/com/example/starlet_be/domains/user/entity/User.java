@@ -71,4 +71,6 @@ public class User{
     public void changeProfilePhotoUrl(String profilePhotoUrl) {
         this.profilePhotoUrl = profilePhotoUrl;
     }
+
+    public void changeNickname(String nickname) { this.nickname = nickname; }
 }

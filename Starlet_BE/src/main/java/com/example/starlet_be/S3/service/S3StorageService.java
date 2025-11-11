@@ -1,5 +1,6 @@
 package com.example.starlet_be.S3.service;
 
+import com.example.starlet_be.S3.dto.PublishedObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class S3StorageService {
      * @param tempKey 저장할 사진의 key
      * @return 최종 사진 url
      */
-    public String publishProfile(Long userId, String tempKey) {
+    public PublishedObject publishProfile(Long userId, String tempKey) {
 
         String allowedPrefix = "uploads/users/" + userId + "/";
         if (tempKey == null || !tempKey.startsWith(allowedPrefix)) {
@@ -76,7 +77,9 @@ public class S3StorageService {
 
         s3Client.copyObject(copyReq);
 
-        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+        String url = String.format("https://%s.s3.%s.amazonaws.com/%s",
                 bucket, region, publicKey);
+
+        return PublishedObject.of(publicKey, url);
     }
 }
