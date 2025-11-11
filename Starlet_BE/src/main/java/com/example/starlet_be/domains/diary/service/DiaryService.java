@@ -14,7 +14,7 @@ import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.openai.service.ModerationService;
-import com.example.starlet_be.openai.service.OpenAIBasicService;
+import com.example.starlet_be.openai.service.OpenAIService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +41,7 @@ public class DiaryService {
     private final StarRepository starRepository;
     private final EntityManager em;
     private final ModerationService moderationService;
-    private final OpenAIBasicService openAIService;
+    private final OpenAIService openAIService;
 
     /**
      * 새로운 감정 일기를 생성한다.

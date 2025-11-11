@@ -4,7 +4,7 @@ import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.openai.dto.ModerationDto;
 import com.example.starlet_be.openai.service.ModerationService;
-import com.example.starlet_be.openai.service.OpenAIBasicService;
+import com.example.starlet_be.openai.service.OpenAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/openai")
 public class OpenAiController {
 
-    private final OpenAIBasicService openAIBasicService;
+    private final OpenAIService openAIService;
     private final ModerationService moderationService;
 
     @PostMapping
     public ResponseEntity<?> openAi(@RequestBody String prompt){
-        return ResponseEntity.ok().body(openAIBasicService.getAssistance(prompt, "사용자에게 응답해주세요"));
+        return ResponseEntity.ok().body(openAIService.getAssistance(prompt, "사용자에게 응답해주세요"));
     }
 
     // 1. 모더레이션 - 닉네임 및 일기 유해성 확인

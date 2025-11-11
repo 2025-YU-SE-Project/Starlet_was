@@ -4,6 +4,7 @@ import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
+import com.example.starlet_be.domains.star.dto.StarsIdDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,8 +57,16 @@ public class ConstellationController implements ConstellationApi {
         return ResponseEntity.ok().build();
     }
 
+    // 4. 별자리 이름 추천받기
+    @PostMapping("/suggest")
+    public ResponseEntity<?> suggestConstellationName(
+            @RequestBody StarsIdDto dto
+    ){
+        return ResponseEntity.ok().body(constellationService.suggestConstellationName(dto));
+    }
 
 
+    
     // 별자리 아카이브
 
     // 1. 별자리 아카이브 조회(별자리 전체조회)
