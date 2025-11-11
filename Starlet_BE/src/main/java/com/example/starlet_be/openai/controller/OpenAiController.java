@@ -7,11 +7,9 @@ import com.example.starlet_be.openai.service.ModerationService;
 import com.example.starlet_be.openai.service.OpenAIBasicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,13 +38,6 @@ public class OpenAiController {
         if(isFlagged)
             throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
 
-        return ResponseEntity.ok().build();
-    }
-
-
-    // 한달 일기 종합 분석요약, 파라미터로 연월 입력
-    @GetMapping("/calendar/diary/summary")
-    public ResponseEntity<?> getDiaryMonthSummary(@RequestParam String diaryId){
         return ResponseEntity.ok().build();
     }
 
