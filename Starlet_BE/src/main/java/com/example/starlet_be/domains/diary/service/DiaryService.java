@@ -181,6 +181,10 @@ public class DiaryService {
 
 
     public DiarySummaryResDto getDiaryMonthSummary(UserDetails details, Integer year, Integer month) {
+        if(month < 1 || month > 12) {
+            throw new CustomException(ErrorCode.DIARY_INVALID_MONTH);
+        }
+
         User user = userRepository.findByEmailAddress(details.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );

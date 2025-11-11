@@ -102,10 +102,6 @@ public class DiaryController implements DiaryApi {
             @RequestParam Integer year,
             @RequestParam Integer month
     ){
-        if(month < 1 || month > 12) {
-            throw new CustomException(ErrorCode.DIARY_INVALID_MONTH);
-        }
-
         return ResponseEntity.ok().body(
                 diaryService.getDiaryMonthSummary(details, year, month)
         );
