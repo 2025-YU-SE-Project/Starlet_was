@@ -138,6 +138,15 @@ public interface UserApi {
     @Operation(summary = "사용가능한 닉네임 검사", description = "회원가입을 위한 닉네임 검사 입니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "사용가능한 닉네임"),
+            @ApiResponse(responseCode = "400", description = "닉네임에 유해성 정보 포함 확인",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "409", description = "닉네임 중복",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
