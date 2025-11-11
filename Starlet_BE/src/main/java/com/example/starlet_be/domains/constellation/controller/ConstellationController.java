@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.constellation.controller;
 
+import com.example.starlet_be.domains.constellation.api.ConstellationApi;
 import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;

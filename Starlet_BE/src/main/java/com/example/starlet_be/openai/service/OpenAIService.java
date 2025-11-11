@@ -1,6 +1,8 @@
 package com.example.starlet_be.openai.service;
 
 
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.openai.dto.OpenAiReqDto;
 import com.example.starlet_be.openai.dto.OpenAiResDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +53,7 @@ public class OpenAIService {
                 API_URL, HttpMethod.POST, httpEntity, OpenAiResDto.class);
 
         if (res.getBody() == null || res.getBody().getChoices().isEmpty()) {
-            throw new IllegalArgumentException("OpenAI 응답이 비어있습니다.");
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
         }
 
         // 포괄적으로 일단 String 형 반환으로 작성
