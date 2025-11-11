@@ -3,6 +3,7 @@ package com.example.starlet_be.domains.diary.service;
 import com.example.starlet_be.domains.diary.dto.reqdto.DiaryCreateReqDto;
 import com.example.starlet_be.domains.diary.dto.reqdto.DiaryUpdateReqDto;
 import com.example.starlet_be.domains.diary.dto.resdto.DiaryResDto;
+import com.example.starlet_be.domains.diary.dto.resdto.DiarySummaryResDto;
 import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.entity.Factor;
@@ -179,7 +180,7 @@ public class DiaryService {
     }
 
 
-    public String getDiaryMonthSummary(UserDetails details, Integer year, Integer month) {
+    public DiarySummaryResDto getDiaryMonthSummary(UserDetails details, Integer year, Integer month) {
         User user = userRepository.findByEmailAddress(details.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
@@ -202,9 +203,13 @@ public class DiaryService {
                 일기들의 내용은 다음과 같습니다.
                 """;
 
-        return openAIService.getAssistance(
+        String summaryResponse = openAIService.getAssistance(
                 diarySummary.toString(),
                 String.format(sysPrompt, year, month)
         );
+
+        return DiarySummaryResDto.builder()
+                .summary(summaryResponse)
+                .build();
     }
 }
