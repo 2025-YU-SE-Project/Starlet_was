@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.user.controller;
+package com.example.starlet_be.domains.user.api;
 
 import com.example.starlet_be.domains.user.dto.LoginDto;
 import com.example.starlet_be.domains.user.dto.SignUpDto;
@@ -111,6 +111,12 @@ public interface UserApi {
                                         "status": 400,
                                         "message": "이메일 미인증 / 비밀번호 초기화 중인 유저입니다."
                                     }
+                                    """),
+                            @ExampleObject(name = "부적절한 닉네임", value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
                                     """)
                     })),
             @ApiResponse(responseCode = "404", description = "이메일 중복검사를 하고 인증메일을 발송하지 않은 경우, DB에 등록되지 않음",
@@ -138,6 +144,15 @@ public interface UserApi {
     @Operation(summary = "사용가능한 닉네임 검사", description = "회원가입을 위한 닉네임 검사 입니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "사용가능한 닉네임"),
+            @ApiResponse(responseCode = "400", description = "닉네임에 유해성 정보 포함 확인",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "409", description = "닉네임 중복",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
@@ -148,7 +163,7 @@ public interface UserApi {
                                     """)
                     }))
     })
-    ResponseEntity<?> existNickname(@RequestParam String nickname);
+    ResponseEntity<?> validNickname(@RequestParam String nickname);
 
 
     @Operation(summary = "로그인", description = "로그인을 하는 기능이며, 여기서 나온 토큰으로 서비스에서 유저 정보를 조회합니다.")

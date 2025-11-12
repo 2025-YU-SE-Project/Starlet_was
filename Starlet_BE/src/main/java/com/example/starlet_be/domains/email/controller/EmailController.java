@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.email.controller;
 
+import com.example.starlet_be.domains.email.api.EmailAPI;
 import com.example.starlet_be.domains.email.dto.EmailAddressDto;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.exception.CustomException;

@@ -94,4 +94,16 @@ public class DiaryController implements DiaryApi {
         diaryService.delete(userId, diaryId);
         return ResponseEntity.noContent().build();
     }
+
+    // 한달 일기 종합 분석요약, 파라미터로 연월 입력
+    @GetMapping("/diary/summary")
+    public ResponseEntity<?> getDiaryMonthSummary(
+            @AuthenticationPrincipal UserDetails details,
+            @RequestParam Integer year,
+            @RequestParam Integer month
+    ){
+        return ResponseEntity.ok().body(
+                diaryService.getDiaryMonthSummary(details, year, month)
+        );
+    }
 }

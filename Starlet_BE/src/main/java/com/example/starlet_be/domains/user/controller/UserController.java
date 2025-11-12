@@ -1,6 +1,7 @@
 package com.example.starlet_be.domains.user.controller;
 
 import com.example.starlet_be.domains.email.service.EmailService;
+import com.example.starlet_be.domains.user.api.UserApi;
 import com.example.starlet_be.domains.user.dto.LoginDto;
 import com.example.starlet_be.domains.user.dto.SignUpDto;
 import com.example.starlet_be.domains.user.entity.User;
@@ -47,14 +48,12 @@ public class UserController implements UserApi {
     }
 
 
-    // 3. 닉네임 중복 확인
+    // 3. 닉네임 유효성 확인
     @GetMapping("/signup/nickname_available")
-    public ResponseEntity<?> existNickname(@RequestParam String nickname){
-        // 존재하면 true, 존재하지 않으면 false.
-        if(userService.existNickname(nickname))
-            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
-        else
-            return ResponseEntity.ok().build();
+    public ResponseEntity<?> validNickname(@RequestParam String nickname){
+        // 문제가 있으면 예외 발생
+        userService.validNickname(nickname);
+        return ResponseEntity.ok().build();
     }
 
     // 4. 로그인

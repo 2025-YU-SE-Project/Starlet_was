@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.star.controller;
+package com.example.starlet_be.domains.star.api;
 
 
 import com.example.starlet_be.domains.star.dto.StarPositionDto;

@@ -3,8 +3,8 @@ package com.example.starlet_be.domains.user.service;
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.dto.LoginDto;
-import com.example.starlet_be.domains.user.dto.SignUpDto;
 import com.example.starlet_be.domains.user.dto.LoginInfoDto;
+import com.example.starlet_be.domains.user.dto.SignUpDto;
 import com.example.starlet_be.domains.user.dto.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
@@ -13,6 +13,8 @@ import com.example.starlet_be.domains.verify.entity.VerifyType;
 import com.example.starlet_be.domains.verify.repository.VerifyRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.dto.ModerationDto;
+import com.example.starlet_be.openai.service.ModerationService;
 import com.example.starlet_be.security.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final VerifyRepository verifyRepository;
     private final EmailService emailService;
+    private final ModerationService moderationService;
 
     /**
      * 사용자 단일 조회
@@ -86,7 +89,7 @@ public class UserService {
      * dto에 제대로 정보가 담기지 않는다면 400 응답
      * 이메일을 생성조차 하지 않으면(인증 메일 발송을 하지 않으면 객체가 없음) EMAIL_NOT_FOUND 예외 404 응답
      * 이메일 생성 후 인증하지 않으면 NOT_VERIFY_USER 예외 400 응답
-     * 닉네임이 중복될 경우
+     * 닉네임이 중복되거나 유해성을 포함하는 경우 각각 NICKNAME_CONFLICT, ErrorCode.INAPPROPRIATE_CONTENT 반환
      * @param dto 회원가입을 위한 기본정보들. 이메일, 닉네임, 비밀번호
      * @return User 만들어진 객체 반환
      */
@@ -98,9 +101,12 @@ public class UserService {
         if(email.getVerify().getType() != VerifyType.VERIFY)
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
 
-        // 닉네임 및 이메일 중복 확인
-        if(existNickname(dto.getNickname()))
-            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
+        // 닉네임 및 이메일 중복 확인 (대체 예정)
+//        if(existNickname(dto.getNickname()))
+//            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
+
+        // 닉네임 유효성(중복 및 유해성 검증)
+        validNickname(dto.getNickname());
 
         return userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()), email));
 
@@ -110,13 +116,24 @@ public class UserService {
      * 닉네임 유효성 확인
      *
      * 이미 존재하는 닉네임이 있으면 NICKNAME_CONFLICT 409 응답
+     * 닉네임에 유해한 정보가 심하게 포함되어 있다면 INAPPROPRIATE_CONTENT 400 응답
      *
      * @param nickname
      * @return boolean 중복되면 true, 아니면 false
      */
     @Transactional(readOnly = true)
-    public boolean existNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
+    public void validNickname(String nickname) {
+        if(userRepository.existsByNickname(nickname))
+            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
+
+        ModerationDto.ModerationResponse moderationResponse = moderationService.moderate(nickname);
+
+        if(moderationResponse == null || moderationResponse.getResults() == null)
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
+
+        if(moderationResponse.getResults().get(0).isFlagged())
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+
     }
 
     /**

@@ -1,28 +1,33 @@
 package com.example.starlet_be.domains.constellation.service;
 
-import com.example.starlet_be.domains.connection.entity.Connection;
-import com.example.starlet_be.domains.connection.repository.ConnectionRepository;
 import com.example.starlet_be.domains.connection.dto.ConnectionDto;
 import com.example.starlet_be.domains.connection.dto.StarryNightConnectionDto;
-import com.example.starlet_be.domains.constellation.entity.Constellation;
-import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
-import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
-import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.connection.entity.Connection;
+import com.example.starlet_be.domains.connection.repository.ConnectionRepository;
 import com.example.starlet_be.domains.constellation.dto.ArchiveDetailDto;
 import com.example.starlet_be.domains.constellation.dto.ArchiveDto;
+import com.example.starlet_be.domains.constellation.dto.ConstellationNameSuggestDto;
+import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
+import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.entity.Constellation;
+import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.diary.entity.Color;
-import com.example.starlet_be.domains.star.entity.Star;
-import com.example.starlet_be.domains.star.repository.StarRepository;
-import com.example.starlet_be.domains.star.dto.StarPositionDto;
+import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.star.dto.StarArchiveDetailDto;
 import com.example.starlet_be.domains.star.dto.StarArchiveDto;
+import com.example.starlet_be.domains.star.dto.StarPositionDto;
 import com.example.starlet_be.domains.star.dto.StarryNightStarDto;
+import com.example.starlet_be.domains.star.dto.StarsIdDto;
+import com.example.starlet_be.domains.star.entity.Star;
+import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.service.ModerationService;
+import com.example.starlet_be.openai.service.OpenAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -47,6 +52,8 @@ public class ConstellationService {
     private final ConnectionRepository connectionRepository;
     private final StarRepository starRepository;
     private final UserRepository userRepository;
+    private final OpenAIService openAIService;
+    private final ModerationService moderationService;
 
     /**
      * 별자리 만들기
@@ -64,6 +71,12 @@ public class ConstellationService {
         User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
+
+        // 유해성 검사
+        if(moderationService.moderate(dto.getName()).getResults().get(0).isFlagged()
+            || moderationService.moderate(dto.getDescription()).getResults().get(0).isFlagged()) {
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
 
         // 별자리 생성
         Constellation constellation = Constellation.builder()
@@ -355,9 +368,14 @@ public class ConstellationService {
                 () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
         );
 
-        // 2. 정보 수정
-        con.updateInfo(dto.getName(), dto.getDescription());
+        // 2. 유해성 확인
+        if(moderationService.moderate(con.getName()).getResults().get(0).isFlagged()
+            || moderationService.moderate(con.getDescription()).getResults().get(0).isFlagged()){
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
 
+        // 3. 정보 수정
+        con.updateInfo(dto.getName(), dto.getDescription());
     }
 
     /**
@@ -394,6 +412,55 @@ public class ConstellationService {
         // 5. 대표별자리 지정
         after.changeRepresentative();
         constellationRepository.save(after);
+
+    }
+
+    // 별들의 번호만을 가져와서 나머지 싹 다 조회하도록 구현해보기
+    @Transactional
+    public ConstellationNameSuggestDto suggestConstellationName(StarsIdDto dto){
+        List<Long> starIds = dto.getStarIds();
+
+        StringBuilder starsInfo = new StringBuilder();
+        for(Long starId : starIds){
+            Star star = starRepository.findById(starId).orElseThrow(
+                    () -> new CustomException(ErrorCode.STAR_NOT_FOUND)
+            );
+            Diary diary = star.getDiary();
+
+            starsInfo.append("emotion : " + diary.getEmotion() + ", factors : " + diary.getFactors() + ", content : " + diary.getContent() + "\n");
+
+        }
+
+        String sysPrompt = """
+                    별자리의 이름과 설명을 정하려고 합니다.
+                    주어지는 정보는 별과 연결된 일기의 감정, 요인들, 내용입니다.
+                    별들의 느낌을 기반으로 별자리의 이름과 별자리의 설명을 상세히 적어주셔야 합니다.
+                    
+                    출력하는 형식은 반드시 다음과 같이 slash(/)로 구분하여 분리하여 주세요.
+                    구분자 사이에 공백이나 다른건 절대 없어야합니다.
+                    name과 description은 맨 앞과 맨 뒤에 공백문자가 오면 안된다는 뜻입니다.
+                    
+                    <name>/<description>
+                    
+                    예시1)
+                    물병자리/물병자리이다.
+                    
+                    예시2)
+                    카시오페아자리/카시오페아자리이며, 아름답다.
+                    
+                    name 필드는 사용자의 일기 작성 언어에 따라 언어를 지정해 이름을 지어주면 됩니다.
+                    description필드는 사용자의 일기들과 감정, 요인들을 종합평가하여 함축되고 추상적인 설명을 붙여 감성적이게 표현해주세요.
+                    """;
+
+        String[] result = openAIService.getAssistance(starsInfo.toString(), sysPrompt).split("/", -1);
+
+        if(result.length != 2)
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
+
+        return ConstellationNameSuggestDto.builder()
+                .name(result[0])
+                .description(result[1])
+                .build();
 
     }
 }

@@ -1,6 +1,8 @@
 package com.example.starlet_be.openai.service;
 
 
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
 import com.example.starlet_be.openai.dto.OpenAiReqDto;
 import com.example.starlet_be.openai.dto.OpenAiResDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OpenAIBasicService {
+public class OpenAIService {
 
     @Value("${openai.api.key}")
     private String key;
@@ -51,17 +53,8 @@ public class OpenAIBasicService {
                 API_URL, HttpMethod.POST, httpEntity, OpenAiResDto.class);
 
         if (res.getBody() == null || res.getBody().getChoices().isEmpty()) {
-            throw new IllegalArgumentException("OpenAI 응답이 비어있습니다.");
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
         }
-
-//        String jsonResponse = res.getBody().getChoices().get(0).getMessage().getContent();
-
-        // 6. JSON 응답을 DTO로 파싱, 에러 필드 확인하기
-//        JsonNode responseNode = objectMapper.readTree(jsonResponse);
-//        if (responseNode.has("error"))
-//            throw new IllegalArgumentException("응답 없음");
-//        else
-//            return objectMapper.readValue(jsonResponse, SubmissionAiAssistanceDto.class);
 
         // 포괄적으로 일단 String 형 반환으로 작성
         return res.getBody().getChoices().get(0).getMessage().getContent();

@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.verify.controller;
 
+import com.example.starlet_be.domains.verify.api.VerifyApi;
 import com.example.starlet_be.domains.verify.dto.PasswordResetConfirmDto;
 import com.example.starlet_be.domains.verify.service.VerifyService;
 import lombok.RequiredArgsConstructor;

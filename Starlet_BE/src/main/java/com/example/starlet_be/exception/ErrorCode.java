@@ -46,6 +46,12 @@ public enum ErrorCode {
     CONSTELLATION_NOT_FOUND(404, "해당 별자리를 찾을 수 없습니다."),
     ALREADY_BELONG_TO_CONSTELLATION(409, "이미 별자리에 소속된 별이 존재합니다."),
 
+
+    // OpenAI 관련
+    INAPPROPRIATE_CONTENT(400, "입력 내용에 부적절한 내용이 포함되었습니다."),
+    OPENAI_SERVER_ERROR(500, "외부 서버(OpenAI) 오류입니다."),
+
+
     // 기타 관련
     INTERNAL_SERVER_ERROR(500, "내부 서버 오류입니다.");
 

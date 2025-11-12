@@ -52,6 +52,12 @@ public interface DiaryApi {
                     """),
                                     @ExampleObject(name = "내용 길이 오류", value = """
                         { "content": "내용은 15자 이상 300자 이하로 입력해주세요." }
+                    """),
+                                    @ExampleObject(name = "일기 내용 유해성 발견", value = """
+                        {
+                          "status": 400,
+                          "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                        }
                     """)
                             })),
             @ApiResponse(responseCode = "401", description = "액세스 토큰 미입력/만료",
@@ -90,11 +96,18 @@ public interface DiaryApi {
                       "content": "사실은 수업 오기 너무너무 귀찮았다...흑흑"
                     }
                 """))),
-            @ApiResponse(responseCode = "400", description = "입력 누락/형식 오류",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                    { "content": "내용은 15자 이상 300자 이하로 입력해주세요." }
-                """))),
+            @ApiResponse(responseCode = "400", description = "입력 누락 및 형식 유효성 위반",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(name = "일기 내용 유해성 발견", value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """),
+                            @ExampleObject(name = "내용 길이 범위 이탈", value = """
+                        { "content": "내용은 15자 이상 300자 이하로 입력해주세요." }
+                        """)
+                    })),
             @ApiResponse(responseCode = "401", description = "액세스 토큰 미입력/만료",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """
@@ -236,5 +249,49 @@ public interface DiaryApi {
     ResponseEntity<?> removeDiary(
             @AuthenticationPrincipal UserDetails principal,
             @PathVariable("diaryId") Long diaryId
+    );
+
+    @Operation(summary = "한달 일기 분석", description = "한달의 일기 정보들을 종합하여 알려주는 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "일기 분석 결과",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "summary": "2025년 9월의 일기들을 살펴보면, 한 주 내내 소공 수업과 관련된 활동 속에서 꾸준히....."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "400", description = "월 정보 오기입",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "month는 1~12 사이여야 합니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "사용자 정보 없음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 유저를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "500", description = "OpenAI 서버 오류",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 500,
+                                        "message": "외부 서버(OpenAI) 오류입니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> getDiaryMonthSummary(
+            @AuthenticationPrincipal UserDetails details,
+            @RequestParam Integer year,
+            @RequestParam Integer month
     );
 }

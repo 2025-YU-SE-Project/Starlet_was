@@ -1,22 +1,26 @@
 package com.example.starlet_be.domains.diary.service;
 
-import com.example.starlet_be.domains.star.entity.Star;
-import com.example.starlet_be.domains.star.repository.StarRepository;
-import com.example.starlet_be.domains.user.repository.UserRepository;
-import com.example.starlet_be.exception.CustomException;
-import com.example.starlet_be.domains.diary.entity.Diary;
-import com.example.starlet_be.domains.diary.entity.Factor;
 import com.example.starlet_be.domains.diary.dto.reqdto.DiaryCreateReqDto;
 import com.example.starlet_be.domains.diary.dto.reqdto.DiaryUpdateReqDto;
-import com.example.starlet_be.domains.diary.repository.DiaryRepository;
 import com.example.starlet_be.domains.diary.dto.resdto.DiaryResDto;
+import com.example.starlet_be.domains.diary.dto.resdto.DiarySummaryResDto;
 import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
+import com.example.starlet_be.domains.diary.entity.Diary;
+import com.example.starlet_be.domains.diary.entity.Factor;
+import com.example.starlet_be.domains.diary.repository.DiaryRepository;
+import com.example.starlet_be.domains.star.entity.Star;
+import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.repository.UserRepository;
+import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.service.ModerationService;
+import com.example.starlet_be.openai.service.OpenAIService;
 import jakarta.persistence.EntityManager;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -37,12 +41,15 @@ public class DiaryService {
     private final UserRepository userRepository;
     private final StarRepository starRepository;
     private final EntityManager em;
+    private final ModerationService moderationService;
+    private final OpenAIService openAIService;
 
     /**
      * 새로운 감정 일기를 생성한다.
      *
      * date가 null이면 오늘 날짜로 기본 설정
      * 동일 사용자/날짜의 일기가 이미 있으면 DiaryExceptions.AlreadyExists 예외 발생
+     * 일기에 부적절한 표현이 심하게 존재하면 INAPPROPRIATE_CONTENT 예외 발생
      * 감정 일기 생성 후, star 생성
      *
      * @param userId 작성자 ID
@@ -57,6 +64,11 @@ public class DiaryService {
         if (diaryRepository.existsByUser_IdAndCreateAt(userId, date)) {
             throw new CustomException(ErrorCode.DIARY_ALREADY_EXISTS);
         }
+
+        if (moderationService.moderate(req.getContent()).getResults().get(0).isFlagged()) {
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
+
         try
         {
             User userRef = em.getReference(User.class, userId);
@@ -92,6 +104,7 @@ public class DiaryService {
     /**
      * 특정 날짜의 감정 일기를 수정한다.
      * 수정 가능한 필드: content
+     * 일기에 부적절한 표현이 심하게 존재하면 INAPPROPRIATE_CONTENT 예외 발생
      *
      * @param userId 사용자 ID
      * @param req    수정 요청 DTO
@@ -105,6 +118,9 @@ public class DiaryService {
                 .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND));
 
         if (req.getContent() != null) {
+            if (moderationService.moderate(req.getContent()).getResults().get(0).isFlagged()) {
+                throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+            }
             diary.updateContent(req.getContent());
         }
 
@@ -161,5 +177,43 @@ public class DiaryService {
 
     private List<Factor> safeFactors(List<Factor> in) {
         return (in != null) ? new ArrayList<>(in) : new ArrayList<>();
+    }
+
+
+    public DiarySummaryResDto getDiaryMonthSummary(UserDetails details, Integer year, Integer month) {
+        if(month < 1 || month > 12) {
+            throw new CustomException(ErrorCode.DIARY_INVALID_MONTH);
+        }
+
+        User user = userRepository.findByEmailAddress(details.getUsername()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        List<Diary> diaries = diaryRepository.findAllByUser_IdAndCreateAtBetweenOrderByCreateAtAsc(user.getId(), startDate, endDate);
+
+        StringBuilder diarySummary = new StringBuilder();
+        for (Diary diary : diaries) {
+            diarySummary.append("diary createAt : " + diary.getCreateAt().toString() + ", emotion : " + diary.getEmotion() + ", factors : " + diary.getFactors() + ", content : " + diary.getContent() + "\n");
+        }
+
+        String sysPrompt = """
+                이 일기 자료들은 %d년 %d월의 일기들 정보입니다.
+                일기들의 정보를 확인 후 이번달의 일기 요약을 알려주세요.
+                요약과 함께 위로나 조언도 꼭 부탁드립니다.
+                최대한 길게 작성해주세요.
+                일기들의 내용은 다음과 같습니다.
+                """;
+
+        String summaryResponse = openAIService.getAssistance(
+                diarySummary.toString(),
+                String.format(sysPrompt, year, month)
+        );
+
+        return DiarySummaryResDto.builder()
+                .summary(summaryResponse)
+                .build();
     }
 }

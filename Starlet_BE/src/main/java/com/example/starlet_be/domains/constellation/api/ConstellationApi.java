@@ -1,8 +1,9 @@
-package com.example.starlet_be.domains.constellation.controller;
+package com.example.starlet_be.domains.constellation.api;
 
 import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.star.dto.StarsIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -144,15 +145,15 @@ public interface ConstellationApi {
             description = "별자리를 만드는 API입니다. 아직 논의가 필요한 부분인 만큼 초안으로 작성하였습니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "별자리 생성 성공"),
-//            @ApiResponse(responseCode = "400", description = "좌표 범위 벗어남",
-//                    content = @Content(mediaType = "application/json", examples = {
-//                            @ExampleObject(value = """
-//                                    {
-//                                        "status": 400,
-//                                        "message": "입력된 좌표가 범위 밖입니다."
-//                                    }
-//                                    """)
-//                    })),
+            @ApiResponse(responseCode = "400", description = "유해적인 정보 입력",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
@@ -451,6 +452,15 @@ public interface ConstellationApi {
     @Operation(summary = "대표 별자리 설정", description = "대표 별자리를 지정합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "별자리 정보 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "유해적인 정보 입력",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 정보",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(name = "사용자 정보 없음", value = """
@@ -470,4 +480,40 @@ public interface ConstellationApi {
     ResponseEntity<?> changeRepresentativeConstellation(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails);
+
+
+
+    @Operation(summary = "별자리 이름 및 설명 추천", description = "별자리에 속할 별들의 일기 정보를 이용하여 이름과 설명을 추천받는 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 이름 추천 결과",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "name": "투자자리",
+                                        "description": "일상의 조화 속에서 우정과 성취가 반짝이며, 작은 도전이 큰 기쁨으로 피어나는 별자리이다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "별 정보 없음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 별을 찾을 수 없습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "500", description = "OpenAI 서버 오류",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 500,
+                                        "message": "외부 서버(OpenAI) 오류입니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> suggestConstellationName(
+            @RequestBody StarsIdDto dto
+    );
 }
