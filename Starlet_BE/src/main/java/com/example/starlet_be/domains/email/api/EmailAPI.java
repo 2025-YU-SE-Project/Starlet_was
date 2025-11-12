@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.email.controller;
+package com.example.starlet_be.domains.email.api;
 
 import com.example.starlet_be.domains.email.dto.EmailAddressDto;
 import io.swagger.v3.oas.annotations.Operation;

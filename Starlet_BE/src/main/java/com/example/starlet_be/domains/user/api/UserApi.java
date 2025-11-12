@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.user.controller;
+package com.example.starlet_be.domains.user.api;
 
 import com.example.starlet_be.domains.user.dto.LoginDto;
 import com.example.starlet_be.domains.user.dto.SignUpDto;

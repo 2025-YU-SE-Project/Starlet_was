@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.verify.controller;
+package com.example.starlet_be.domains.verify.api;
 
 import com.example.starlet_be.domains.verify.dto.PasswordResetConfirmDto;
 import io.swagger.v3.oas.annotations.Operation;
