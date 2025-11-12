@@ -145,15 +145,15 @@ public interface ConstellationApi {
             description = "별자리를 만드는 API입니다. 아직 논의가 필요한 부분인 만큼 초안으로 작성하였습니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "별자리 생성 성공"),
-//            @ApiResponse(responseCode = "400", description = "좌표 범위 벗어남",
-//                    content = @Content(mediaType = "application/json", examples = {
-//                            @ExampleObject(value = """
-//                                    {
-//                                        "status": 400,
-//                                        "message": "입력된 좌표가 범위 밖입니다."
-//                                    }
-//                                    """)
-//                    })),
+            @ApiResponse(responseCode = "400", description = "유해적인 정보 입력",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(value = """
@@ -452,6 +452,15 @@ public interface ConstellationApi {
     @Operation(summary = "대표 별자리 설정", description = "대표 별자리를 지정합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "별자리 정보 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "유해적인 정보 입력",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 400,
+                                        "message": "입력 내용에 부적절한 내용이 포함되었습니다."
+                                    }
+                                    """)
+                    })),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 정보",
                     content = @Content(mediaType = "application/json", examples = {
                             @ExampleObject(name = "사용자 정보 없음", value = """
