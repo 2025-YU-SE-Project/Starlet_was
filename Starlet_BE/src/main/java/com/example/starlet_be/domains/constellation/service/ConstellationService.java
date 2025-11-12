@@ -26,6 +26,7 @@ import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.service.ModerationService;
 import com.example.starlet_be.openai.service.OpenAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,6 +53,7 @@ public class ConstellationService {
     private final StarRepository starRepository;
     private final UserRepository userRepository;
     private final OpenAIService openAIService;
+    private final ModerationService moderationService;
 
     /**
      * 별자리 만들기
@@ -69,6 +71,12 @@ public class ConstellationService {
         User user = userRepository.findByEmailAddress(userDetails.getUsername()).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
+
+        // 유해성 검사
+        if(moderationService.moderate(dto.getName()).getResults().get(0).isFlagged()
+            || moderationService.moderate(dto.getDescription()).getResults().get(0).isFlagged()) {
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
 
         // 별자리 생성
         Constellation constellation = Constellation.builder()
@@ -360,9 +368,14 @@ public class ConstellationService {
                 () -> new CustomException(ErrorCode.CONSTELLATION_NOT_FOUND)
         );
 
-        // 2. 정보 수정
-        con.updateInfo(dto.getName(), dto.getDescription());
+        // 2. 유해성 확인
+        if(moderationService.moderate(con.getName()).getResults().get(0).isFlagged()
+            || moderationService.moderate(con.getDescription()).getResults().get(0).isFlagged()){
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+        }
 
+        // 3. 정보 수정
+        con.updateInfo(dto.getName(), dto.getDescription());
     }
 
     /**
