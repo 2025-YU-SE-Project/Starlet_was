@@ -49,8 +49,8 @@ public class UserController implements UserApi {
 
     // 3. 닉네임 유효성 확인
     @GetMapping("/signup/nickname_available")
-    public ResponseEntity<?> existNickname(@RequestParam String nickname){
-        // 안에 예외처리 코드가 포함되어있음
+    public ResponseEntity<?> validNickname(@RequestParam String nickname){
+        // 문제가 있으면 예외 발생
         userService.validNickname(nickname);
         return ResponseEntity.ok().build();
     }
