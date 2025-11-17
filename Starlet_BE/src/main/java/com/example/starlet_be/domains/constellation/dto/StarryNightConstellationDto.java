@@ -16,6 +16,10 @@ public class StarryNightConstellationDto {
     private Double x;
     private Double y;
 
+    private String name;
+
+    private LocalDate createAt;
+
     private LocalDate belongDate;
 
 
@@ -30,13 +34,16 @@ public class StarryNightConstellationDto {
     @Builder
     public StarryNightConstellationDto(
             Long constellationId, Long userId,
-            Double x, Double y, LocalDate belongDate,
+            Double x, Double y, String name,
+            LocalDate createAt, LocalDate belongDate,
             List<StarryNightStarDto> stars,
             List<StarryNightConnectionDto> connections) {
         this.constellationId = constellationId;
         this.userId = userId;
         this.x = x;
         this.y = y;
+        this.name = name;
+        this.createAt = createAt;
         this.belongDate = belongDate;
         this.stars = stars;
         this.connections = connections;

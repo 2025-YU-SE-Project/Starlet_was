@@ -197,6 +197,8 @@ public class ConstellationService {
                             .userId(con.getUser().getId())
                             .x(con.getX())
                             .y(con.getY())
+                            .name(con.getName())
+                            .createAt(con.getCreateAt())
                             .belongDate(con.getBelongDate())
                             .stars(starsInfo)
                             .connections(connectionsInfo)
