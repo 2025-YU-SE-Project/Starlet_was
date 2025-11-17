@@ -61,6 +61,7 @@ public class ConstellationService {
      * 사용자가 존재하지 않으면 USER_NOT_FOUND
      * 별이 존재하지 않으면 STAR_NOT_FOUND
      * 선택한 별이 이미 별자리에 소속되어있으면 ALREADY_BELONG_TO_CONSTELLATION, 이 부분은 프론트 단에서 막아주긴 해야함
+     * 최초로 별자리를 등록한다면 즉시 대표별자리로 등록
      *
      * @param userDetails 토큰 기반 로그인 정보
      * @param dto 생성할 별자리 기본 정보 -> 별자리 이름, 설명, 별 리스트, 선 리스트
@@ -78,13 +79,19 @@ public class ConstellationService {
             throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
         }
 
+        // 최초 생성 별자리라면 그 별자리를 대표 별자리로
+        boolean isRepresentative = false;
+        if(constellationRepository.countByUser(user) == 0){
+            isRepresentative = true;
+        }
+
         // 별자리 생성
         Constellation constellation = Constellation.builder()
                 .user(user)
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .createAt(LocalDate.now())
-                .isRepresentative(false)
+                .isRepresentative(isRepresentative)
                 .x(Math.random())
                 .y(Math.random())
                 .build();
@@ -197,6 +204,8 @@ public class ConstellationService {
                             .userId(con.getUser().getId())
                             .x(con.getX())
                             .y(con.getY())
+                            .name(con.getName())
+                            .createAt(con.getCreateAt())
                             .belongDate(con.getBelongDate())
                             .stars(starsInfo)
                             .connections(connectionsInfo)
@@ -382,7 +391,7 @@ public class ConstellationService {
      * 대표별자리 지정/변경 API
      *
      * Constellation의 boolean필드를 통해 대표별자리 변경을 시도합니다.
-     * 이미 대표별자리가 있을 경우 이전 별자리의 대표를 해제하고 새로운 별자리를 대표로 등록합니다.
+     * 이전 별자리의 대표를 해제하고 새로운 별자리를 대표로 등록합니다.
      *
      * @param id 새로 대표로 만들 별자리의 id 입니다.
      * @param userDetails 유저 정보 입니다.
