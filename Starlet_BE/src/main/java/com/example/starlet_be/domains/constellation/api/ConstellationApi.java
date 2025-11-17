@@ -32,7 +32,9 @@ public interface ConstellationApi {
                                             "userId": 1,
                                             "x": 0.1,
                                             "y": 0.2,
-                                            "belongDate": "2025-09-01"
+                                            "name": "북두칠성",
+                                            "createAt" : "2025-11-12",
+                                            "belongDate": "2025-09-01",
                                             "stars": [
                                                 {
                                                     "starId": 1,
@@ -77,6 +79,8 @@ public interface ConstellationApi {
                                             "userId": 1,
                                             "x": 0.6550693249242013,
                                             "y": 0.19746977186845616,
+                                            "name": "카시오페아자리",
+                                            "createAt" : "2025-11-10",
                                             "stars": [
                                                 {
                                                     "starId": 4,
