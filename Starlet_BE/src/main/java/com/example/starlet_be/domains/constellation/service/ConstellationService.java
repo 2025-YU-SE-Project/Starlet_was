@@ -378,8 +378,8 @@ public class ConstellationService {
         );
 
         // 2. 유해성 확인
-        if(moderationService.moderate(con.getName()).getResults().get(0).isFlagged()
-            || moderationService.moderate(con.getDescription()).getResults().get(0).isFlagged()){
+        if(moderationService.moderate(dto.getName()).getResults().get(0).isFlagged()
+            || moderationService.moderate(dto.getDescription()).getResults().get(0).isFlagged()){
             throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
         }
 
