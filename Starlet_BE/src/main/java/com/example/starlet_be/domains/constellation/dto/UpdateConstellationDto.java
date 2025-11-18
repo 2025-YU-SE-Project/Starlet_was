@@ -1,16 +1,12 @@
 package com.example.starlet_be.domains.constellation.dto;
 
-import com.example.starlet_be.domains.connection.dto.ConnectionDto;
-import com.example.starlet_be.domains.star.dto.StarPositionDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
-public class CreateConstellationDto {
+public class UpdateConstellationDto {
 
     @Schema(description = "별자리 이름", example = "물병자리")
     @NotNull(message = "별자리 이름을 Null 값으로 입력할 수 없습니다.")
@@ -21,10 +17,4 @@ public class CreateConstellationDto {
     @NotNull(message = "별자리 설명을 Null 값으로 입력할 수 없습니다.")
     @Size(max = 30, message = "별자리 설명은 30자 이내여야 합니다.")
     private String description;
-
-    @Schema(description = "별자리로 만들 별들")
-    private List<StarPositionDto> stars;
-
-    @Schema(description = "별자리로 만들 선 시작위치와 끝위치")
-    private List<ConnectionDto> connections;
 }

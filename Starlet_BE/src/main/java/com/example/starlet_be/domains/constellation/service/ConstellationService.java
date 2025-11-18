@@ -10,7 +10,7 @@ import com.example.starlet_be.domains.constellation.dto.ConstellationNameSuggest
 import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.diary.entity.Color;
@@ -370,7 +370,7 @@ public class ConstellationService {
      * @param dto 수정할 별자리 정보들 입니다.
      */
     @Transactional
-    public void updateConstellationInfo(Long id, UpdateConstellationInfo dto){
+    public void updateConstellationInfo(Long id, UpdateConstellationDto dto){
 
         // 1. 별자리 찾기
         Constellation con = constellationRepository.findById(id).orElseThrow(
