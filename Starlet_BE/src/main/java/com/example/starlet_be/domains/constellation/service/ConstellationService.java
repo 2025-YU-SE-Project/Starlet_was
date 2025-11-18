@@ -459,6 +459,11 @@ public class ConstellationService {
                     
                     name 필드는 사용자의 일기 작성 언어에 따라 언어를 지정해 이름을 지어주면 됩니다.
                     description필드는 사용자의 일기들과 감정, 요인들을 종합평가하여 함축되고 추상적인 설명을 붙여 감성적이게 표현해주세요.
+                    
+                    별자리 이름은 공백 포함 10자 이내여야 합니다. 그리고 2자 이상 생성을 권장합니다.
+                    예를들어 "물병자리", "오징어자리", "constella" 는 가능합니다.
+                    "불", "가나다라마바사아자차카타파하", "constellation" 는 불가능합니다.
+                    별자리 설명은 공백 포함 30자 이내여야 합니다. 그러나 설명이 너무 부실하게 적으면 안됩니다.
                     """;
 
         String[] result = openAIService.getAssistance(starsInfo.toString(), sysPrompt).split("/", -1);
