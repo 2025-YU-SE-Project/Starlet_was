@@ -2,7 +2,7 @@ package com.example.starlet_be.domains.constellation.api;
 
 import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
 import com.example.starlet_be.domains.star.dto.StarsIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -450,7 +450,7 @@ public interface ConstellationApi {
                                     """)
                     }))
     })
-    ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationInfo dto);
+    ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationDto dto);
 
 
     @Operation(summary = "대표 별자리 설정", description = "대표 별자리를 지정합니다.")

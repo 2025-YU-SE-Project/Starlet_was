@@ -3,9 +3,10 @@ package com.example.starlet_be.domains.constellation.controller;
 import com.example.starlet_be.domains.constellation.api.ConstellationApi;
 import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationInfo;
+import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
 import com.example.starlet_be.domains.star.dto.StarsIdDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,7 @@ public class ConstellationController implements ConstellationApi {
     @PostMapping
     public ResponseEntity<?> createConstellation(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody CreateConstellationDto dto
+            @Valid @RequestBody CreateConstellationDto dto
     ){
         constellationService.createConstellation(userDetails, dto);
         return ResponseEntity.ok().build();
@@ -86,7 +87,10 @@ public class ConstellationController implements ConstellationApi {
 
     // 3. 별자리 이름 및 설명 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateConstellationInfo(@PathVariable Long id, @RequestBody UpdateConstellationInfo dto){
+    public ResponseEntity<?> updateConstellationInfo(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateConstellationDto dto
+    ){
         constellationService.updateConstellationInfo(id, dto);
         return ResponseEntity.ok().build();
     }
