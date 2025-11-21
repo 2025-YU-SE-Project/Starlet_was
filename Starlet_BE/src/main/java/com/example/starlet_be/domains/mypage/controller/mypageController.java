@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.mypage.controller;
 
+import com.example.starlet_be.domains.mypage.api.MyPageApi;
 import com.example.starlet_be.domains.mypage.dto.*;
 import com.example.starlet_be.domains.mypage.service.MyPageService;
 import com.example.starlet_be.domains.user.entity.User;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/mypage")
 @RequiredArgsConstructor
-public class mypageController {
+public class mypageController implements MyPageApi {
 
     private final MyPageService myPageService;
     private final UserRepository userRepository;
