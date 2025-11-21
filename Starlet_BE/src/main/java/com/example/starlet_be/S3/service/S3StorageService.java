@@ -82,4 +82,14 @@ public class S3StorageService {
 
         return PublishedObject.of(publicKey, url);
     }
+
+    public String convertToUrl(String key) {
+        if (key == null || key.isBlank()) {
+            return null;
+        }
+
+        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+                bucket, region, key);
+    }
+
 }
