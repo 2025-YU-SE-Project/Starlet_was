@@ -51,6 +51,16 @@ public enum ErrorCode {
     INAPPROPRIATE_CONTENT(400, "입력 내용에 부적절한 내용이 포함되었습니다."),
     OPENAI_SERVER_ERROR(500, "외부 서버(OpenAI) 오류입니다."),
 
+    //친구 관련
+    FRIEND_ALREADY_EXIST(409, "이미 친구 관계입니다."),
+    FRIEND_REQUEST_ALREADY_PENDING(400, "이미 처리 중인 친구 요청이 있습니다."),
+    FRIEND_REQUEST_NOT_FOUND(404, "유효한 친구 요청을 찾을 수 없습니다."),
+    FRIEND_NOT_FOUND(404, "친구 관계를 찾을 수 없습니다."),
+    FRIEND_REQUEST_EXPIRED(400, "친구 요청 유효 시간이 만료되었습니다."),
+    CANNOT_REQUEST_SELF(400, "자기 자신에게 친구 요청을 보낼 수 없습니다."),
+    CANNOT_SEARCH_SELF(400, "자기 자신은 검색할 수 없습니다."),
+    FORBIDDEN(403, "권한이 없습니다."),
+
 
     // 기타 관련
     INTERNAL_SERVER_ERROR(500, "내부 서버 오류입니다.");

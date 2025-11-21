@@ -44,6 +44,7 @@ jwt:
 app:
   frontend:
     base-url: ${APP_FRONTEND_BASE_URL}
+    friend-url : ${APP_FRONTEND_MAIL_URL}
 
 
 s3:
