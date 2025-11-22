@@ -1,7 +1,6 @@
 package com.example.starlet_be.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,17 +9,21 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+//    @Value("${jwt.secret-key}")
+    private final SecretKey secretKey;
 
     private final long accessValid = 1000L * 60 * 60; // 1시간
     private final long refreshValid = 1000L * 60 * 60 * 24 * 7; // 7일
+
+    public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     // 1. Access 토큰 발급
     public String createAccessToken(String email) {
