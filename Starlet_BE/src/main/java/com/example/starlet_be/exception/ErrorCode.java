@@ -11,6 +11,7 @@ public enum ErrorCode {
     NOT_VERIFY_USER(400, "이메일 미인증 / 비밀번호 재설정 중인 유저입니다."),
     VERIFY_TYPE_NOT_MATCHED(400, "인증 상태 타입이 일치하지 않습니다."),
     VERIFY_NOT_FOUND(404, "인증 정보를 찾을 수 없습니다."),
+    JWT_TOKEN_PARSING_ERROR(500, "JWT 필터링 오류가 발생하였습니다."),
 
 
     // 이메일 관련
