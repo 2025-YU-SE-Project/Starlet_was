@@ -1,6 +1,7 @@
 package com.example.starlet_be.security;
 
 import com.example.starlet_be.exception.CustomAuthenticationEntryPoint;
+import com.example.starlet_be.exception.ErrorCode;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -42,9 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (JwtException e) {
-                customAuthenticationEntryPoint.commence(request, response, new AuthenticationException(e.getMessage(), e) {});
-                return;
+            } catch (JwtException | IllegalArgumentException e) {
+                request.setAttribute("exception", ErrorCode.JWT_TOKEN_PARSING_ERROR);
             }
         }
         filterChain.doFilter(request, response);
