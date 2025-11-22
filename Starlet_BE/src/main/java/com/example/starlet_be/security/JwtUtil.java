@@ -35,72 +35,23 @@ public class JwtUtil {
     }
 
     // 토큰 발급 종합
-//    private String generateToken(String email, long validTime) {
-//        return Jwts.builder()
-//                .setSubject(email)
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + validTime))
-//                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
-//                .compact();
-//    }
-
     private String generateToken(String email, long validTime) {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + validTime))
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
+//                .signWith(Keys.hmacShaKeyFor(secretKey.getEncoded()), SignatureAlgorithm.HS256)
+                .signWith(secretKey, Jwts.SIG.HS256)
                 .compact();
     }
 
-//    public String getEmailFromToken(String token){
-//        return Jwts.parserBuilder()
-//                .setSigningKey(secretKey.getBytes())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody()
-//                .getSubject();
-//    }
-//
-//    public boolean validateToken(String token){
-//        try{
-//            Jwts.parserBuilder()
-//                    .setSigningKey(secretKey.getBytes())
-//                    .build()
-//                    .parseClaimsJws(token);
-//
-//            return true;
-//        }
-//        catch(JwtException | IllegalArgumentException e){
-//            return false;
-//        }
-//    }
-
-    private Key getSigningKey() {
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
     public String getEmailFromToken(String token) {
-        // Jwts.parser()가 JwtParserBuilder를 반환합니다
-        Jws<Claims> jws = Jwts.parser()
-                .verifyWith((SecretKey) getSigningKey())   // 서명 검증 키 설정
-                .build()                       // JwtParser 생성
-                .parseClaimsJws(token);        // JWS 파싱 & 검증
-
-        return jws.getBody().getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .verifyWith((SecretKey) getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -111,7 +62,6 @@ public class JwtUtil {
         return null;
     }
 
-    // 제대로 작동되는지는 테스트 필요
     public String extractRefreshTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
