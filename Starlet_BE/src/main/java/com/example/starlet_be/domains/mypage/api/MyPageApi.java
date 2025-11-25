@@ -168,11 +168,7 @@ public interface MyPageApi {
             @ApiResponse(responseCode = "200", description = "대표 별자리 조회 성공",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StarryNightConstellationDto.class))),
-            @ApiResponse(responseCode = "204", description = "대표 별자리 없음",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                                    {}
-                                    """))),
+            @ApiResponse(responseCode = "204", description = "대표 별자리 없음"),
             @ApiResponse(responseCode = "401", description = "액세스 토큰 미입력/만료",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """
@@ -230,6 +226,9 @@ public interface MyPageApi {
             summary = "월별 감정 통계 조회",
             description = """
                     year, month 기준으로 해당 월에 작성된 일기들의 감정별(HAPPINESS, SADNESS 등) 개수를 조회합니다.
+                    
+                    - year : 4자리 연도 형식 (2025)
+                    - month : 1~12 범위 정수
                     """
     )
     @ApiResponses({
@@ -310,7 +309,10 @@ public interface MyPageApi {
             summary = "닉네임 수정",
             description = """
                     사용자의 닉네임을 수정합니다.
-                    2~10자 이내 닉네임만 허용하며, 중복 닉네임은 사용할 수 없습니다.
+                    - 2~10자 이내 닉네임만 허용
+                    - 앞 뒤 공백 자동 제거
+                    - 기존 닉네임과 동일하면 변경하지 않고 그대로 반환
+                    - 중복, 부적절한 닉네임 불가
                     """
     )
     @ApiResponses({
@@ -348,4 +350,25 @@ public interface MyPageApi {
             @AuthenticationPrincipal UserDetails principal,
             @RequestBody @Valid UpdateNicknameReqDto req
     );
+
+    @Operation(
+            summary = "닉네임 중복 확인",
+            description = """
+                새 닉네임이 사용 가능한지 확인합니다.
+                본인 닉네임과 동일하면 사용 가능으로 처리됩니다.
+                """
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용 가능"),
+            @ApiResponse(responseCode = "400", description = "닉네임 형식 오류"),
+            @ApiResponse(responseCode = "409", description = "닉네임 중복"),
+            @ApiResponse(responseCode = "401", description = "토큰 없음/만료"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
+    @GetMapping("/available")
+    ResponseEntity<?> checkNickname(
+            @AuthenticationPrincipal UserDetails principal,
+            @RequestParam String newNickname
+    );
+
 }
