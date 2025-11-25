@@ -18,6 +18,7 @@ public class SignUpDto {
 
     @Schema(description = "비밀번호", example = "sl1234")
     @NotBlank(message = "비밀번호는 필수 입력입니다.")
+    @Size(max=15, min=6, message = "비밀번호는 최소 6글자, 최대 15글자 까지 가능합니다.")
     private String password;
 
     @Schema(description = "사용자 이메일", example = "starlet2025@gmail.com")
