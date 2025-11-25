@@ -23,6 +23,7 @@ public class CreateConstellationDto {
     private String description;
 
     @Schema(description = "별자리로 만들 별들")
+    @Size(min=7, max=14, message = "별들은 7~14개로만 구성되어야 합니다.")
     private List<StarPositionDto> stars;
 
     @Schema(description = "별자리로 만들 선 시작위치와 끝위치")
