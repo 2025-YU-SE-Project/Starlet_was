@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.verify.api;
 
-import com.example.starlet_be.domains.verify.dto.PasswordResetConfirmDto;
+import com.example.starlet_be.domains.verify.dto.request.PasswordResetConfirmDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
