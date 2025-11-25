@@ -101,10 +101,6 @@ public class UserService {
         if(email.getVerify().getType() != VerifyType.VERIFY)
             throw new CustomException(ErrorCode.NOT_VERIFY_USER);
 
-        // 닉네임 및 이메일 중복 확인 (대체 예정)
-//        if(existNickname(dto.getNickname()))
-//            throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
-
         // 닉네임 유효성(중복 및 유해성 검증)
         validNickname(dto.getNickname());
 
@@ -117,12 +113,15 @@ public class UserService {
      *
      * 이미 존재하는 닉네임이 있으면 NICKNAME_CONFLICT 409 응답
      * 닉네임에 유해한 정보가 심하게 포함되어 있다면 INAPPROPRIATE_CONTENT 400 응답
+     * strip() 메소드를 이용하여 앞 뒤 공백문자 모두 제거한 후 검사합니다.
      *
      * @param nickname
      * @return boolean 중복되면 true, 아니면 false
      */
     @Transactional(readOnly = true)
     public void validNickname(String nickname) {
+        nickname = nickname.strip();
+
         if(userRepository.existsByNickname(nickname))
             throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
 
