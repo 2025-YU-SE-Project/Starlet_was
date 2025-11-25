@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.connection.dto;
+package com.example.starlet_be.domains.connection.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

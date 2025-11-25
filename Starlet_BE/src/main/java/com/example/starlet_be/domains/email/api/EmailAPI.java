@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.email.api;
 
-import com.example.starlet_be.domains.email.dto.EmailAddressDto;
+import com.example.starlet_be.domains.email.dto.request.EmailAddressDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

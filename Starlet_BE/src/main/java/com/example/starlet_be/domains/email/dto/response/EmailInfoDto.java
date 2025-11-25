@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.email.dto;
+package com.example.starlet_be.domains.email.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

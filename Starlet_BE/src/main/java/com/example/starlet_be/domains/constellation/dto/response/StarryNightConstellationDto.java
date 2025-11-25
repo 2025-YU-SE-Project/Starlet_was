@@ -1,6 +1,6 @@
-package com.example.starlet_be.domains.constellation.dto;
+package com.example.starlet_be.domains.constellation.dto.response;
 
-import com.example.starlet_be.domains.connection.dto.StarryNightConnectionDto;
+import com.example.starlet_be.domains.connection.dto.response.StarryNightConnectionDto;
 import com.example.starlet_be.domains.star.dto.response.StarryNightStarDto;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,8 +2,8 @@ package com.example.starlet_be.domains.email.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.repository.EmailRepository;
-import com.example.starlet_be.domains.email.dto.EmailAddressDto;
-import com.example.starlet_be.domains.email.dto.EmailInfoDto;
+import com.example.starlet_be.domains.email.dto.request.EmailAddressDto;
+import com.example.starlet_be.domains.email.dto.response.EmailInfoDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;

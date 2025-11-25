@@ -1,16 +1,16 @@
 package com.example.starlet_be.domains.constellation.service;
 
-import com.example.starlet_be.domains.connection.dto.ConnectionDto;
-import com.example.starlet_be.domains.connection.dto.StarryNightConnectionDto;
+import com.example.starlet_be.domains.connection.dto.response.ConnectionDto;
+import com.example.starlet_be.domains.connection.dto.response.StarryNightConnectionDto;
 import com.example.starlet_be.domains.connection.entity.Connection;
 import com.example.starlet_be.domains.connection.repository.ConnectionRepository;
-import com.example.starlet_be.domains.constellation.dto.ArchiveDetailDto;
-import com.example.starlet_be.domains.constellation.dto.ArchiveDto;
-import com.example.starlet_be.domains.constellation.dto.ConstellationNameSuggestDto;
-import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
-import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.response.ArchiveDetailDto;
+import com.example.starlet_be.domains.constellation.dto.response.ArchiveDto;
+import com.example.starlet_be.domains.constellation.dto.response.ConstellationNameSuggestDto;
+import com.example.starlet_be.domains.constellation.dto.request.ConstellationPositionDto;
+import com.example.starlet_be.domains.constellation.dto.request.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.request.UpdateConstellationDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.diary.entity.Color;
