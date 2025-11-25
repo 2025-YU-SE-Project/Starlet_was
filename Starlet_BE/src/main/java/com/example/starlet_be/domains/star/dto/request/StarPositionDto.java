@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.star.dto;
+package com.example.starlet_be.domains.star.dto.request;
 
 import lombok.Getter;
 

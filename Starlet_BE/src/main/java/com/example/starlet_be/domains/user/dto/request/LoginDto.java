@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.user.dto;
+package com.example.starlet_be.domains.user.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

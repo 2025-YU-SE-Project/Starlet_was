@@ -2,7 +2,7 @@ package com.example.starlet_be.domains.mypage.mapper;
 
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.connection.dto.StarryNightConnectionDto;
-import com.example.starlet_be.domains.star.dto.StarryNightStarDto;
+import com.example.starlet_be.domains.star.dto.response.StarryNightStarDto;
 import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
 import org.springframework.stereotype.Component;
 

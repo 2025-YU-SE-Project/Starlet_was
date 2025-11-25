@@ -5,7 +5,7 @@ import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto
 import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
 import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
-import com.example.starlet_be.domains.star.dto.StarsIdDto;
+import com.example.starlet_be.domains.star.dto.request.StarsIdDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

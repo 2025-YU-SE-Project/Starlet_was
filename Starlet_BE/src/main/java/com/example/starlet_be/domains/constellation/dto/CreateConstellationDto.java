@@ -1,7 +1,7 @@
 package com.example.starlet_be.domains.constellation.dto;
 
 import com.example.starlet_be.domains.connection.dto.ConnectionDto;
-import com.example.starlet_be.domains.star.dto.StarPositionDto;
+import com.example.starlet_be.domains.star.dto.request.StarPositionDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

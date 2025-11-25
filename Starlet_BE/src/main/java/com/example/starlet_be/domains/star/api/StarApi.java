@@ -1,7 +1,7 @@
 package com.example.starlet_be.domains.star.api;
 
 
-import com.example.starlet_be.domains.star.dto.StarPositionDto;
+import com.example.starlet_be.domains.star.dto.request.StarPositionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

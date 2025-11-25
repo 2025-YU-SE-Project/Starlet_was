@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.user.dto;
+package com.example.starlet_be.domains.user.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

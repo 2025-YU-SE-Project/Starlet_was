@@ -1,7 +1,7 @@
 package com.example.starlet_be.domains.star.controller;
 
 import com.example.starlet_be.domains.star.api.StarApi;
-import com.example.starlet_be.domains.star.dto.StarPositionDto;
+import com.example.starlet_be.domains.star.dto.request.StarPositionDto;
 import com.example.starlet_be.domains.star.service.StarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

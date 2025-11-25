@@ -2,10 +2,10 @@ package com.example.starlet_be.domains.user.service;
 
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.service.EmailService;
-import com.example.starlet_be.domains.user.dto.LoginDto;
-import com.example.starlet_be.domains.user.dto.LoginInfoDto;
-import com.example.starlet_be.domains.user.dto.SignUpDto;
-import com.example.starlet_be.domains.user.dto.UserResDto;
+import com.example.starlet_be.domains.user.dto.request.LoginDto;
+import com.example.starlet_be.domains.user.dto.response.LoginInfoDto;
+import com.example.starlet_be.domains.user.dto.request.SignUpDto;
+import com.example.starlet_be.domains.user.dto.response.UserResDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
