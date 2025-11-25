@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/mypage")
 @RequiredArgsConstructor
-public class mypageController implements MyPageApi {
+public class MyPageController implements MyPageApi {
 
     private final MyPageService myPageService;
     private final UserRepository userRepository;
@@ -101,6 +101,16 @@ public class mypageController implements MyPageApi {
         return ResponseEntity.ok(body);
     }
 
+    //닉네임 중복 확인
+    @GetMapping("/available")
+    public ResponseEntity<?> checkNickname(
+            @AuthenticationPrincipal UserDetails principal,
+            @RequestParam String newNickname
+    ) {
+        Long userId = resolveUserId(principal);
+        myPageService.checkNickname(userId, newNickname);
+        return ResponseEntity.ok().build();
+    }
 
 
     private Long resolveUserId(UserDetails principal) {
