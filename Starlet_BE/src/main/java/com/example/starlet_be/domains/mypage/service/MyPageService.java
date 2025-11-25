@@ -16,6 +16,8 @@ import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
+import com.example.starlet_be.openai.dto.ModerationDto;
+import com.example.starlet_be.openai.service.ModerationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ public class MyPageService {
     private final StarRepository starRepository;
     private final ConstellationMapper constellationMapper;
     private final S3StorageService s3StorageService;
+    private final ModerationService moderationService;
 
     /**
      * 마이페이지 요약 정보 조회
@@ -237,43 +240,85 @@ public class MyPageService {
 
     /**
      * 닉네임 수정
-     * <p>
-     * 새로운 닉네임의 유효성을 검사하고, 중복 여부를 확인한 뒤
-     * 기존 사용자 닉네임과 다를 경우 변경
-     * </p>
      *
-     * @param userId 사용자 ID
-     * @param newNickname 새 닉네임 (2~10자 사이)
-     * @return UpdateNicknameResDto 변경된 닉네임을 포함한 DTO
+     * 새 닉네임을 정규화(trim)하고 유효성 검사 후,
+     * 기존 닉네임과 다를 경우 중복 및 모더레이션 검사를 거쳐 변경
+     * 동일한 닉네임이면 변경하지 않는다
      *
-     * @throws com.example.starlet_be.exception.CustomException
-     *         <ul>
-     *             <li>USER_NOT_FOUND - 존재하지 않는 사용자일 경우</li>
-     *             <li>INVALID_NICKNAME - 닉네임 길이가 유효하지 않은 경우</li>
-     *             <li>NICKNAME_CONFLICT - 이미 사용 중인 닉네임일 경우</li>
-     *         </ul>
+     * @throws CustomException INVALID_NICKNAME, NICKNAME_CONFLICT
      */
     @Transactional
     public UpdateNicknameResDto updateNickname(Long userId, String newNickname) {
-        String nickname = newNickname == null ? "" : newNickname.trim();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
 
-        if(nickname.length() < 2 || nickname.length() > 10) {
-            throw new CustomException(ErrorCode.INVALID_NICKNAME);
+        String nickname = normalizeAndValidateNickname(newNickname);
+
+        // 닉네임이 동일하면 그대로 반환하도록
+        if (nickname.equals(user.getNickname())) {
+            return UpdateNicknameResDto.of(user.getNickname());
+        }
+
+        checkNickname(userId, nickname);
+
+        user.changeNickname(nickname);
+        return UpdateNicknameResDto.of(user.getNickname());
+    }
+
+
+    /**
+     * 닉네임 중복 및 모더레이션 검사
+     *
+     * 정규화된 닉네임 기준으로,
+     * 본인 제외 중복 여부와 OpenAI 모더레이션 여부를 확인한다.
+     *
+     * @throws CustomException INVALID_NICKNAME, NICKNAME_CONFLICT
+     */
+    @Transactional(readOnly = true)
+    public void checkNickname(Long userId, String newNickname) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        String nickname = normalizeAndValidateNickname(newNickname);
+
+        if(nickname.equals(user.getNickname())) {
+            return;
         }
 
         if(userRepository.existsByNicknameAndIdNot(nickname, userId)) {
             throw new CustomException(ErrorCode.NICKNAME_CONFLICT);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-        );
+        ModerationDto.ModerationResponse moderationResponse = moderationService.moderate(nickname);
 
-        if(!nickname.equals(user.getNickname())) {
-            user.changeNickname(nickname);
+        if(moderationResponse == null || moderationResponse.getResults() == null)
+            throw new CustomException(ErrorCode.OPENAI_SERVER_ERROR);
+
+        if(moderationResponse.getResults().get(0).isFlagged())
+            throw new CustomException(ErrorCode.INAPPROPRIATE_CONTENT);
+
+    }
+
+    /**
+     * 닉네임 정규화 및 기본 유효성 검사.
+     *
+     * null 을 빈 문자열로 처리하고 trim 한 뒤,
+     * 길이가 2~10자인지 검증
+     *
+     * @return 정규화된 닉네임
+     * @throws CustomException INVALID_NICKNAME
+     */
+    private String normalizeAndValidateNickname(String rawNickname) {
+        String nickname = Optional.ofNullable(rawNickname).orElse("").trim();
+
+        if (nickname.length() < 2 || nickname.length() > 10) {
+            throw new CustomException(ErrorCode.INVALID_NICKNAME);
         }
 
-        return UpdateNicknameResDto.of(user.getNickname());
+        return nickname;
     }
+
 
 }
