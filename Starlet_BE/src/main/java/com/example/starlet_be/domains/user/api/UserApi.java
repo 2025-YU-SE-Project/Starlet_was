@@ -1,7 +1,7 @@
 package com.example.starlet_be.domains.user.api;
 
-import com.example.starlet_be.domains.user.dto.LoginDto;
-import com.example.starlet_be.domains.user.dto.SignUpDto;
+import com.example.starlet_be.domains.user.dto.request.LoginDto;
+import com.example.starlet_be.domains.user.dto.request.SignUpDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

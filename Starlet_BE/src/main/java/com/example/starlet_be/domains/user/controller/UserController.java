@@ -2,8 +2,8 @@ package com.example.starlet_be.domains.user.controller;
 
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.api.UserApi;
-import com.example.starlet_be.domains.user.dto.LoginDto;
-import com.example.starlet_be.domains.user.dto.SignUpDto;
+import com.example.starlet_be.domains.user.dto.request.LoginDto;
+import com.example.starlet_be.domains.user.dto.request.SignUpDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;

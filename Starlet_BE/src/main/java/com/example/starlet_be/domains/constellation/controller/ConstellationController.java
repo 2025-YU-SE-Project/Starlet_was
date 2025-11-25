@@ -1,11 +1,11 @@
 package com.example.starlet_be.domains.constellation.controller;
 
 import com.example.starlet_be.domains.constellation.api.ConstellationApi;
-import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
-import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.request.ConstellationPositionDto;
+import com.example.starlet_be.domains.constellation.dto.request.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.request.UpdateConstellationDto;
 import com.example.starlet_be.domains.constellation.service.ConstellationService;
-import com.example.starlet_be.domains.star.dto.StarsIdDto;
+import com.example.starlet_be.domains.star.dto.request.StarsIdDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

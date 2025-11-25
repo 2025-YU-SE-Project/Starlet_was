@@ -1,9 +1,9 @@
 package com.example.starlet_be.domains.constellation.api;
 
-import com.example.starlet_be.domains.constellation.dto.ConstellationPositionDto;
-import com.example.starlet_be.domains.constellation.dto.CreateConstellationDto;
-import com.example.starlet_be.domains.constellation.dto.UpdateConstellationDto;
-import com.example.starlet_be.domains.star.dto.StarsIdDto;
+import com.example.starlet_be.domains.constellation.dto.request.ConstellationPositionDto;
+import com.example.starlet_be.domains.constellation.dto.request.CreateConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.request.UpdateConstellationDto;
+import com.example.starlet_be.domains.star.dto.request.StarsIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

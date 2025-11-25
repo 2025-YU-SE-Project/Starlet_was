@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.constellation.dto;
+package com.example.starlet_be.domains.constellation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

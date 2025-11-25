@@ -2,7 +2,7 @@ package com.example.starlet_be.domains.mypage.service;
 
 import com.example.starlet_be.S3.dto.PublishedObject;
 import com.example.starlet_be.S3.service.S3StorageService;
-import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
 import com.example.starlet_be.domains.diary.entity.Diary;

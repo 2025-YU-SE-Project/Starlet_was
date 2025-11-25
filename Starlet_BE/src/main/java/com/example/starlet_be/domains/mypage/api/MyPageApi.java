@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.mypage.api;
 
-import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
 import com.example.starlet_be.domains.mypage.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

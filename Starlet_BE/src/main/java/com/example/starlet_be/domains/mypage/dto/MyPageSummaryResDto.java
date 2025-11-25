@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.mypage.dto;
 
-import com.example.starlet_be.domains.constellation.dto.StarryNightConstellationDto;
+import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
 import lombok.Builder;
 import lombok.Getter;
 
