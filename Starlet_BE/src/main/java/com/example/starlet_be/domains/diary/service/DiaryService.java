@@ -206,6 +206,8 @@ public class DiaryService {
                 요약이니 공백포함 200자 이내로 쓰세요.
                 그리고 줄글로 쓰며 줄바꿈 문자를 굳이 넣지는 마세요.
                 일기들의 내용은 다음과 같습니다.
+                
+                만약 넘어오는 자료가 없으면 "일기가 없습니다" 라는 문구를 반환하세요.
                 """;
 
         String summaryResponse = openAIService.getAssistance(
