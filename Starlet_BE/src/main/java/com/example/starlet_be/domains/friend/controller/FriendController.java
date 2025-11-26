@@ -1,5 +1,6 @@
 package com.example.starlet_be.domains.friend.controller;
 
+import com.example.starlet_be.domains.friend.api.FriendApi;
 import com.example.starlet_be.domains.friend.dto.*;
 import com.example.starlet_be.domains.friend.service.FriendService;
 import com.example.starlet_be.domains.user.entity.User;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/friends")
 @RequiredArgsConstructor
-public class FriendController {
+public class FriendController implements FriendApi {
 
     private final UserRepository userRepository;
     private final FriendService friendService;
