@@ -312,10 +312,11 @@ public class ConstellationService {
      * 사용자가 만든 별자리를 모두 조회
      *
      * @param userDetails 사용자 로그인 정보
+     * @param pageable 페이지 번호와 가져올 개수 지정
      * @return 별자리 아카이브 DTO 리스트
      */
     @Transactional(readOnly = true)
-    public List<ArchiveDto> getArchivePaging(
+    public Page<ArchiveDto> getArchivePaging(
             UserDetails userDetails,
             Pageable pageable
     ){
@@ -328,9 +329,8 @@ public class ConstellationService {
         // 2. 사용자의 별자리 모두 들고오기
         Page<Constellation> constellations = constellationRepository.findByUser(user, pageable);
 
-        List<ArchiveDto> archiveList = new ArrayList<>();
-
-        for(Constellation con : constellations){
+        // 3. map을 통한 별자리 아카이브 페이지 목록 반환
+        return constellations.map(con -> {
             List<Star> stars = starRepository.findByConstellation(con);
             List<StarArchiveDto> starArchiveList = new ArrayList<>();
 
@@ -353,7 +353,8 @@ public class ConstellationService {
                         .build());
             }
 
-            archiveList.add(ArchiveDto.builder()
+            // 함수 내부에서 결과를 리턴
+            return ArchiveDto.builder()
                     .constellationId(con.getId())
                     .name(con.getName())
                     .description(con.getDescription())
@@ -361,10 +362,8 @@ public class ConstellationService {
                     .isRepresentative(con.isRepresentative())
                     .stars(starArchiveList)
                     .connections(connectionList)
-                    .build());
-        }
-
-        return archiveList;
+                    .build();
+        });
     }
 
     /**
