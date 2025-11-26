@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -334,6 +335,118 @@ public interface ConstellationApi {
                     }))
     })
     ResponseEntity<?> getArchiveList(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "별자리 아카이브 페이지 조회",
+            description = """
+                    사용자가 생성한 별자리를 페이지 단위로 가져옵니다.
+                    쿼리 스트링으로 뒤에 페이지 번호(0번부터 시작하는거 고려)와 가져올 데이터 수를 작성해주시면 됩니다.
+                    예시) http://localhost:8080/api/v1/constellation/archive/paging?page=0&size=4
+                    
+                    아래 나타난 pageable 입력 JSON 형태는 무시해주세요.
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "별자리 아카이브 조회 성공",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    [
+                                        {
+                                            "constellationId": 1,
+                                            "name": "카시오페이아자리",
+                                            "description": "카시오페아 자리 입니다.",
+                                            "date": "2025-10-03",
+                                            "isRepresentative": false,
+                                            "stars": [
+                                                {
+                                                    "starId": 1,
+                                                    "x": -0.15,
+                                                    "y": 0.0,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 2,
+                                                    "x": -0.05,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 3,
+                                                    "x": 0.05,
+                                                    "y": -0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 4,
+                                                    "x": 0.15,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 5,
+                                                    "x": 0.2,
+                                                    "y": 0.0,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 6,
+                                                    "x": -0.1,
+                                                    "y": 0.1,
+                                                    "color": "YELLOW"
+                                                },
+                                                {
+                                                    "starId": 7,
+                                                    "x": 0.1,
+                                                    "y": -0.1,
+                                                    "color": "YELLOW"
+                                                }
+                                            ],
+                                            "connections": [
+                                                {
+                                                    "startStarId": 1,
+                                                    "endStarId": 6
+                                                },
+                                                {
+                                                    "startStarId": 6,
+                                                    "endStarId": 2
+                                                },
+                                                {
+                                                    "startStarId": 2,
+                                                    "endStarId": 7
+                                                },
+                                                {
+                                                    "startStarId": 7,
+                                                    "endStarId": 4
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                    """)
+                    })
+            ),
+            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 401,
+                                        "message": "토큰이 없거나 만료되었습니다."
+                                    }
+                                    """)
+                    })),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자",
+                    content = @Content(mediaType = "application/json", examples = {
+                            @ExampleObject(value = """
+                                    {
+                                        "status": 404,
+                                        "message": "해당 유저를 찾을 수 없습니다."
+                                    }
+                                    """)
+                    }))
+    })
+    ResponseEntity<?> getArchivePaging(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Pageable pageable
+    );
 
     @Operation(summary = "별자리 아카이브 상세 조회", description = "특정 별자리의 상세 정보를 조회합니다.")
     @ApiResponses({
