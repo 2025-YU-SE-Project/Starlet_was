@@ -40,6 +40,7 @@ public interface MyPageApi {
                                         "nickname": "starlet_user",
                                         "totalStars": 12,
                                         "totalConstellations": 3
+                                        "profilePhotoUrl": "https://..."
                                       },
                                       "level": {
                                         "code": "STARLIGHT_EXPLORER",
@@ -114,7 +115,7 @@ public interface MyPageApi {
 
     @Operation(
             summary = "사용자 프로필 요약 조회",
-            description = "닉네임, 총 별 개수, 총 별자리 개수를 조회합니다."
+            description = "닉네임, 총 별 개수, 총 별자리 개수, 프로필 url을 조회합니다."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
