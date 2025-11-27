@@ -28,6 +28,8 @@ public class StarController implements StarApi {
     }
 
 
+    // 이동 준비
+    
     // 밤하늘 페이지 별 불러오기(2달 간격)
     // 별자리에 속한 별들을 제외하고 불러오도록 구현
     @GetMapping
@@ -39,6 +41,8 @@ public class StarController implements StarApi {
         return ResponseEntity.ok().body(starService.getStarryNightStar(userDetails, year, month));
     }
 
+
+    // 이동 준비
 
     // 별 위치 최신화
     @PatchMapping("/reposition/{id}")
