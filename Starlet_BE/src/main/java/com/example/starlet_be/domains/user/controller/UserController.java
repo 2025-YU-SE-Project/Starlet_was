@@ -1,20 +1,26 @@
 package com.example.starlet_be.domains.user.controller;
 
-import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.api.UserApi;
 import com.example.starlet_be.domains.user.dto.request.LoginDto;
 import com.example.starlet_be.domains.user.dto.request.SignUpDto;
 import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.service.UserService;
 import com.example.starlet_be.exception.CustomException;
 import com.example.starlet_be.exception.ErrorCode;
-import com.example.starlet_be.domains.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
@@ -23,7 +29,18 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class UserController implements UserApi {
     private final UserService userService;
-    private final EmailService emailService;
+
+    // 1-A. 사용자 정보 가져오기 - 사이드바
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id){
+        return ResponseEntity.ok().body(userService.getUser(id));
+    }
+
+    // 2-A. 사용자들 정보 가져오기 - 사이드바
+    @GetMapping("/get")
+    public ResponseEntity<?> getUserList(){
+        return ResponseEntity.ok().body(userService.getUserList());
+    }
 
     // 3. 회원가입(이메일 인증이 끝났다는 가정하에 진행됨)
     @PostMapping("/signup")
