@@ -13,78 +13,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "User API", description = "회원 관련 API 입니다.")
 public interface UserApi {
-
-    @Operation(summary = "회원 ID 조회", description = "회원 고유 ID를 통한 회원 조회입니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    {
-                                        "id": 31,
-                                        "nickname": "달나라 토끼",
-                                        "email": "moonrabit25@naver.com"
-                                    }
-                                    """)
-                    })),
-            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    {
-                                        "status": 401,
-                                        "message": "토큰이 없거나 만료되었습니다."
-                                    }
-                                    """)
-                    })),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    {
-                                        "status": 404,
-                                        "message": "해당 유저를 찾을 수 없습니다."
-                                    }
-                                    """)
-                    }))
-    })
-    ResponseEntity<?> getUser(@PathVariable Long id);
-
-
-    @Operation(summary = "회원 목록 조회", description = "모든 회원들의 정보를 조회하는 API 입니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    [
-                                        {
-                                            "id": 30,
-                                            "nickname": "죽어볼태양",
-                                            "email": "die4sun@naver.com"
-                                        },
-                                        {
-                                            "id": 31,
-                                            "nickname": "달나라 토끼",
-                                            "email": "moonrabit25@naver.com"
-                                        }
-                                    ]
-                                    """)
-                    })),
-            @ApiResponse(responseCode = "401", description = "토큰 만료 혹은 존재하지 않음",
-                    content = @Content(mediaType = "application/json", examples = {
-                            @ExampleObject(value = """
-                                    {
-                                        "status": 401,
-                                        "message": "토큰이 없거나 만료되었습니다."
-                                    }
-                                    """)
-                    }))
-    })
-    ResponseEntity<?> getUserList();
-
 
     @Operation(summary = "회원가입", description = "서비스를 이용하기 위한 회원가입 입니다.")
     @ApiResponses({

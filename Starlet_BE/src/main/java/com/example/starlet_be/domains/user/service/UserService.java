@@ -3,9 +3,8 @@ package com.example.starlet_be.domains.user.service;
 import com.example.starlet_be.domains.email.entity.Email;
 import com.example.starlet_be.domains.email.service.EmailService;
 import com.example.starlet_be.domains.user.dto.request.LoginDto;
-import com.example.starlet_be.domains.user.dto.response.LoginInfoDto;
 import com.example.starlet_be.domains.user.dto.request.SignUpDto;
-import com.example.starlet_be.domains.user.dto.response.UserResDto;
+import com.example.starlet_be.domains.user.dto.response.LoginInfoDto;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;
 import com.example.starlet_be.domains.verify.entity.Verify;
@@ -24,9 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 사용자(User) 관리 서비스
  * 회원가입, 로그인, 회원탈퇴, 로그아웃, 이메일 기반 검색, 닉네임 중복 확인
@@ -41,48 +37,7 @@ public class UserService {
     private final VerifyRepository verifyRepository;
     private final EmailService emailService;
     private final ModerationService moderationService;
-
-    /**
-     * 사용자 단일 조회
-     *
-     * ID 기반으로 사용자 정보를 가져온다.
-     * 사용자가 존재하지 않는다면 USER_NOT_FOUND 예외 발생
-     *
-     * SRS에서 별도로 지정된 기능이 아니며 프론트엔드의 테스트 용도로 이용된다.
-     * 사용 용도가 없다면 폐기예정
-     *
-     * @param id 사용자 ID
-     * @return UserResDto 응답 DTO
-     */
-    @Transactional(readOnly = true)
-    public UserResDto getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-        );
-        return user.toResDto();
-    }
-
-    /**
-     * 사용자 목록 조회
-     *
-     * 서비스를 이용중인 모든 사용자 정보를 가져온다.
-     *
-     * SRS에서 별도로 지정된 기능이 아니며 프론트엔드의 테스트 용도로 이용된다.
-     * 사용 용도가 없다면 폐기예정
-     *
-     * @return List<UserResDto> 응답 DTO 리스트
-     */
-    @Transactional(readOnly = true)
-    public List<UserResDto> getUserList() {
-        List<User> users = userRepository.findAll();
-        List<UserResDto> dtos = new ArrayList<>();
-
-        for(User user : users)
-            dtos.add(user.toResDto());
-
-        return dtos;
-    }
-
+    
     /**
      * 회원가입
      *
