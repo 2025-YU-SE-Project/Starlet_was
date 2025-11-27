@@ -95,8 +95,10 @@ public class MyPageService {
 
         long totalStars = starRepository.countByUser(user);
         long totalConstellations = constellationRepository.countByUser(user);
+        String profilePhotoUrl = s3StorageService.convertToUrl(user.getProfilePhotoUrl());
 
-        return UserSummaryResDto.of(user, totalStars, totalConstellations);
+
+        return UserSummaryResDto.of(user, totalStars, totalConstellations, profilePhotoUrl);
     }
 
     /**
