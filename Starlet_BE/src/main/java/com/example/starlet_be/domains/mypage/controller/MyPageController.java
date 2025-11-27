@@ -1,7 +1,9 @@
 package com.example.starlet_be.domains.mypage.controller;
 
 import com.example.starlet_be.domains.mypage.api.MyPageApi;
-import com.example.starlet_be.domains.mypage.dto.*;
+import com.example.starlet_be.domains.mypage.dto.request.ConfirmPhotoReqDto;
+import com.example.starlet_be.domains.mypage.dto.request.UpdateNicknameReqDto;
+import com.example.starlet_be.domains.mypage.dto.response.*;
 import com.example.starlet_be.domains.mypage.service.MyPageService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;

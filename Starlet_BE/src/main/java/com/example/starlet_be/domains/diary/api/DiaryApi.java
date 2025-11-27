@@ -1,9 +1,9 @@
 package com.example.starlet_be.domains.diary.api;
 
-import com.example.starlet_be.domains.diary.dto.reqdto.DiaryCreateReqDto;
-import com.example.starlet_be.domains.diary.dto.reqdto.DiaryUpdateReqDto;
-import com.example.starlet_be.domains.diary.dto.resdto.DiaryResDto;
-import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
+import com.example.starlet_be.domains.diary.dto.request.DiaryCreateReqDto;
+import com.example.starlet_be.domains.diary.dto.request.DiaryUpdateReqDto;
+import com.example.starlet_be.domains.diary.dto.response.DiaryResDto;
+import com.example.starlet_be.domains.diary.dto.response.StarMonthlyResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

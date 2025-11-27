@@ -8,7 +8,7 @@ import com.example.starlet_be.domains.constellation.repository.ConstellationRepo
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.entity.Emotion;
 import com.example.starlet_be.domains.diary.repository.DiaryRepository;
-import com.example.starlet_be.domains.mypage.dto.*;
+import com.example.starlet_be.domains.mypage.dto.response.*;
 import com.example.starlet_be.domains.mypage.level.LevelPolicy;
 import com.example.starlet_be.domains.mypage.mapper.ConstellationMapper;
 import com.example.starlet_be.domains.star.repository.StarRepository;

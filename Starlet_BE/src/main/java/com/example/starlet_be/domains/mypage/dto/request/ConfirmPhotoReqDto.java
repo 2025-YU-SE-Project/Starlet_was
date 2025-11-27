@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.mypage.dto;
+package com.example.starlet_be.domains.mypage.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

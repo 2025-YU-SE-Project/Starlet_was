@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.mypage.dto;
+package com.example.starlet_be.domains.mypage.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

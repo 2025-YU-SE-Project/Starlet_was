@@ -1,6 +1,6 @@
 package com.example.starlet_be.domains.mypage.level;
 
-import com.example.starlet_be.domains.mypage.dto.LevelResDto;
+import com.example.starlet_be.domains.mypage.dto.response.LevelResDto;
 
 import java.util.List;
 

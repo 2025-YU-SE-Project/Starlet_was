@@ -1,10 +1,10 @@
 package com.example.starlet_be.domains.diary.controller;
 
 import com.example.starlet_be.domains.diary.api.DiaryApi;
-import com.example.starlet_be.domains.diary.dto.reqdto.DiaryCreateReqDto;
-import com.example.starlet_be.domains.diary.dto.reqdto.DiaryUpdateReqDto;
-import com.example.starlet_be.domains.diary.dto.resdto.DiaryResDto;
-import com.example.starlet_be.domains.diary.dto.resdto.StarMonthlyResDto;
+import com.example.starlet_be.domains.diary.dto.request.DiaryCreateReqDto;
+import com.example.starlet_be.domains.diary.dto.request.DiaryUpdateReqDto;
+import com.example.starlet_be.domains.diary.dto.response.DiaryResDto;
+import com.example.starlet_be.domains.diary.dto.response.StarMonthlyResDto;
 import com.example.starlet_be.domains.diary.service.DiaryService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;

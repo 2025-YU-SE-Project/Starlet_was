@@ -1,7 +1,5 @@
-package com.example.starlet_be.domains.diary.dto.reqdto;
+package com.example.starlet_be.domains.diary.dto.request;
 
-import com.example.starlet_be.domains.diary.entity.Emotion;
-import com.example.starlet_be.domains.diary.entity.Factor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor

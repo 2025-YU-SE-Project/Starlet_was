@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.diary.dto.reqdto;
+package com.example.starlet_be.domains.diary.dto.request;
 
 import com.example.starlet_be.domains.diary.entity.Emotion;
 import com.example.starlet_be.domains.diary.entity.Factor;
