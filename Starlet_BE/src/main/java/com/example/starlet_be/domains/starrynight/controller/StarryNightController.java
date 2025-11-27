@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/starrynight")
+@RequestMapping("/api/v1")
 public class StarryNightController implements StarryNightApi {
 
     private final StarService starService;
@@ -51,7 +51,7 @@ public class StarryNightController implements StarryNightApi {
     // 밤하늘 별자리
 
     // 1. 별자리 조회
-    @GetMapping
+    @GetMapping("/constellation")
     public ResponseEntity<?> getStarryNightConstellation(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam int year,
@@ -61,7 +61,7 @@ public class StarryNightController implements StarryNightApi {
     }
 
     // 2. 별자리 생성
-    @PostMapping
+    @PostMapping("/constellation")
     public ResponseEntity<?> createConstellation(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateConstellationDto dto
@@ -71,7 +71,7 @@ public class StarryNightController implements StarryNightApi {
     }
 
     // 3. 별자리 위치 최신화
-    @PatchMapping("/reposition/{id}")
+    @PatchMapping("/constellation/reposition/{id}")
     public ResponseEntity<?> repositionConstellation(
             @PathVariable Long id,
             @RequestBody ConstellationPositionDto dto
@@ -81,7 +81,7 @@ public class StarryNightController implements StarryNightApi {
     }
 
     // 4. 별자리 이름 추천받기
-    @PostMapping("/suggest")
+    @PostMapping("/constellation/suggest")
     public ResponseEntity<?> suggestConstellationName(
             @RequestBody StarsIdDto dto
     ){
