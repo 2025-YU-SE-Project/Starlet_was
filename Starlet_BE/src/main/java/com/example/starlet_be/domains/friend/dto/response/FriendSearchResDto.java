@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.friend.dto;
+package com.example.starlet_be.domains.friend.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

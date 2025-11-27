@@ -1,7 +1,12 @@
 package com.example.starlet_be.domains.friend.controller;
 
 import com.example.starlet_be.domains.friend.api.FriendApi;
-import com.example.starlet_be.domains.friend.dto.*;
+import com.example.starlet_be.domains.friend.dto.request.FriendAcceptReqDto;
+import com.example.starlet_be.domains.friend.dto.request.FriendRejectReqDto;
+import com.example.starlet_be.domains.friend.dto.request.FriendReqDto;
+import com.example.starlet_be.domains.friend.dto.request.FriendReqItemResDto;
+import com.example.starlet_be.domains.friend.dto.response.FriendListItemResDto;
+import com.example.starlet_be.domains.friend.dto.response.FriendSearchResDto;
 import com.example.starlet_be.domains.friend.service.FriendService;
 import com.example.starlet_be.domains.user.entity.User;
 import com.example.starlet_be.domains.user.repository.UserRepository;

@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.diary.dto.resdto;
+package com.example.starlet_be.domains.diary.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

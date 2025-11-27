@@ -2,13 +2,13 @@ package com.example.starlet_be.domains.friend.service;
 
 import com.example.starlet_be.S3.service.S3StorageService;
 import com.example.starlet_be.domains.constellation.repository.ConstellationRepository;
-import com.example.starlet_be.domains.friend.dto.FriendListItemResDto;
-import com.example.starlet_be.domains.friend.dto.FriendReqItemResDto;
-import com.example.starlet_be.domains.friend.dto.FriendSearchResDto;
+import com.example.starlet_be.domains.friend.dto.response.FriendListItemResDto;
+import com.example.starlet_be.domains.friend.dto.request.FriendReqItemResDto;
+import com.example.starlet_be.domains.friend.dto.response.FriendSearchResDto;
 import com.example.starlet_be.domains.friend.entity.Friend;
 import com.example.starlet_be.domains.friend.entity.FriendStatus;
 import com.example.starlet_be.domains.friend.repository.FriendRepository;
-import com.example.starlet_be.domains.mypage.dto.LevelResDto;
+import com.example.starlet_be.domains.mypage.dto.response.LevelResDto;
 import com.example.starlet_be.domains.mypage.level.LevelPolicy;
 import com.example.starlet_be.domains.star.repository.StarRepository;
 import com.example.starlet_be.domains.user.entity.User;

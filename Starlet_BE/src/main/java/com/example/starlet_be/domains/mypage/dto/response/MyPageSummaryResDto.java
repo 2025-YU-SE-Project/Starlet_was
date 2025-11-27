@@ -1,4 +1,4 @@
-package com.example.starlet_be.domains.mypage.dto;
+package com.example.starlet_be.domains.mypage.dto.response;
 
 import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
 import lombok.Builder;

@@ -1,7 +1,9 @@
 package com.example.starlet_be.domains.mypage.api;
 
 import com.example.starlet_be.domains.constellation.dto.response.StarryNightConstellationDto;
-import com.example.starlet_be.domains.mypage.dto.*;
+import com.example.starlet_be.domains.mypage.dto.request.ConfirmPhotoReqDto;
+import com.example.starlet_be.domains.mypage.dto.request.UpdateNicknameReqDto;
+import com.example.starlet_be.domains.mypage.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
