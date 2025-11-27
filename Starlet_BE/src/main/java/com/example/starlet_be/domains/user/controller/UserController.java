@@ -25,18 +25,6 @@ public class UserController implements UserApi {
     private final UserService userService;
     private final EmailService emailService;
 
-    // 1-A. 사용자 조회(관리자 전용)
-    @GetMapping("/get/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id){
-        return ResponseEntity.ok().body(userService.getUser(id));
-    }
-
-    // 2-A. 사용자들 조회(관리자 전용)
-    @GetMapping("/get")
-    public ResponseEntity<?> getUserList(){
-        return ResponseEntity.ok().body(userService.getUserList());
-    }
-
     // 3. 회원가입(이메일 인증이 끝났다는 가정하에 진행됨)
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto){
@@ -44,10 +32,7 @@ public class UserController implements UserApi {
         if(user == null)
             throw new CustomException(ErrorCode.USER_CREATE_FAILED);
         return ResponseEntity.created(URI.create("/api/v1/user/" + user.getId())).build();
-
     }
-
-
     // 3. 닉네임 유효성 확인
     @GetMapping("/signup/nickname_available")
     public ResponseEntity<?> validNickname(@RequestParam String nickname){
