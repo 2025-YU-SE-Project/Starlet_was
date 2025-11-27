@@ -32,7 +32,6 @@ public enum ErrorCode {
     // diary 관련
     DIARY_ALREADY_EXISTS(409, "해당 날짜에는 이미 감정 일기가 존재합니다."),
     DIARY_NOT_FOUND(404, "해당 날짜의 감정 일기를 찾을 수 없습니다."),
-    DIARY_INVALID_PARAM(400, "요청 값이 올바르지 않습니다."),
     DIARY_INVALID_MONTH(400, "month는 1~12 사이여야 합니다."),
 
 
