@@ -30,13 +30,13 @@ import java.net.URI;
 public class UserController implements UserApi {
     private final UserService userService;
 
-    // 1-A. 사용자 조회(관리자 전용)
+    // 1-A. 사용자 정보 가져오기 - 사이드바
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id){
         return ResponseEntity.ok().body(userService.getUser(id));
     }
 
-    // 2-A. 사용자들 조회(관리자 전용)
+    // 2-A. 사용자들 정보 가져오기 - 사이드바
     @GetMapping("/get")
     public ResponseEntity<?> getUserList(){
         return ResponseEntity.ok().body(userService.getUserList());
