@@ -8,6 +8,7 @@ import com.example.starlet_be.domains.constellation.service.ConstellationService
 import com.example.starlet_be.domains.star.dto.request.StarsIdDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,6 +76,15 @@ public class ConstellationController implements ConstellationApi {
     @GetMapping("/archive")
     public ResponseEntity<?> getArchiveList(@AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok().body(constellationService.getArchiveList(userDetails));
+    }
+
+    // 1.1. 별자리 아카이브 조회(별자리 페이징 조회)
+    @GetMapping("/archive/paging")
+    public ResponseEntity<?> getArchivePaging(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok().body(constellationService.getArchivePaging(userDetails, pageable));
     }
 
 
