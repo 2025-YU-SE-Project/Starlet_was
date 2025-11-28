@@ -20,11 +20,15 @@ public class UserSummaryResDto{
     @Schema(example = "1")
     private int totalConstellations;
 
-    public static UserSummaryResDto of(User user, long totalStars, long totalConstellations) {
+    @Schema(example = "https://...")
+    private String profilePhotoUrl;
+
+    public static UserSummaryResDto of(User user, long totalStars, long totalConstellations, String profilePhotoUrl) {
         return UserSummaryResDto.builder()
                 .nickname(user.getNickname())
                 .totalStars((int) totalStars)
                 .totalConstellations((int) totalConstellations)
+                .profilePhotoUrl(profilePhotoUrl)
                 .build();
     }
 
