@@ -13,7 +13,7 @@ public class SignUpDto {
 
     @Schema(description = "사용자 닉네임", example = "우리 은하")
     @NotBlank(message = "닉네임은 필수 입력입니다.")
-    @Size(max = 10, min = 2, message = "닉네임은 최소 2글자, 최대 10글자 까지 가능합니다.")
+    @Size(max = 6, min = 2, message = "닉네임은 최소 2글자, 최대 6글자 까지 가능합니다.")
     private String nickname;
 
     @Schema(description = "비밀번호", example = "sl1234")

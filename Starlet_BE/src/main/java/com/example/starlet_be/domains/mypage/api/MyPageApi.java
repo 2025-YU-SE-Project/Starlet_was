@@ -312,7 +312,7 @@ public interface MyPageApi {
             summary = "닉네임 수정",
             description = """
                     사용자의 닉네임을 수정합니다.
-                    - 2~10자 이내 닉네임만 허용
+                    - 2~6자 이내 닉네임만 허용
                     - 앞 뒤 공백 자동 제거
                     - 기존 닉네임과 동일하면 변경하지 않고 그대로 반환
                     - 중복, 부적절한 닉네임 불가
@@ -330,7 +330,7 @@ public interface MyPageApi {
             @ApiResponse(responseCode = "400", description = "닉네임 형식/길이 오류",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """
-                                    { "status": 400, "message": "닉네임은 2~10자 사이여야 합니다." }
+                                    { "status": 400, "message": "닉네임은 2~6자 사이여야 합니다." }
                                     """))),
             @ApiResponse(responseCode = "409", description = "닉네임 중복",
                     content = @Content(mediaType = "application/json",
