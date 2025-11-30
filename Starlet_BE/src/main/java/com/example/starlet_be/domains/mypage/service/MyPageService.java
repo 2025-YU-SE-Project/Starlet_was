@@ -8,6 +8,7 @@ import com.example.starlet_be.domains.constellation.repository.ConstellationRepo
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.diary.entity.Emotion;
 import com.example.starlet_be.domains.diary.repository.DiaryRepository;
+import com.example.starlet_be.domains.friend.repository.FriendRepository;
 import com.example.starlet_be.domains.mypage.dto.response.*;
 import com.example.starlet_be.domains.mypage.level.LevelPolicy;
 import com.example.starlet_be.domains.mypage.mapper.ConstellationMapper;
@@ -40,6 +41,7 @@ public class MyPageService {
     private final ConstellationMapper constellationMapper;
     private final S3StorageService s3StorageService;
     private final ModerationService moderationService;
+    private final FriendRepository friendRepository;
 
     /**
      * 마이페이지 요약 정보 조회
@@ -96,9 +98,10 @@ public class MyPageService {
         long totalStars = starRepository.countByUser(user);
         long totalConstellations = constellationRepository.countByUser(user);
         String profilePhotoUrl = s3StorageService.convertToUrl(user.getProfilePhotoUrl());
+        long friendsCount = friendRepository.countAcceptedFriendsByUserId(userId);
 
 
-        return UserSummaryResDto.of(user, totalStars, totalConstellations, profilePhotoUrl);
+        return UserSummaryResDto.of(user, totalStars, totalConstellations, profilePhotoUrl, friendsCount);
     }
 
     /**

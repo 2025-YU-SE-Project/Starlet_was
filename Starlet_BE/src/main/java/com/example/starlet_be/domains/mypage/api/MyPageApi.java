@@ -41,6 +41,7 @@ public interface MyPageApi {
                                         "totalStars": 12,
                                         "totalConstellations": 3
                                         "profilePhotoUrl": "https://..."
+                                        "friendsCount": 10
                                       },
                                       "level": {
                                         "code": "STARLIGHT_EXPLORER",
@@ -275,17 +276,32 @@ public interface MyPageApi {
             description = """
                     Presigned URL 업로드 후, 임시 key(tempKey)를 전달하면
                     실제 프로필 경로로 발행하고, 최종 프로필 이미지 URL을 반환합니다.
+                    
+                    - 일반 사진 변경 : tempKey에 `uploads/users/{userId}/...` 형태의 임시 키 전달
+                    - 기본 이미지로 변경 : tempKey에 문자열 `defaults` 형태로 전달
                     """
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "변경 성공",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ConfirmPhotoResDto.class),
-                            examples = @ExampleObject(value = """
-                                    {
-                                      "profileUrl": "https://starlet-s3-bucket/profile/user-1.png"
-                                    }
-                                    """))),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "사용자 업로드 이미지로 변경",
+                                            value = """
+                                                    {
+                                                        "profileUrl": "https://starlet-s3-bucket/profile/user-1.png"
+                                                    }
+                                                    """),
+                                    @ExampleObject(
+                                            name = "기본 이미지로 변경",
+                                            value = """
+                                                    {
+                                                       "profileUrl": "https://starlet-s3-bucket.s3.ap-northeast-2.amazonaws.com/public/defaults/profileDefault.png" 
+                                                    }
+                                                    """
+                                    )
+                            })),
             @ApiResponse(responseCode = "400", description = "요청 형식 오류",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """

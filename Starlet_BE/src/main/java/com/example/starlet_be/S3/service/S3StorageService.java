@@ -17,6 +17,8 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class S3StorageService {
 
+    private static final String DEFAULT_PROFILE_KEY = "public/defaults/profileDefault.png";
+
     private final S3Presigner presigner;
     private final S3Client s3Client;
 
@@ -61,10 +63,20 @@ public class S3StorageService {
      */
     public PublishedObject publishProfile(Long userId, String tempKey) {
 
-        String allowedPrefix = "uploads/users/" + userId + "/";
-        if (tempKey == null || !tempKey.startsWith(allowedPrefix)) {
+        if (tempKey == null || tempKey.isBlank()) {
             throw new IllegalArgumentException("잘못된 tempKey입니다.");
         }
+
+        //기본 이미지
+        if(tempKey.equals("defaults")) {
+            String url = convertToUrl(DEFAULT_PROFILE_KEY);
+            return PublishedObject.of(DEFAULT_PROFILE_KEY, url);
+        }
+
+        String allowedPrefix = "uploads/users/" + userId + "/";
+            if(!tempKey.startsWith(allowedPrefix)) {
+                throw new IllegalArgumentException("잘못된 tempKey입니다.");
+            }
 
         String publicKey = "public/users/" + userId + "/profile.png";
 
@@ -76,7 +88,6 @@ public class S3StorageService {
                 .build();
 
         s3Client.copyObject(copyReq);
-
         String url = String.format("https://%s.s3.%s.amazonaws.com/%s",
                 bucket, region, publicKey);
 
@@ -85,7 +96,8 @@ public class S3StorageService {
 
     public String convertToUrl(String key) {
         if (key == null || key.isBlank()) {
-            return null;
+            return String.format("https://%s.s3.%s.amazonaws.com/%s",
+                    bucket, region, DEFAULT_PROFILE_KEY);
         }
 
         return String.format("https://%s.s3.%s.amazonaws.com/%s",
