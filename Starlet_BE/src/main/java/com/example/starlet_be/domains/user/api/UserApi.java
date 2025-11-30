@@ -102,7 +102,7 @@ public interface UserApi {
                                     """),
                             @ExampleObject(name = "닉네임 길이 초과", value = """
                                     {
-                                        "nickname": "닉네임은 최소 2글자, 최대 10글자 까지 가능합니다."
+                                        "nickname": "닉네임은 최소 2글자, 최대 6글자 까지 가능합니다."
                                     }
                                     """),
                             @ExampleObject(name = "인증 되지 않은 계정", value = """
