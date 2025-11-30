@@ -5,6 +5,7 @@ import com.example.starlet_be.domains.friend.entity.FriendStatus;
 import com.example.starlet_be.domains.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,16 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
             FriendStatus status1, User requester,
             FriendStatus status2, User receiver
     );
+
+    long countByRequesterIdAndStatus(Long requesterId, FriendStatus status);
+
+    long countByReceiverIdAndStatus(Long receiverId, FriendStatus status);
+
+    default long countAcceptedFriendsByUserId(Long userId) {
+        return countByRequesterIdAndStatus(userId, FriendStatus.ACCEPTED)
+                + countByReceiverIdAndStatus(userId, FriendStatus.ACCEPTED);
+    }
+
+    void deleteByStatusAndExpiredAtBefore(FriendStatus status, LocalDateTime now);
 }
 
