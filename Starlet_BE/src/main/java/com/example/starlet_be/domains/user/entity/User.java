@@ -3,6 +3,7 @@ package com.example.starlet_be.domains.user.entity;
 import com.example.starlet_be.domains.constellation.entity.Constellation;
 import com.example.starlet_be.domains.diary.entity.Diary;
 import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.friend.entity.Friend;
 import com.example.starlet_be.domains.star.entity.Star;
 import com.example.starlet_be.domains.user.dto.response.UserResDto;
 import jakarta.persistence.CascadeType;
@@ -52,6 +53,12 @@ public class User{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Constellation> constellations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "requester", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Friend> sentFriendRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Friend> receivedFriendRequests = new ArrayList<>();
 
     @Builder public User(String nickname, String password, Email email, String profilePhotoUrl) {
         this.nickname = nickname;
