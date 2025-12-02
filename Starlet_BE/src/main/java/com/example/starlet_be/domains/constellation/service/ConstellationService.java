@@ -525,8 +525,11 @@ public class ConstellationService {
                     별자리 이름은 공백 포함 10자 이내여야 합니다. 그리고 2자 이상 생성을 권장합니다.
                     예를들어 "물병자리", "오징어자리", "constella" 는 가능합니다.
                     "불", "가나다라마바사아자차카타파하", "constellation" 는 불가능합니다.
-                    별자리 설명은 공백 포함 30자 이내여야 합니다. 그러나 설명이 너무 부실하게 적으면 안됩니다.
+
+                    별자리 설명은 공백 포함 20자 이내여야 합니다. 그러나 설명이 너무 부실하게 적으면 안됩니다.
+                    
                     """;
+                    // 별자리 설명은 공백 포함 30자 이내여야 하지만 자연어의 특성상 더 길어질 수 있어 제약함.
 
         String[] result = openAIService.getAssistance(starsInfo.toString(), sysPrompt).split("/", -1);
 
