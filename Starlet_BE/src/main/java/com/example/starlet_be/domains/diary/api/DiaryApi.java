@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.diary.api;
 
 import com.example.starlet_be.domains.diary.dto.request.DiaryCreateReqDto;
 import com.example.starlet_be.domains.diary.dto.request.DiaryUpdateReqDto;
+import com.example.starlet_be.domains.diary.dto.response.DiaryByDateResDto;
 import com.example.starlet_be.domains.diary.dto.response.DiaryResDto;
 import com.example.starlet_be.domains.diary.dto.response.StarMonthlyResDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -129,19 +130,31 @@ public interface DiaryApi {
 
     @Operation(
             summary = "특정 날짜 감정 일기 조회",
-            description = "YYYY-MM-DD 형식의 날짜로 해당 날짜 일기를 조회합니다."
+            description = """
+                YYYY-MM-DD 형식의 날짜로 해당 날짜 일기를 조회합니다.
+                - 다이어리가 없을 경우: hasDiary = false, diary = null
+                - 다이어리가 있을 경우: hasDiary = true, diary에 내용 포함
+                """
+
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DiaryResDto.class),
+                            schema = @Schema(implementation = DiaryByDateResDto.class),
                             examples = @ExampleObject(value = """
                     {
-                      "date": "2025-09-09",
-                      "emotion": "HAPPINESS",
-                      "color": "YELLOW",
-                      "factors": ["FRIEND","WORK"],
-                      "content": "오늘은 소공 수업을 했는데, 너무너무 재미있었다!"
+                        "hasDiary": true,
+                        "date": "2025-12-04",
+                        "diary": {
+                            "date": "2025-12-04",
+                            "emotion": "SURPRISING",
+                            "color": "PURPLE",
+                            "factors": [
+                                "FRIEND",
+                                "WORK"
+                            ],
+                            "content": "즐거운하루입니다!시험화이팅하세요!!!!"
+                        }
                     }
                 """))),
             @ApiResponse(responseCode = "400", description = "날짜 형식 오류",
@@ -153,12 +166,8 @@ public interface DiaryApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """
                     { "status": 401, "message": "토큰이 없거나 만료되었습니다." }
-                """))),
-            @ApiResponse(responseCode = "404", description = "해당 날짜 일기 없음",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                    { "status": 404, "message": "해당 날짜의 감정 일기를 찾을 수 없습니다." }
                 """)))
+
     })
     @GetMapping("/diary/{date}")
     ResponseEntity<?> getDiary(

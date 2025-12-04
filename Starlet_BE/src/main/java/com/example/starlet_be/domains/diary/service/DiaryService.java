@@ -2,6 +2,7 @@ package com.example.starlet_be.domains.diary.service;
 
 import com.example.starlet_be.domains.diary.dto.request.DiaryCreateReqDto;
 import com.example.starlet_be.domains.diary.dto.request.DiaryUpdateReqDto;
+import com.example.starlet_be.domains.diary.dto.response.DiaryByDateResDto;
 import com.example.starlet_be.domains.diary.dto.response.DiaryResDto;
 import com.example.starlet_be.domains.diary.dto.response.DiarySummaryResDto;
 import com.example.starlet_be.domains.diary.dto.response.StarMonthlyResDto;
@@ -129,16 +130,17 @@ public class DiaryService {
 
     /**
      * 특정 날짜의 감정 일기를 조회한다.
+     * 다이어리가 있을 경우 -> 다이어리 조회
+     * 다이어리가 없을 경우 -> hasDiary=false
      *
      * @param userId 사용자 ID
      * @param date   조회할 날짜
      * @return DiaryResDto 응답 DTO
-     * @throws CustomException ErrorCode.DIARY_NOT_FOUND 동일 사용자/날짜가 이미 존재할 경우
      */
-    public DiaryResDto getByDate(Long userId, LocalDate date) {
-        Diary diary = diaryRepository.findByUser_IdAndCreateAt(userId, date)
-                .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND));
-        return DiaryResDto.of(diary);
+    public DiaryByDateResDto getByDate(Long userId, LocalDate date) {
+        return diaryRepository.findByUser_IdAndCreateAt(userId, date)
+                .map(DiaryByDateResDto::of)
+                .orElseGet(() -> DiaryByDateResDto.empty(date));
     }
 
     /**

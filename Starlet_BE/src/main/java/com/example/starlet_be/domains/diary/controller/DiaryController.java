@@ -3,6 +3,7 @@ package com.example.starlet_be.domains.diary.controller;
 import com.example.starlet_be.domains.diary.api.DiaryApi;
 import com.example.starlet_be.domains.diary.dto.request.DiaryCreateReqDto;
 import com.example.starlet_be.domains.diary.dto.request.DiaryUpdateReqDto;
+import com.example.starlet_be.domains.diary.dto.response.DiaryByDateResDto;
 import com.example.starlet_be.domains.diary.dto.response.DiaryResDto;
 import com.example.starlet_be.domains.diary.dto.response.StarMonthlyResDto;
 import com.example.starlet_be.domains.diary.service.DiaryService;
@@ -52,12 +53,12 @@ public class DiaryController implements DiaryApi {
     }
 
     @GetMapping("/diary/{date}")
-    public ResponseEntity<DiaryResDto> getDiary(
+    public ResponseEntity<DiaryByDateResDto> getDiary(
             @AuthenticationPrincipal UserDetails principal,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         Long userId = resolveUserId(principal);
-        DiaryResDto body = diaryService.getByDate(userId, date);
+        DiaryByDateResDto body = diaryService.getByDate(userId, date);
         return ResponseEntity.ok(body);
     }
 
