@@ -244,6 +244,7 @@ public class ConstellationService {
         Double changeX = (dto.getX() > 0.2 && dto.getX() < 0.8) ? constellation.getX() : dto.getX();
         Double changeY = (dto.getY() > 0.2 && dto.getY() < 0.8) ? constellation.getY() : dto.getY();
 
+
         // 3. 위치 적용
         constellation.changePosition(changeX, changeY);
 
