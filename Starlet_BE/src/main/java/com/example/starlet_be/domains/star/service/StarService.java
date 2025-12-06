@@ -130,8 +130,8 @@ public class StarService {
             throw new CustomException(ErrorCode.STAR_POSITION_OUT_OF_SCOPE);
 
         // 별이 너무 밖으로 나가지 않게 조정, 나간다면 제자리로
-        Double changeX = (dto.getX() > 0.05 && dto.getX() < 0.95) ? star.getX() : dto.getX();
-        Double changeY = (dto.getY() > 0.05 && dto.getY() < 0.95) ? star.getY() : dto.getY();
+        Double changeX = (dto.getX() > 0.05 && dto.getX() < 0.95) ? dto.getX() : star.getX();
+        Double changeY = (dto.getY() > 0.05 && dto.getY() < 0.95) ? dto.getY() : star.getY();
 
         // 3. 위치 적용
         star.changePosition(changeX, changeY);
