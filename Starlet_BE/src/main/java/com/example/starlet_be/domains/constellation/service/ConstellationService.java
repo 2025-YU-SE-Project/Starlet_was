@@ -94,8 +94,8 @@ public class ConstellationService {
                 .description(dto.getDescription())
                 .createAt(LocalDate.now())
                 .isRepresentative(isRepresentative)
-                .x(Math.random())
-                .y(Math.random())
+                .x((0.85 - 0.15) * Math.random() + 0.15)
+                .y((0.85 - 0.15) * Math.random() + 0.15)
                 .build();
         constellationRepository.save(constellation);
 
@@ -240,8 +240,12 @@ public class ConstellationService {
         if(dto.getX() < 0 || dto.getX() > 1 || dto.getY() < 0 || dto.getY() > 1)
             throw new CustomException(ErrorCode.CONSTELLATION_POSITION_OUT_OF_SCOPE);
 
+        // 별자리가 너무 밖으로 나가지 않게 조정, 나간다면 제자리로
+        Double changeX = (dto.getX() > 0.15 && dto.getX() < 0.85) ? constellation.getX() : dto.getX();
+        Double changeY = (dto.getY() > 0.15 && dto.getY() < 0.85) ? constellation.getY() : dto.getY();
+
         // 3. 위치 적용
-        constellation.changePosition(dto.getX(), dto.getY());
+        constellation.changePosition(changeX, changeY);
 
         // 4. 저장
         constellationRepository.save(constellation);
