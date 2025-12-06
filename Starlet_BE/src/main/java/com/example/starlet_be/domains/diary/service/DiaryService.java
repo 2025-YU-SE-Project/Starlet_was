@@ -86,8 +86,8 @@ public class DiaryService {
 
             Star star = Star.builder()
                     .color(diary.getEmotion().getColor())
-                    .x(Math.random())
-                    .y(Math.random())
+                    .x((0.95 - 0.05) * Math.random() + 0.05)
+                    .y((0.95 - 0.05) * Math.random() + 0.05)
                     .user(userRef)
                     .diary(diary)
                     .build();
