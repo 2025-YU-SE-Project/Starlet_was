@@ -129,11 +129,15 @@ public class StarService {
         if(dto.getX() < 0 || dto.getX() > 1 || dto.getY() < 0 || dto.getY() > 1)
             throw new CustomException(ErrorCode.STAR_POSITION_OUT_OF_SCOPE);
 
-        // 3. 단 하나라도 정상 범위 밖으로 나간다면 커밋을 시행하지 않음
-        if(dto.getX() > 0.05 && dto.getX() < 0.95 && dto.getY() > 0.05 && dto.getY() < 0.95){
-            star.changePosition(dto.getX(), dto.getY());
-            starRepository.save(star);
-        }
+//        // 3. 단 하나라도 정상 범위 밖으로 나간다면 커밋을 시행하지 않음
+//        if(dto.getX() > 0.05 && dto.getX() < 0.95 && dto.getY() > 0.05 && dto.getY() < 0.95){
+//            star.changePosition(dto.getX(), dto.getY());
+//            starRepository.save(star);
+//        }
+
+        // 3. 반영
+        star.changePosition(dto.getX(), dto.getY());
+        starRepository.save(star);
 
     }
 }
