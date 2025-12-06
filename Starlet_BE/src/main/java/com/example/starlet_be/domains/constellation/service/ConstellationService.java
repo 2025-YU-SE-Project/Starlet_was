@@ -94,8 +94,8 @@ public class ConstellationService {
                 .description(dto.getDescription())
                 .createAt(LocalDate.now())
                 .isRepresentative(isRepresentative)
-                .x((0.8 - 0.2) * Math.random() + 0.2)
-                .y((0.8 - 0.2) * Math.random() + 0.2)
+                .x((0.75 - 0.25) * Math.random() + 0.25)
+                .y((0.75 - 0.25) * Math.random() + 0.25)
                 .build();
         constellationRepository.save(constellation);
 
@@ -240,17 +240,11 @@ public class ConstellationService {
         if(dto.getX() < 0 || dto.getX() > 1 || dto.getY() < 0 || dto.getY() > 1)
             throw new CustomException(ErrorCode.CONSTELLATION_POSITION_OUT_OF_SCOPE);
 
-        // 별자리가 너무 밖으로 나가지 않게 조정, 나간다면 제자리로
-        Double changeX = (dto.getX() > 0.2 && dto.getX() < 0.8) ? constellation.getX() : dto.getX();
-        Double changeY = (dto.getY() > 0.2 && dto.getY() < 0.8) ? constellation.getY() : dto.getY();
-
-
-        // 3. 위치 적용
-        constellation.changePosition(changeX, changeY);
-
-        // 4. 저장
-        constellationRepository.save(constellation);
-
+        // 3. 단 하나라도 정상 범위 밖으로 나간다면 커밋을 시행하지 않음
+        if(dto.getX() > 0.25 && dto.getX() < 0.75 && dto.getY() > 0.25 && dto.getY() < 0.75){
+            constellation.changePosition(dto.getX(), dto.getY());
+            constellationRepository.save(constellation);
+        }
     }
 
     /**
@@ -531,7 +525,7 @@ public class ConstellationService {
                     예를들어 "물병자리", "오징어자리", "constella" 는 가능합니다.
                     "불", "가나다라마바사아자차카타파하", "constellation" 는 불가능합니다.
 
-                    별자리 설명은 공백 포함 20자 이내여야 합니다. 그러나 설명이 너무 부실하게 적으면 안됩니다.
+                    별자리 설명은 공백 포함 20자 이내여야 합니다. 반드시 이 사항을 지켜야합니다. 절대 20자가 초과되어선 안된다는것을 명심해주세요.
                     
                     """;
                     // 별자리 설명은 공백 포함 30자 이내여야 하지만 자연어의 특성상 더 길어질 수 있어 제약함.
