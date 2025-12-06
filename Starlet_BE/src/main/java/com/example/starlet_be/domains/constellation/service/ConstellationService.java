@@ -241,8 +241,8 @@ public class ConstellationService {
             throw new CustomException(ErrorCode.CONSTELLATION_POSITION_OUT_OF_SCOPE);
 
         // 별자리가 너무 밖으로 나가지 않게 조정, 나간다면 제자리로
-        Double changeX = (dto.getX() > 0.15 && dto.getX() < 0.85) ? constellation.getX() : dto.getX();
-        Double changeY = (dto.getY() > 0.15 && dto.getY() < 0.85) ? constellation.getY() : dto.getY();
+        Double changeX = (dto.getX() > 0.15 && dto.getX() < 0.85) ? dto.getX() : constellation.getX();
+        Double changeY = (dto.getY() > 0.15 && dto.getY() < 0.85) ? dto.getY() : constellation.getY();
 
         // 3. 위치 적용
         constellation.changePosition(changeX, changeY);
