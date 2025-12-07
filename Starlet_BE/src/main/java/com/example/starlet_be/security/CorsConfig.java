@@ -1,5 +1,6 @@
 package com.example.starlet_be.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -12,11 +13,20 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    private final String webServerUrl;
+
+    public CorsConfig(@Value("${web.server}") String webServerUrl) {
+        this.webServerUrl = webServerUrl;
+    }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedOriginPattern("http://localhost:*");
+        configuration.addAllowedOriginPattern("http://localhost");
+        configuration.addAllowedOriginPattern(webServerUrl + ":*");
+        configuration.addAllowedOriginPattern(webServerUrl);
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(List.of("*"));
