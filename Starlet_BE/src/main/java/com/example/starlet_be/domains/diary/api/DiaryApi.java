@@ -228,37 +228,6 @@ public interface DiaryApi {
             @RequestParam int month
     );
 
-    /* ====================================== */
-    @Operation(
-            summary = "(개발용) 감정 일기 삭제",
-            description = """
-            사용자가 지우고자 하는 감정 일기를 지울 수 있습니다.
-            """
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "삭제 성공",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DiaryResDto.class),
-                            examples = @ExampleObject(value = """
-                    {
-                    }
-                """))),
-            @ApiResponse(responseCode = "401", description = "액세스 토큰 미입력/만료",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                    { "status": 401, "message": "토큰이 없거나 만료되었습니다." }
-                """))),
-            @ApiResponse(responseCode = "404", description = "해당 ID 일기 없음",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                    { "status": 409, "message": "해당 날짜의 감정 일기를 찾을 수 없습니다." }
-                """)))
-    })
-    @DeleteMapping("/{diaryId}")
-    ResponseEntity<?> removeDiary(
-            @AuthenticationPrincipal UserDetails principal,
-            @PathVariable("diaryId") Long diaryId
-    );
 
     @Operation(summary = "한달 일기 분석", description = "한달의 일기 정보들을 종합하여 알려주는 API")
     @ApiResponses({
