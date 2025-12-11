@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class DiaryService {
     /**
      * 새로운 감정 일기를 생성한다.
      *
-     * date가 null이면 오늘 날짜로 기본 설정
+     * req로 받은 date가 오늘 날짜와 다르면 DIARY_NOT_CREATE 예외 발생
      * 동일 사용자/날짜의 일기가 이미 있으면 DiaryExceptions.AlreadyExists 예외 발생
      * 일기에 부적절한 표현이 심하게 존재하면 INAPPROPRIATE_CONTENT 예외 발생
      * 감정 일기 생성 후, star 생성
@@ -60,9 +61,14 @@ public class DiaryService {
      */
     @Transactional
     public DiaryResDto create(Long userId, DiaryCreateReqDto req) {
-        LocalDate date = (req.getDate() != null) ? req.getDate() : LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
 
-        if (diaryRepository.existsByUser_IdAndCreateAt(userId, date)) {
+        LocalDate requestDate = req.getDate();
+        if (requestDate != null && !requestDate.isEqual(today)) {
+            throw new CustomException(ErrorCode.DIARY_NOT_CREATE);
+        }
+
+        if (diaryRepository.existsByUser_IdAndCreateAt(userId, today)) {
             throw new CustomException(ErrorCode.DIARY_ALREADY_EXISTS);
         }
 
@@ -79,7 +85,7 @@ public class DiaryService {
                     .emotion(req.getEmotion())
                     .factors(safeFactors(req.getFactors()))
                     .content(req.getContent())
-                    .createAt(date)
+                    .createAt(today)
                     .build();
 
             diaryRepository.save(diary);
@@ -164,24 +170,25 @@ public class DiaryService {
                 .toList();
     }
 
-    /**
-     * (개발용) 일기 삭제
-     *
-     * @param userId 사용자 ID
-     * @param diaryId 삭제할 diary ID
-     */
-    public void delete(Long userId, Long diaryId) {
-        Diary diary = diaryRepository.findByIdAndUser_Id(diaryId, userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND)); // 타인/없음 은닉
-
-        diaryRepository.delete(diary);
-    }
-
+//    /**
+//     * (개발용) 일기 삭제
+//     *
+//     * @param userId 사용자 ID
+//     * @param diaryId 삭제할 diary ID
+//     */
+//    public void delete(Long userId, Long diaryId) {
+//        Diary diary = diaryRepository.findByIdAndUser_Id(diaryId, userId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.DIARY_NOT_FOUND)); // 타인/없음 은닉
+//
+//        diaryRepository.delete(diary);
+//    }
+//
     private List<Factor> safeFactors(List<Factor> in) {
         return (in != null) ? new ArrayList<>(in) : new ArrayList<>();
     }
 
 
+    // 일기 요약 ai
     public DiarySummaryResDto getDiaryMonthSummary(UserDetails details, Integer year, Integer month) {
         if(month < 1 || month > 12) {
             throw new CustomException(ErrorCode.DIARY_INVALID_MONTH);

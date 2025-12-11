@@ -86,16 +86,6 @@ public class DiaryController implements DiaryApi {
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다: " + email));
     }
 
-    @DeleteMapping("/{diaryId}")
-    public ResponseEntity<Object> removeDiary(
-            @AuthenticationPrincipal UserDetails principal,
-            @PathVariable("diaryId") Long diaryId ) {
-        Long userId = resolveUserId(principal);
-
-        diaryService.delete(userId, diaryId);
-        return ResponseEntity.noContent().build();
-    }
-
     // 한달 일기 종합 분석요약, 파라미터로 연월 입력
     @GetMapping("/diary/summary")
     public ResponseEntity<?> getDiaryMonthSummary(
