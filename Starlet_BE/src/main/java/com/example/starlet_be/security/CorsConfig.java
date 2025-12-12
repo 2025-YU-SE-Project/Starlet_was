@@ -23,8 +23,8 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOriginPattern("http://localhost:*");
-        configuration.addAllowedOriginPattern("http://localhost");
+//        configuration.addAllowedOriginPattern("http://localhost:*");
+//        configuration.addAllowedOriginPattern("http://localhost");
         configuration.addAllowedOriginPattern(webServerUrl + ":*");
         configuration.addAllowedOriginPattern(webServerUrl);
 
