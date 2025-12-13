@@ -1,6 +1,8 @@
 package com.example.starlet_be.security;
 
-import com.example.starlet_be.service.StarUserDetailService;
+import com.example.starlet_be.exception.CustomAuthenticationEntryPoint;
+import com.example.starlet_be.exception.ErrorCode;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +21,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final StarUserDetailService starUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 
     @Override
@@ -27,16 +30,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtUtil.resolveToken(request);
 
-        if(token != null && jwtUtil.validateToken(token)) {
-            String email = jwtUtil.getEmailFromToken(token);
-            UserDetails userDetails = starUserDetailService.loadUserByUsername(email);
+        if (token != null) {
+            try {
+                String email = jwtUtil.getEmailFromToken(token);
+                UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (JwtException | IllegalArgumentException e) {
+                request.setAttribute("exception", ErrorCode.JWT_TOKEN_PARSING_ERROR);
+            }
         }
         filterChain.doFilter(request, response);
     }

@@ -1,0 +1,36 @@
+package com.example.starlet_be.domains.user.dto.request;
+
+import com.example.starlet_be.domains.email.entity.Email;
+import com.example.starlet_be.domains.user.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class SignUpDto {
+
+    @Schema(description = "사용자 닉네임", example = "우리 은하")
+    @NotBlank(message = "닉네임은 필수 입력입니다.")
+    @Size(max = 6, min = 2, message = "닉네임은 최소 2글자, 최대 6글자 까지 가능합니다.")
+    private String nickname;
+
+    @Schema(description = "비밀번호", example = "sl1234")
+    @NotBlank(message = "비밀번호는 필수 입력입니다.")
+    @Size(max=15, min=6, message = "비밀번호는 최소 6글자, 최대 15글자 까지 가능합니다.")
+    private String password;
+
+    @Schema(description = "사용자 이메일", example = "starlet2025@gmail.com")
+    @jakarta.validation.constraints.Email(message = "이메일 형식을 맞춰주세요")
+    @NotBlank(message = "이메일은 필수 입력입니다.")
+    private String email;
+
+    public User toEntity(String encodedPassword, Email email) {
+        return User.builder()
+                .nickname(nickname.strip())
+                .password(encodedPassword)
+                .email(email)
+                .build();
+    }
+}

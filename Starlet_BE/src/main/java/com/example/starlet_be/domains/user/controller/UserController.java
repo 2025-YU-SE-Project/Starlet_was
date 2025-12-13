@@ -1,0 +1,80 @@
+package com.example.starlet_be.domains.user.controller;
+
+import com.example.starlet_be.domains.user.api.UserApi;
+import com.example.starlet_be.domains.user.dto.request.LoginDto;
+import com.example.starlet_be.domains.user.dto.request.SignUpDto;
+import com.example.starlet_be.domains.user.entity.User;
+import com.example.starlet_be.domains.user.service.UserService;
+import com.example.starlet_be.exception.CustomException;
+import com.example.starlet_be.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("/api/v1/user")
+@RequiredArgsConstructor
+public class UserController implements UserApi {
+    private final UserService userService;
+
+    // 1-A. 사용자 정보 가져오기 - 사이드바
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id){
+        return ResponseEntity.ok().body(userService.getUser(id));
+    }
+
+    // 2-A. 사용자들 정보 가져오기 - 사이드바
+    @GetMapping("/get")
+    public ResponseEntity<?> getUserList(){
+        return ResponseEntity.ok().body(userService.getUserList());
+    }
+
+    // 3. 회원가입(이메일 인증이 끝났다는 가정하에 진행됨)
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto dto){
+        User user = userService.signUp(dto);
+        if(user == null)
+            throw new CustomException(ErrorCode.USER_CREATE_FAILED);
+        return ResponseEntity.created(URI.create("/api/v1/user/" + user.getId())).build();
+    }
+    // 3. 닉네임 유효성 확인
+    @GetMapping("/signup/nickname_available")
+    public ResponseEntity<?> validNickname(@RequestParam String nickname){
+        // 문제가 있으면 예외 발생
+        userService.validNickname(nickname);
+        return ResponseEntity.ok().build();
+    }
+
+    // 4. 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto dto, HttpServletResponse res){
+        return ResponseEntity.ok().body(userService.login(dto, res));
+    }
+
+    // 5. 사용자 삭제, URI는 임시
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+        userService.deleteCurrentUser(userDetails.getUsername());
+        return ResponseEntity.ok().build();
+    }
+
+    // 6. 로그아웃 : 프론트엔드에서 그냥 토큰 삭제하기
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        userService.logout(response);
+        return ResponseEntity.ok().build();
+    }
+}
